@@ -1,0 +1,19 @@
+version: 2
+
+references:
+
+  install_backend_dependencies: &install_backend_dependencies
+    run:
+      name: Install backend dependencies
+      command: |
+        cd server
+        pipenv install
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7.3
+    steps:
+      - checkout
+      - *install_backend_dependencies
+      - run: cd server && pipenv run python -m unittest discover -s test -p '*_test.py'
+
