@@ -1,6 +1,6 @@
 from flask import Flask
-from api.ping_handler import ping_handler
-from api.home_handler import home_handler
+from project.api.ping_handler import ping_handler
+from project.api.home_handler import home_handler
 
 
 app = Flask(__name__)

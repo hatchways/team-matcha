@@ -1,6 +1,6 @@
 import json
 from flask import jsonify, request, Blueprint
-from config import TEAM_NAME
+from project.config import TEAM_NAME
 ping_handler = Blueprint('ping_handler', __name__)
 
 
@@ -8,6 +8,7 @@ ping_handler = Blueprint('ping_handler', __name__)
 def ping():
     if request.method == 'POST':
         body = json.loads(request.get_data())
+        print(TEAM_NAME.split(','))
         if body['teamName'] in TEAM_NAME.split(','):
             return jsonify({'response': "{} is now part of the team".format(body['teamName'])}), 200
         else:
