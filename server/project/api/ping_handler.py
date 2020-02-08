@@ -1,11 +1,12 @@
 import json
 from flask import jsonify, request, Blueprint
-from project.config import TEAM_NAME
+import os
 ping_handler = Blueprint('ping_handler', __name__)
 
 
 @ping_handler.route('/ping', methods=['POST'])
 def ping():
+    TEAM_NAME = os.environ['TEAM_NAME']
     if request.method == 'POST':
         body = json.loads(request.get_data())
         print(TEAM_NAME.split(','))

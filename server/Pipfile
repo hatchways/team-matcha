@@ -7,6 +7,10 @@ verify_ssl = true
 
 [packages]
 flask = "*"
+flask-sqlalchemy = "*"
+flask-restful = "*"
+psycopg2-binary = "*"
+
 
 [requires]
 python_version = "3.7"

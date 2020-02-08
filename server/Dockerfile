@@ -1,6 +1,11 @@
 FROM python:3.7.2-alpine
 
 
+RUN apk update && \
+  apk add --virtual build-deps gcc python-dev musl-dev && \
+  apk add postgresql-dev && \
+  apk add netcat-openbsd
+
 # install dependencies
 # pipenv is another tool that allows you to maintain logical dependencies
 # (in a Pipfile) and pinned dependencies (in a Pipfile.lock).
@@ -22,4 +27,3 @@ ENV PYTHONUNBUFFERED 1
 COPY . /usr/src/app
 
 WORKDIR /usr/src/app
-
