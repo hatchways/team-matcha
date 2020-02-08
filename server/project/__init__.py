@@ -1,21 +1,26 @@
-from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
 import os
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from project.api.home_handler import home_handler
+from project.api.ping_handler import ping_handler
 
+# instantiate the db
+db = SQLAlchemy()
 
-app = Flask(__name__)
+def create_app(script_info=None):
 
-app_settings = os.getenv('APP_SETTINGS')
-app.config.from_object(app_settings)
+   # instantiate the app
+    app = Flask(__name__)
 
-db = SQLAlchemy(app)
+    # set up config
+    app_settings = os.getenv('APP_SETTINGS')
+    app.config.from_object(app_settings)
 
-class User(db.Model):
-    __tablename__ = "users"
+    # set up extensions
+    db.init_app(app)
 
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(128), unique=True, nullable=False)
-    active = db.Column(db.Boolean(), default=True, nullable=False)
+    #register blueprints
+    app.register_blueprint(home_handler)
+    app.register_blueprint(ping_handler)
 
-    def __init__(self, email):
-        self.email = email
+    return app
