@@ -13,7 +13,8 @@
 
 #### To build and Run:
 ```
-docker-compose up
+make docker-build
+make docker-up
 ```
 
 #### To Create Table:
@@ -21,8 +22,10 @@ docker-compose up
 docker exec postgres-db python manage.py create_db
 ```
 
-#### To inspect the Table:
+#### To enter postgres terminal:
+###### docker exec [service name] psql --username=[postgres username] --dbname=[database name]
 
 ```
 docker exec postgres-db psql --username=postgres --dbname=db_dev
 ```
+

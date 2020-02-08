@@ -31,7 +31,7 @@ services:
       - ./server/.env
 
   postgres-db: #service name
-    container_name: postgres-db
+    container_name: db
     build:
       context: ./server/project/db
       dockerfile: Dockerfile
