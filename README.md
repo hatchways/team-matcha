@@ -16,6 +16,11 @@
 make docker-build
 make docker-up
 ```
+#### To run tests
+###### container should be up before testing
+```
+make docker-test
+```
 
 #### To Create Table:
 ```
