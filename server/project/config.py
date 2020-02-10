@@ -4,7 +4,7 @@ class BaseConfig:
     """Base Configuration"""
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECREET_KEY = os.environ.get('DATABASE_SECRET')
+    SECRET_KEY = os.environ.get('DATABASE_SECRET')
 
 class DevelopmentConfig(BaseConfig):
     """Development Configuration"""
