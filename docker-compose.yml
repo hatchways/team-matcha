@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  client: # Service Name
+    container_name: client #container name
+    # Specify where the Dockerfile to build
+    build: ./client
+
+    volumes:
+      - './client:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=development
+    # The keyword 'network_mode' is used to define the network type.
+    # Here we define that the container can access to the 'localhost' of the computer.
+    network_mode: host
+
+  server:
+    container_name: server
+    build: ./server
+    command: python manage.py run -h 0.0.0.0
+    volumes:
+      - ./server:/usr/src/app/
+    ports:
+      - 5000:5000
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+    env_file:
+      - ./server/.env
+
+  postgres-db: #service name
+    container_name: db
+    build:
+      context: ./server/project/db
+      dockerfile: Dockerfile
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
