@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from flask_restx import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
-from project.api.home_handler import home_handler
+from project.api.home_handler import api, home_handler
 from project.api.ping_handler import ping_handler
 from project.api import api
 from project.api.users_handler import users_handler

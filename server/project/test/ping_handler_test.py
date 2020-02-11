@@ -16,7 +16,6 @@ class PingHandlerTest(TestBase):
         response = self.api.post('/ping',
                                  data=json.dumps({'teamName': 'Brian'}),
                                  content_type="application/json")
-
         self.assertDictEqual(
             response.json,
             {'response': 'Brian is now part of the team'})
