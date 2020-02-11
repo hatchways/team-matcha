@@ -28,14 +28,15 @@ class AddUserTest(TestBase):
         """Ensure a new user can be added to the database"""
         response = self.api.post(
             '/users',
-            data=json.dumps({'names': "Joe",
+            data=json.dumps({'name': "Joe",
                              'email': "test@email.com"}),
             content_type='application/json')
 
         data = json.loads(response.data.decode())
+        print(data)
 
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
         self.assertIn('test@email.com was added', data['message'])
 
