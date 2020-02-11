@@ -8,9 +8,9 @@ from project.api import api
 # instantiate the db
 db = SQLAlchemy()
 
-def create_app(script_info=None):
 
-   # instantiate the app
+def create_app(script_info=None):
+ # instantiate the app
     app = Flask(__name__)
 
     # set up config
@@ -21,7 +21,7 @@ def create_app(script_info=None):
     db.init_app(app)
     api.init_app(app)
 
-    #register blueprints
+ # register blueprints
     app.register_blueprint(home_handler)
     app.register_blueprint(ping_handler)
 
