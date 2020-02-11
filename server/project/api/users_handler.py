@@ -16,10 +16,7 @@ class Users(Resource):
     def post(self):
         data = api.payload
 
-        response_object = {
-            "status": "Fail",
-            "messag": "Invalid Payload"
-        }
+        response_object = {"status": "Fail", "messag": "Invalid Payload"}
         if not data:
             return response_objet, 400
 
