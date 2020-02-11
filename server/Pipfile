@@ -11,6 +11,7 @@ flask-sqlalchemy = "*"
 flask-restful = "*"
 psycopg2-binary = "*"
 flask-testing = "*"
+flask-restx = "*"
 
 
 [requires]
