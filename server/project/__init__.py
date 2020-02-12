@@ -13,7 +13,6 @@ def create_app(script_info=None):
 
     # instantiate the app
     app = Flask(__name__)
-    # api = Api(app)
 
     # set up config
     app_settings = os.getenv('APP_SETTINGS')
@@ -21,7 +20,6 @@ def create_app(script_info=None):
 
     # set up extensions
     db.init_app(app)
-    api.init_app(app)
 
     # register blueprints here
     from project.api.home_handler import home_handler
@@ -33,4 +31,5 @@ def create_app(script_info=None):
     from project.api.users_handler import users_blueprint
     app.register_blueprint(users_blueprint)
 
+    api.init_app(app)
     return app

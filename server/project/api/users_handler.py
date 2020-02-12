@@ -1,13 +1,10 @@
 from flask import Blueprint, request
 from flask_restx import Resource, fields, Api
-from project import db
+from project import db, api
 from project.api.models import User
-from project.api import api
 import uuid
 
 users_blueprint = Blueprint('users', __name__)
-# api = Api(users_blueprint)
-
 
 
 def add_user(params):
@@ -20,11 +17,12 @@ def add_user(params):
 
 
 #Used for both input and/or output validation
-user_output = api.model('User', {
-    'public_id': fields.String(required=True),
-    'name': fields.String(required=True),
-    'email': fields.String(required=True),
-})
+user_output = api.model(
+    'User', {
+        'public_id': fields.String(required=True),
+        'name': fields.String(required=True),
+        'email': fields.String(required=True),
+    })
 
 user_input = api.model('User', {
     'name': fields.String(required=True),
@@ -39,7 +37,6 @@ class UserList(Resource):
     def post(self):
         data = api.payload
         return add_user(api.payload), 201
-
 
 
 @api.route('/users/<public_id>')

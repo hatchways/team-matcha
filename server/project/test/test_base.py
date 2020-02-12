@@ -1,7 +1,10 @@
 import unittest
 from project import create_app, db
+from project.api import api
+from flask_restx import Api
 
 app = create_app()
+# api = Api(app)
 
 class TestBase(unittest.TestCase):
     def create_app(self):
