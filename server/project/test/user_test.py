@@ -14,7 +14,7 @@ def add_user(name, email):
 
 
 class UserTest(TestBase):
-    def test_user(self):
+    def test_user_model(self):
         name = "kenny"
         email = "test@email.com"
         add_user(name, email)

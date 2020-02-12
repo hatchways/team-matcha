@@ -2,10 +2,10 @@ import json
 import os
 
 from flask import Blueprint, request
-from flask_restx import Resource
-from project.api import api
+from flask_restx import Resource, Api
 
 ping_handler = Blueprint('ping_handler', __name__)
+api = Api(ping_handler)
 
 
 @api.route('/ping')
