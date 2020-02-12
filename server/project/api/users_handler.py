@@ -38,6 +38,11 @@ class UserList(Resource):
         data = api.payload
         return add_user(api.payload), 201
 
+    @api.marshal_with(user_output, as_list=True,
+                      envelope='data')  #output validation
+    def get(self):
+        return User.query.all(), 200
+
 
 @api.route('/users/<public_id>')
 class Users(Resource):
