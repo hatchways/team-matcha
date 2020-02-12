@@ -29,6 +29,9 @@ services:
       - APP_SETTINGS=project.config.DevelopmentConfig
     env_file:
       - ./server/.env
+    depends_on:
+      - postgres-db
+
 
   postgres-db: #service name
     container_name: db
