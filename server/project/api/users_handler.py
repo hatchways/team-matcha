@@ -1,9 +1,10 @@
 from flask import Blueprint, request
-from flask_restx import Resource, fields
-from project.api import api
+from flask_restx import Resource, fields, Api
+from project import db
 # from project.api.models import User
 
-users_handler = Blueprint('users_handler', __name__)
+users_blueprint = Blueprint('users', __name__)
+api = Api(users_blueprint)
 
 user_fields = api.model('Resource', {
     'name': fields.String,
@@ -13,7 +14,6 @@ user_fields = api.model('Resource', {
 parser = api.parser()
 parser.add_argument('name', type=str)
 parser.add_argument('email', type=str)
-
 
 # def add_user(params):
 #     name = params['name']

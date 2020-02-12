@@ -1,13 +1,15 @@
 from flask.cli import FlaskGroup
 from project import create_app, db
+from project.api.models import User
 import unittest
 import sys
 
-app = create_app()
+# app = create_app()
 cli = FlaskGroup(create_app=create_app)
 
 @cli.command("create_db")
 def create_db():
+    print("Creating db")
     db.drop_all()
     db.create_all()
     db.session.commit()
