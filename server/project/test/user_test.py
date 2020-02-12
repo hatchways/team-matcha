@@ -12,8 +12,8 @@ def add_user(name, email):
     db.session.commit()
     return user
 
-class UserTest(TestBase):
 
+class UserTest(TestBase):
     def test_user(self):
         name = "kenny"
         email = "test@email.com"
@@ -21,20 +21,21 @@ class UserTest(TestBase):
         user = User.query.filter_by(name=name).first()
 
         self.assertEqual(user.name, name)
+        self.assertEqual(user.email, email)
 
 
 class AddUserTest(TestBase):
     def test_add_user(self):
         """Ensure a new user can be added to the database"""
-        response = self.api.post(
-            '/users',
-            data=json.dumps({'name': "Joe",
-                             'email': "test@email.com"}),
-            content_type='application/json')
+        response = self.api.post('/users',
+                                 data=json.dumps({
+                                     'name': "Joe",
+                                     'email': "test@email.com"
+                                 }),
+                                 content_type='application/json')
 
         data = json.loads(response.data.decode())
         print(data)
-
 
         self.assertEqual(response.status_code, 201)
 
@@ -42,4 +43,4 @@ class AddUserTest(TestBase):
 
         self.assertIn('Success', data['status'])
 
-        self.assertEqual(User.query.filter_by(name="Joe").first() ,"Joe")
+        self.assertEqual(User.query.filter_by(name="Joe").first(), "Joe")
