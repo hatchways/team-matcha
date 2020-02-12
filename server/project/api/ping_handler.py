@@ -1,8 +1,7 @@
-import json
 import os
 
-from flask import Blueprint, request
-from flask_restx import Resource, Api, fields
+from flask import Blueprint
+from flask_restx import Resource
 from project import api
 
 ping_handler = Blueprint('ping_handler', __name__)

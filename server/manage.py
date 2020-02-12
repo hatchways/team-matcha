@@ -4,7 +4,6 @@ from project.api.models import User
 import unittest
 import sys
 
-# app = create_app()
 cli = FlaskGroup(create_app=create_app)
 
 

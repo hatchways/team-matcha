@@ -1,9 +1,8 @@
 from flask import Blueprint
-from flask_restx import Resource, Api
+from flask_restx import Resource
 from project import api
 
 home_handler = Blueprint('home_handler', __name__)
-# api = Api(home_handler)
 
 
 @api.route('/welcome')

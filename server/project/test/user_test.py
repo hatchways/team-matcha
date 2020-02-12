@@ -1,6 +1,5 @@
 import json
 
-from flask import Blueprint, jsonify, request
 from project import db
 from project.api.models import User
 from project.test.test_base import TestBase

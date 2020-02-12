@@ -1,5 +1,5 @@
-from flask import Blueprint, request, abort
-from flask_restx import Resource, fields, Api
+from flask import Blueprint, abort
+from flask_restx import Resource, fields
 from project import db, api
 from project.api.models import User
 import uuid
