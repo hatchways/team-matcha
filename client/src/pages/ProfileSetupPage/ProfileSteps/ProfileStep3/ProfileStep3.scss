@@ -1,0 +1,87 @@
+.step3{
+    background-color: #fff;
+    width: 80%;
+
+    &__content{
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+
+        &--hours{
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 35px;
+            padding-bottom: 5px;
+            width: 80%;
+
+            &--values{
+                align-items: flex-start;
+                display: flex;
+                justify-content: flex-start;
+                width: 100%;
+            }
+            &--title{
+                font-weight: 600 !important;
+                margin-bottom: 10px !important;
+                width: 100%;
+            }
+            
+            &--select{
+                font-size: 2rem;
+                border: solid 1px rgb(230, 230, 230);
+                border-radius: 5px;
+                padding: 12px 32px;
+                & *{
+                    font-weight: 600 !important;
+                    color: black;
+                }
+
+            }
+
+            &--span{
+                color: black;
+                font-size: 2rem;
+                padding: 12px 24px;
+                font-weight: 600;
+            }
+        }
+
+        &--days{
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 35px;
+            padding-bottom: 60px;
+            width: 80%;
+
+            &--title{
+                font-weight: 600 !important;
+                margin-bottom: 10px !important;
+                width: 100%;
+            }
+            &--list{
+                align-items: center;
+                border: solid 1px rgb(230, 230, 230);
+                border-radius: 5px;
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                -ms-border-radius: 5px;
+                -o-border-radius: 5px;
+            }
+            &--item{
+                text-align: center;
+                padding: 16px 16px;
+                flex: 1;
+                border-right: solid 1px rgb(230, 230, 230);
+            }
+        }
+    }
+}
