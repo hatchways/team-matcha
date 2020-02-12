@@ -13,7 +13,7 @@ def add_user(name, email):
     return user
 
 
-class UserTest(TestBase):
+class UserModelTest(TestBase):
     def test_user_model(self):
         name = "kenny"
         email = "test@email.com"
@@ -30,7 +30,7 @@ class AddUserTest(TestBase):
         response = self.api.post('/users',
                                  data=json.dumps({
                                      'name': "Joe",
-                                     'email': "test@email.com"
+                                     'email': "joe@email.com"
                                  }),
                                  content_type='application/json')
 
@@ -39,8 +39,34 @@ class AddUserTest(TestBase):
 
         self.assertEqual(response.status_code, 201)
 
-        self.assertIn('test@email.com was added', data['message'])
 
-        self.assertIn('Success', data['status'])
+        self.assertEqual(User.query.filter_by(name="Joe").first().name, "Joe")
 
-        self.assertEqual(User.query.filter_by(name="Joe").first(), "Joe")
+
+    def test_bad_parameter_values(self):
+        """Ensure invalid payload returns 400"""
+        response = self.api.post('/users',
+                                 data=json.dumps({
+                                     'name': 1,
+                                     'email': 1,
+                                 }),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_bad_parameter_names(self):
+        """Ensure invalid payload returns 400"""
+        response = self.api.post('/users',
+                                 data=json.dumps({
+                                     'bad_field': "Joe",
+                                     'email': "test@email.com",
+                                 }),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 400)
+
+
+# class GetUserTest(TestBase):
+#     def test_get_user(self):
+#         """Ensure a user can be retrieved""""
+#         add_user(name, email)

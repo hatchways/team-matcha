@@ -1,46 +1,42 @@
 from flask import Blueprint, request
 from flask_restx import Resource, fields, Api
 from project import db
-# from project.api.models import User
+from project.api.models import User
 
 users_blueprint = Blueprint('users', __name__)
 api = Api(users_blueprint)
 
-user_fields = api.model('Resource', {
-    'name': fields.String,
-    'email': fields.String,
+def add_user(params):
+    name = params['name']
+    email = params['email']
+    user = User(name=name, email=email)
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+
+class AllCapsString(fields.Raw):
+    def format(self, value):
+        return value.upper()
+
+
+#Used for both input and/or output validation
+user_output = api.model(
+    'User', {
+        'name': fields.String(required=True),
+        'email': AllCapsString(attribute='email', required=True),
+    })
+
+user_input = api.model('User', {
+    'name': fields.String(required=True),
+    'email': fields.String(required=True),
 })
-
-parser = api.parser()
-parser.add_argument('name', type=str)
-parser.add_argument('email', type=str)
-
-# def add_user(params):
-#     name = params['name']
-#     email = params['email']
-#     user = User(name=name, email=email)
-#     db.session.add(user)
-#     db.session.commit()
-#     return user
 
 
 @api.route('/users')
 class Users(Resource):
-    # @api.marshal_with(model, envelope='data')
-    # @api.expect(user_fields, validate=True)
-    # @api.marshal_with(user_fields)
+    @api.marshal_with(user_output, envelope='data')  #output validation
+    @api.expect(user_input, validate=True)  #input validation
     def post(self):
         data = api.payload
-        print(data)
-
-        response_object = {"status": "Fail", "message": "Invalid Payload"}
-        if not data:
-            return response_objet, 400
-
-        name = data['name']
-        email = data['email']
-        response_object['status'] = 'Success'
-        response_object['message'] = f'{name} was added'
-        return response_object, 201
-
-        # return add_user(api.payload), 201
+        return add_user(api.payload), 201
