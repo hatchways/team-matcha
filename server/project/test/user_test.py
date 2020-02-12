@@ -22,12 +22,12 @@ class UserModelTest(TestBase):
         user = User.query.filter_by(name=name).first()
 
         self.assertEqual(user.name, name)
+
         self.assertEqual(user.email, email)
 
 
-class AddUserTest(TestBase):
+class UserCreateTest(TestBase):
     def test_add_user(self):
-        """Ensure a new user can be added to the database"""
         response = self.api.post('/users',
                                  data=json.dumps({
                                      'name': "Joe",
@@ -62,18 +62,24 @@ class AddUserTest(TestBase):
         self.assertEqual(response.status_code, 400)
 
 
-class GetUserTest(TestBase):
+class UserGetTest(TestBase):
     def test_get_user(self):
         name = "Joe"
         email = "joe@email.com"
         user = add_user(name, email)
         response = self.api.get(f'/users/{user.public_id}')
         data = json.loads(response.data.decode())
+
         self.assertEqual(response.status_code, 200)
+
         self.assertEqual(name, data['data']['name'])
+
         self.assertEqual(email, data['data']['email'])
 
     def test_get_non_existing_user(self):
         response = self.api.get(f'/users/{9999}')
         data = json.loads(response.data.decode())
-        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(response.status_code, 400)
+
+        self.assertEqual(data['message'], "User not Found!")

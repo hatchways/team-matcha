@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from flask_restx import Resource, fields, Api
 from project import db, api
 from project.api.models import User
@@ -45,5 +45,5 @@ class Users(Resource):
     def get(self, public_id):
         user = User.query.filter_by(public_id=public_id).first()
         if not user:
-            return {'message': 'No user found!'}
+            abort(400, "User not Found!")
         return user, 200
