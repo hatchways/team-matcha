@@ -4,10 +4,11 @@ from flask import Blueprint, jsonify, request
 from project import db
 from project.api.models import User
 from project.test.test_base import TestBase
+import uuid
 
 
 def add_user(name, email):
-    user = User(name=name, email=email)
+    user = User(public_id=uuid.uuid4(), name=name, email=email)
     db.session.add(user)
     db.session.commit()
     return user
@@ -40,8 +41,7 @@ class AddUserTest(TestBase):
 
         self.assertEqual(User.query.filter_by(name="Joe").first().name, "Joe")
 
-    def test_bad_parameter_values(self):
-        """Ensure invalid payload returns 400"""
+    def test_bad_params_values(self):
         response = self.api.post('/users',
                                  data=json.dumps({
                                      'name': 1,
@@ -51,8 +51,7 @@ class AddUserTest(TestBase):
 
         self.assertEqual(response.status_code, 400)
 
-    def test_bad_parameter_names(self):
-        """Ensure invalid payload returns 400"""
+    def test_bad_params_name(self):
         response = self.api.post('/users',
                                  data=json.dumps({
                                      'bad_field': "Joe",
@@ -65,12 +64,16 @@ class AddUserTest(TestBase):
 
 class GetUserTest(TestBase):
     def test_get_user(self):
-        """Ensure we can get a user"""
         name = "Joe"
         email = "joe@email.com"
         user = add_user(name, email)
-        response = self.api.get(f'/users/{user.id}')
+        response = self.api.get(f'/users/{user.public_id}')
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(name, data['data']['name'])
         self.assertEqual(email, data['data']['email'])
+
+    def test_get_non_existing_user(self):
+        response = self.api.get(f'/users/{9999}')
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)

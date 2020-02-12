@@ -2,14 +2,20 @@ import json
 import os
 
 from flask import Blueprint, request
-from flask_restx import Resource, Api
+from flask_restx import Resource, Api, fields
+from project.api import api
 
 ping_handler = Blueprint('ping_handler', __name__)
-api = Api(ping_handler)
+# api = Api(ping_handler)
 
+
+ping_input = api.model('ping', {
+    'teamName': fields.String(required=True),
+})
 
 @api.route('/ping')
 class Ping(Resource):
+    @api.expect(ping_input, validate=True)  #input validation
     def post(self):
         team_name = os.environ['TEAM_NAME']
         body = api.payload

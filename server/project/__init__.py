@@ -3,6 +3,7 @@ import os
 from flask import Flask
 from flask_restx import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
+from project.api import api
 
 # instantiate the db
 db = SQLAlchemy()
@@ -12,7 +13,7 @@ def create_app(script_info=None):
 
     # instantiate the app
     app = Flask(__name__)
-    api = Api(app)
+    # api = Api(app)
 
     # set up config
     app_settings = os.getenv('APP_SETTINGS')
@@ -20,6 +21,7 @@ def create_app(script_info=None):
 
     # set up extensions
     db.init_app(app)
+    api.init_app(app)
 
     # register blueprints here
     from project.api.home_handler import home_handler

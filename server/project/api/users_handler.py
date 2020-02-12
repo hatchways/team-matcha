@@ -2,16 +2,18 @@ from flask import Blueprint, request
 from flask_restx import Resource, fields, Api
 from project import db
 from project.api.models import User
+from project.api import api
 import uuid
 
 users_blueprint = Blueprint('users', __name__)
-api = Api(users_blueprint)
+# api = Api(users_blueprint)
+
 
 
 def add_user(params):
     name = params['name']
     email = params['email']
-    user = User(name=name, email=email)
+    user = User(public_id=uuid.uuid4(), name=name, email=email)
     db.session.add(user)
     db.session.commit()
     return user
@@ -19,6 +21,7 @@ def add_user(params):
 
 #Used for both input and/or output validation
 user_output = api.model('User', {
+    'public_id': fields.String(required=True),
     'name': fields.String(required=True),
     'email': fields.String(required=True),
 })
@@ -38,9 +41,12 @@ class UserList(Resource):
         return add_user(api.payload), 201
 
 
-@api.route('/users/<user_id>')
+
+@api.route('/users/<public_id>')
 class Users(Resource):
     @api.marshal_with(user_output, envelope='data')  #output validation
-    def get(self, user_id):
-        user = User.query.get(user_id)
+    def get(self, public_id):
+        user = User.query.filter_by(public_id=public_id).first()
+        if not user:
+            return {'message': 'No user found!'}
         return user, 200
