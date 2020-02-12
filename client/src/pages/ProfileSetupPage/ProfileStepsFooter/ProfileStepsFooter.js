@@ -2,8 +2,6 @@
 import React from 'react';
 // import { Link } from 'react-router-dom';
 import { Box, Button } from '@material-ui/core';
-// importing stylesheet
-import './ProfileStepsFooter.scss';
 
 const ProfileStepsFooter = ({ buttonText, step, handleNextStep, handleDataSubmit }) => (
     <Box className="stepsFooter">

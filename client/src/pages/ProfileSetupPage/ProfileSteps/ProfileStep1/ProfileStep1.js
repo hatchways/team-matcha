@@ -1,8 +1,6 @@
 // importing modules
 import React from 'react';
 import { Box, MenuItem, Select, Typography } from '@material-ui/core';
-// importing stylesheet
-import './ProfileStep1.scss';
 // importing components
 import ProfileStepHeader from '../../ProfileStepsHeader/ProfileStepsHeader';
 import ProfileStepFooter from '../../ProfileStepsFooter/ProfileStepsFooter';

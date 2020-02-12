@@ -1,18 +1,15 @@
 // step1 footer
 .stepsFooter{
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    @include applyFlex(center, center, column);
     padding-top: 20px;
     padding-bottom: 20px;
     width: 100%;
     &__btn{
-        background-color: #ef6c00 !important;
+        background-color: $primary !important;
         color: whitesmoke !important;
         padding: 16px 64px !important;
     }
     &__link{
-        color: rgba(69, 69, 69, 0.352);
+        color: $off-black;
     }
 }

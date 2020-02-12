@@ -1,0 +1,27 @@
+// step1 header
+.stepHeader{
+    @include applyFlex(center, space-around);
+    border-bottom: solid 1px $off-white;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    width: 100%;
+    
+    &__title{
+        font-weight: $bold-text;
+        width: 35%;
+    }
+
+    &__bar{
+        border-radius: 100px;
+        background-color: $off-white;
+        height: 12px;
+        width: 40%;
+        
+        // progress bar inner        
+        &--inner{
+            background-color: $primary;
+            border-radius: 100px;
+            height: 100%;
+        }
+    }
+}

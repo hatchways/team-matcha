@@ -3,39 +3,32 @@
     width: 80%;
 
     &__content{
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        @include applyFlex(center, center, column);
         width: 100%;
 
         &--title{
-            font-weight: 600 !important;
+            font-weight: $bold-text;
         }
 
         &--text{
             padding-left: 50px;
             &--span{
-                font-weight: 600 !important;
+                font-weight: $bold-text;
             }
         }
     }
 
     &__content--title--wrap{
-        align-items: flex-start;
-        border-bottom: solid 1px rgb(230, 230, 230);
-        display: flex;
-        justify-content: space-between;
+        @include applyFlex(flex-start, space-between);
+        border-bottom: solid 1px $off-white;
         padding-bottom: 45px;
         padding-top: 45px;
         width: 80%;
     }
 
     &__content--text--wrap{
-        align-items: flex-start;
-        border-bottom: solid 1px rgb(230, 230, 230);
-        display: flex;
-        justify-content: space-between;
+        @include applyFlex(flex-start, space-between);
+        border-bottom: solid 1px $off-white;
         padding-bottom: 30px;
         padding-top: 30px;
         width: 80%;

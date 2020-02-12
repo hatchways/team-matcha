@@ -5,8 +5,6 @@ import { Box, Container, Typography } from '@material-ui/core';
 import ProfileStep1 from './ProfileSteps/ProfileStep1/ProfileStep1';
 import ProfileStep2 from './ProfileSteps/ProfileStep2/ProfileStep2';
 import ProfileStep3 from './ProfileSteps/ProfileStep3/ProfileStep3';
-// importing stylesheet
-import './ProfileSetup.scss';
 
 class ProfileSetupPage extends Component {
     constructor(props){

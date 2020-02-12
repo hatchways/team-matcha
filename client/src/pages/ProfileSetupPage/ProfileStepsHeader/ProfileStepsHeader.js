@@ -1,15 +1,20 @@
 import React from 'react';
 import { Box, Typography } from '@material-ui/core';
-import './ProfileStepsHeader.scss';
 
 const ProfileStepsHeader = ({step, text}) => {
     let width;
-    if(step === 1) {
-        width = '32%';
-    } else if(step === 2) {
-        width = '64%'
-    } else if (step === 3) {
-        width = '100%';
+    switch(step) {
+        case 1:
+            width = '32%';
+            break;
+        case 2:
+            width = '64%'
+            break;
+        case 3:
+            width = '100%';
+            break;
+        default:
+            width = '32%';
     }
     return (
         <Box className="stepHeader">

@@ -1,20 +1,17 @@
 .profileSetup{
-    align-items: center;
+    @include applyFlex(center, center, column);
     background-color: whitesmoke;
-    display: flex;
-    flex-direction: column;
     height: 100vh;
-    justify-content: center;
     
     &__logo{
         margin-bottom: 20px;
         &--main{
-            color: #ef6c00;
-            font-weight: 600 !important;
+            color: $primary;
+            font-weight: $bold-text;
         }
         &--span{
             color: black;
-            font-weight: 600;
+            font-weight: $bold-text;
         }
     }
 }
