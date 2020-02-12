@@ -35,13 +35,10 @@ class AddUserTest(TestBase):
                                  content_type='application/json')
 
         data = json.loads(response.data.decode())
-        print(data)
 
         self.assertEqual(response.status_code, 201)
 
-
         self.assertEqual(User.query.filter_by(name="Joe").first().name, "Joe")
-
 
     def test_bad_parameter_values(self):
         """Ensure invalid payload returns 400"""
@@ -66,7 +63,14 @@ class AddUserTest(TestBase):
         self.assertEqual(response.status_code, 400)
 
 
-# class GetUserTest(TestBase):
-#     def test_get_user(self):
-#         """Ensure a user can be retrieved""""
-#         add_user(name, email)
+class GetUserTest(TestBase):
+    def test_get_user(self):
+        """Ensure we can get a user"""
+        name = "Joe"
+        email = "joe@email.com"
+        user = add_user(name, email)
+        response = self.api.get(f'/users/{user.id}')
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(name, data['data']['name'])
+        self.assertEqual(email, data['data']['email'])
