@@ -75,6 +75,18 @@ class UserGetTest(TestBase):
 
         self.assertEqual(email, data['data']['email'])
 
+    def test_get_list_of_users(self):
+        user = add_user("Joe", "Joe@email.com")
+        user = add_user("Shmoe", "Shmoe@email.com")
+        user = add_user("Doe", "Doe@email.com")
+        response = self.api.get(f'/users')
+        data = json.loads(response.data.decode())['data']
+
+        self.assertEqual(len(data), 3)
+
+        query = User.query.all()
+        self.assertEqual(len(query), 3)
+
     def test_get_non_existing_user(self):
         response = self.api.get(f'/users/{9999}')
         data = json.loads(response.data.decode())
