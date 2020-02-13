@@ -16,14 +16,42 @@
         background-color: $off-white;
         height: 12px;
         width: 40%;
-        
-        // progress bar inner        
-        &--inner{
+
+        &--inner32,
+        &--inner64,
+        &--inner100{
             background-color: $primary;
             border-radius: 100px;
             height: 100%;
         }
+        
+        &--inner32{
+            animation:  animateWidthTo32 .5s linear;
+            transition: width .5s ease-out;
+        }
+        &--inner64{
+            animation:  animateWidthTo64 .5s linear;
+            transition: width .5s ease;
+        }
+        &--inner100{
+            animation:  animateWidthTo100 .5s linear;
+            transition: width .5s ease;
+        }
     }
+}
+
+// width animations
+@keyframes animateWidthTo32 {
+    from {width: 0%;}
+    to {width: 32%;}
+}
+@keyframes animateWidthTo64 {
+    from {width: 32%;}
+    to {width: 64%;}
+}
+@keyframes animateWidthTo100 {
+    from {width: 64%;}
+    to {width: 100%;}
 }
 
 // Extra small devices (portrait phones, less than 576px)
