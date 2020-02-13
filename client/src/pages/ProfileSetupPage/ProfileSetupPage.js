@@ -71,7 +71,7 @@ class ProfileSetupPage extends Component {
     // method: validates if userUrl is unique
     handleUserUrlCheck = (e) => {
         const { value, name } = e.target;
-        this.setState({ [name]: value });
+        this.setState({ [name]: value.trim() });
         
         // test data
         const userExists = this.state.users.find((user) => user.userUrl.toLowerCase() === value.toLowerCase());
