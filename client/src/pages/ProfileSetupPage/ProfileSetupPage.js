@@ -135,6 +135,19 @@ class ProfileSetupPage extends Component {
                     />
                 );
                 break;
+            default:
+                stepComponent = (
+                    <ProfileStep1
+                    exists={exists}
+                    step={step}
+                    timezone={timezone}
+                    timezonesArr={this.state.timezonesArr}
+                    username={username}
+                    handleNextStep={this.handleNextStep}
+                    handleUserInput={this.handleUserInput}
+                    handleUsernameCheck={this.handleUsernameCheck}
+                    />
+                );
         }
 
         return (
