@@ -52,8 +52,8 @@
                 text-align: left;
             }
             &--icon{
-                animation:  animateIcon 1s linear !important;
-                transition: all 1s ease-out !important;
+                animation:  animateIcon .75s linear !important;
+                transition: all .75s ease-out !important;
             }
         }
 
