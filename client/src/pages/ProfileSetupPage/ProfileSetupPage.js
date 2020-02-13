@@ -14,7 +14,7 @@ class ProfileSetupPage extends Component {
         this.state = {
             step: 1,
             username: '',
-            timezone: '',
+            timezone: momentTZ.tz.guess(),
             timeAvlFrom: '', 
             timeAvlUntil: '',
             daysAvl: {
@@ -115,7 +115,7 @@ class ProfileSetupPage extends Component {
             case 2:
                 stepComponent = (
                     <ProfileStep2
-                    username="john-doe@gmail.com"
+                    username={username}
                     step={step}
                     handleNextStep={this.handleNextStep}
                     />
