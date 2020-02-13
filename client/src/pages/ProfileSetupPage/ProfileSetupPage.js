@@ -1,6 +1,8 @@
 // importing modules
 import React, { Component } from 'react';
 import { Box, Container, Typography } from '@material-ui/core';
+import momentTZ from 'moment-timezone';
+
 // importing components
 import ProfileStep1 from './ProfileSteps/ProfileStep1/ProfileStep1';
 import ProfileStep2 from './ProfileSteps/ProfileStep2/ProfileStep2';
@@ -30,7 +32,8 @@ class ProfileSetupPage extends Component {
                 {username: "jane-doe"},
                 {username: "johnny-doe"},
                 {username: "janey-doe"},
-            ]
+            ],
+            timezonesArr: momentTZ.tz.names()
         }
     }
 
@@ -70,6 +73,7 @@ class ProfileSetupPage extends Component {
         const { value, name } = e.target;
         this.setState({ [name]: value });
         
+        // test data
         const userExists = this.state.users.find((user) => user.username.toLowerCase() === value.toLowerCase());
         
         if(userExists) {
@@ -100,6 +104,7 @@ class ProfileSetupPage extends Component {
                     exists={exists}
                     step={step}
                     timezone={timezone}
+                    timezonesArr={this.state.timezonesArr}
                     username={username}
                     handleNextStep={this.handleNextStep}
                     handleUserInput={this.handleUserInput}

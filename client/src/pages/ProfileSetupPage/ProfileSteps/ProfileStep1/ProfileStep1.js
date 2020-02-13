@@ -8,7 +8,10 @@ import { green, red } from '@material-ui/core/colors';
 import ProfileStepHeader from '../../ProfileStepsHeader/ProfileStepsHeader';
 import ProfileStepFooter from '../../ProfileStepsFooter/ProfileStepsFooter';
 
-const ProfileStep1 = ({ exists, step, username, timezone, handleNextStep, handleUserInput, handleUsernameCheck }) => {
+const ProfileStep1 = ({ exists, step, 
+    username, timezone, 
+    timezonesArr, handleNextStep, 
+    handleUserInput, handleUsernameCheck }) => {
     return(
     <Box boxShadow={3} className="step1">
         <ProfileStepHeader
@@ -45,11 +48,18 @@ const ProfileStep1 = ({ exists, step, username, timezone, handleNextStep, handle
                         value={timezone}
                         onChange={handleUserInput}
                         >
-                            <MenuItem value={0}> 
-                                <p className="step1__form--select--text">UTC Time&nbsp;
-                                    <span className="step1__form--select--text--span">(11:31)</span>
-                                </p>
-                            </MenuItem>
+                            {
+                                timezonesArr.length > 0 
+                                    ? timezonesArr.map((timezoneVal) => { 
+                                    return (
+                                        <MenuItem key={timezoneVal} value={timezoneVal}> 
+                                            <p className="step1__form--select--text">
+                                                {timezoneVal}
+                                            </p>
+                                        </MenuItem> )
+                                    }) 
+                                    : null
+                            }
                         </Select>
                     </div>
                     {/*change to a drop down list of time zones*/}
