@@ -32,8 +32,8 @@ const ProfileStep1 = ({ exists, step,
                             value={username}
                             type="text"
                         />
-                        { username.length > 0 && exists === false ? <CheckCircleIcon style={{ color: green[500] }} /> : null }
-                        { username.length > 0 && exists === true ? <CancelIcon style={{ color: red[800] }} /> : null }
+                        { username.length >= 6 && username.length <= 24 && exists === false ? <CheckCircleIcon style={{ color: green[500] }} className="step1__form--input--icon" /> : null }
+                        { username.length >= 6 && username.length <= 24 && exists === true ? <CancelIcon style={{ color: red[800] }} className="step1__form--input--icon" /> : null }
                     </Box>
                 </Box>
                 <Box className="step1__form--select--wrap">
@@ -63,7 +63,7 @@ const ProfileStep1 = ({ exists, step,
                 </Box>
             </Box>
         </Box>
-        { username.length > 0 && exists === false ? 
+        { username.length >= 6 && exists === false && username.length <= 24 ? 
         <ProfileStepFooter 
             handleNextStep={handleNextStep}
             buttonText="Continue"

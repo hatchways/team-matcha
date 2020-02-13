@@ -51,7 +51,10 @@
                 margin: 0;
                 text-align: left;
             }
-            
+            &--icon{
+                animation:  animateIcon 1s linear !important;
+                transition: all 1s ease-out !important;
+            }
         }
 
         &--select--wrap{
@@ -74,6 +77,12 @@
             }
         }
     }
+}
+
+// opacity animation
+@keyframes animateIcon {
+    from {opacity: 0;}
+    to {opacity: 1;}
 }
 
 // Extra small devices (portrait phones, less than 576px)
