@@ -24,13 +24,13 @@ make docker-test
 
 #### To Create Table:
 ```
-docker exec postgres-db python manage.py create_db
+docker-compose exec server python manage.py create_db
 ```
 
 #### To enter postgres terminal:
 ###### docker exec [service name] psql --username=[postgres username] --dbname=[database name]
 
 ```
-docker exec postgres-db psql --username=postgres --dbname=db_dev
+docker-compose exec postgres-db psql --username=postgres --dbname=db_dev
 ```
 

@@ -1,8 +1,8 @@
 import os
+
 from flask import Flask
+from flask_restx import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
-from project.api.home_handler import home_handler
-from project.api.ping_handler import ping_handler
 from project.api import api
 
 # instantiate the db
@@ -10,7 +10,8 @@ db = SQLAlchemy()
 
 
 def create_app(script_info=None):
- # instantiate the app
+
+    # instantiate the app
     app = Flask(__name__)
 
     # set up config
@@ -19,10 +20,16 @@ def create_app(script_info=None):
 
     # set up extensions
     db.init_app(app)
-    api.init_app(app)
 
- # register blueprints
+    # register blueprints here
+    from project.api.home_handler import home_handler
     app.register_blueprint(home_handler)
+
+    from project.api.ping_handler import ping_handler
     app.register_blueprint(ping_handler)
 
+    from project.api.users_handler import users_blueprint
+    app.register_blueprint(users_blueprint)
+
+    api.init_app(app)
     return app

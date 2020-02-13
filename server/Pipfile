@@ -7,11 +7,11 @@ verify_ssl = true
 
 [packages]
 flask = "*"
-flask-sqlalchemy = "*"
-flask-restful = "*"
+flask-sqlalchemy = ""
 psycopg2-binary = "*"
 flask-testing = "*"
 flask-restx = "*"
+python-dotenv = "*"
 
 
 [requires]
