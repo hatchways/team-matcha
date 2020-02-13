@@ -13,8 +13,6 @@ const ProfileStepsHeader = ({step, text}) => {
         case 3:
             width = '100%';
             break;
-        default:
-            width = '32%';
     }
     return (
         <Box className="stepHeader">
