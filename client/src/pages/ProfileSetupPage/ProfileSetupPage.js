@@ -29,7 +29,7 @@ class ProfileSetupPage extends Component {
                 {username: "john-doe"},
                 {username: "jane-doe"},
                 {username: "johnny-doe"},
-                {username: "janey-black"},
+                {username: "janey-doe"},
             ]
         }
     }
