@@ -14,7 +14,7 @@ class ProfileSetupPage extends Component {
         this.state = {
             step: 1,
             username: '',
-            timezone: momentTZ.tz.guess(),
+            timezoneName: momentTZ.tz.guess(true),
             timeAvlFrom: '', 
             timeAvlUntil: '',
             daysAvl: {
@@ -87,12 +87,22 @@ class ProfileSetupPage extends Component {
         }
     };
 
+    // method: handles data submission to the server
     handleDataSubmit = () => {
-        // submit data to the server
+        const currentDate = momentTZ().format('YYYY-MM-D');
+        const data = { // data to be sent to the server
+            username: this.state.username,
+            timezoneName: this.state.timezoneName,
+            utcOffset: momentTZ(currentDate).tz(this.state.timezoneName).format('Z'),
+            timeAvlFrom: this.state.timeAvlFrom, 
+            timeAvlUntil: this.state.timeAvlUntil,
+            ...this.state.daysAvl
+        }
+        console.log(data);
     };
 
     render(){
-        const { step, timezone, 
+        const { step, timezoneName, 
                 timeAvlFrom, timeAvlUntil, 
                 daysAvl, exists, username } = this.state;
         let stepComponent;
@@ -103,7 +113,7 @@ class ProfileSetupPage extends Component {
                     <ProfileStep1
                     exists={exists}
                     step={step}
-                    timezone={timezone}
+                    timezoneName={timezoneName}
                     timezonesArr={this.state.timezonesArr}
                     username={username}
                     handleNextStep={this.handleNextStep}
@@ -140,7 +150,7 @@ class ProfileSetupPage extends Component {
                     <ProfileStep1
                     exists={exists}
                     step={step}
-                    timezone={timezone}
+                    timezoneName={timezoneName}
                     timezonesArr={this.state.timezonesArr}
                     username={username}
                     handleNextStep={this.handleNextStep}

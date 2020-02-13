@@ -9,7 +9,7 @@ import ProfileStepHeader from '../../ProfileStepsHeader/ProfileStepsHeader';
 import ProfileStepFooter from '../../ProfileStepsFooter/ProfileStepsFooter';
 
 const ProfileStep1 = ({ exists, step, 
-    username, timezone, 
+    username, timezoneName, 
     timezonesArr, handleNextStep, 
     handleUserInput, handleUsernameCheck }) => {
     return(
@@ -41,9 +41,9 @@ const ProfileStep1 = ({ exists, step,
                     <div className="step1__form--select">
                         <Select
                         disableUnderline
-                        name="timezone"
+                        name="timezoneName"
                         variant="outlined"
-                        value={timezone}
+                        value={timezoneName}
                         onChange={handleUserInput}
                         >
                             {

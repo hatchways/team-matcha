@@ -12,7 +12,6 @@ const AvailableTimesDropDown = ({timeAvlFrom, timeAvlUntil, handleUserInput}) =>
             name="timeAvlFrom"
             value={timeAvlFrom}
             >
-                <MenuItem value={0}>00:00</MenuItem>
                 <MenuItem value={1}>01:00</MenuItem>
                 <MenuItem value={2}>02:00</MenuItem>
                 <MenuItem value={3}>03:00</MenuItem>
@@ -36,6 +35,7 @@ const AvailableTimesDropDown = ({timeAvlFrom, timeAvlUntil, handleUserInput}) =>
                 <MenuItem value={21}>21:00</MenuItem>
                 <MenuItem value={22}>22:00</MenuItem>
                 <MenuItem value={23}>23:00</MenuItem>
+                <MenuItem value={24}>24:00</MenuItem>
             </Select>
             </Box>
             <div className="step3__content--hours--span">&mdash;</div>
@@ -46,7 +46,6 @@ const AvailableTimesDropDown = ({timeAvlFrom, timeAvlUntil, handleUserInput}) =>
             name="timeAvlUntil"
             value={timeAvlUntil}
             >
-                <MenuItem value={0}>00:00</MenuItem>
                 <MenuItem value={1}>01:00</MenuItem>
                 <MenuItem value={2}>02:00</MenuItem>
                 <MenuItem value={3}>03:00</MenuItem>
@@ -70,6 +69,7 @@ const AvailableTimesDropDown = ({timeAvlFrom, timeAvlUntil, handleUserInput}) =>
                 <MenuItem value={21}>21:00</MenuItem>
                 <MenuItem value={22}>22:00</MenuItem>
                 <MenuItem value={23}>23:00</MenuItem>
+                <MenuItem value={24}>24:00</MenuItem>
             </Select>
             </Box>
         </div>
