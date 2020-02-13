@@ -66,3 +66,54 @@
         }
     }
 }
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .step3{
+        width: 90%;
+        &__content{
+            &--hours{
+                text-align: center;
+                &--values{
+                    @include applyFlex(center, center, column);
+                }
+                &--select{
+                    width: 50%;
+                }
+            }
+            
+            &--days{
+                &--list{
+                    overflow-x: scroll;
+                }
+            }
+        }
+    }
+}
+
+// Extra small devices (landscape phones, less than 576px)
+@media (max-width: 575.98px) and (orientation: landscape){
+    .step3{
+        width: 90%;
+        &__content{
+            &--days{
+                &--list{
+                    overflow-x: scroll;
+                }
+            }
+        }
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 576px) and (max-width: 1199.98px) {
+    .step3{
+        &__content{
+            &--days{
+                &--list{
+                    overflow-x: scroll;
+                }
+            }
+        }
+    }
+}

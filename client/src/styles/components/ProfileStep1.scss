@@ -75,3 +75,150 @@
         }
     }
 }
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .step1{
+        width: 90%;
+        &__form{
+            padding-bottom: 40px;
+            padding-top: 40px;
+            width: 90%;
+            &--label{
+                margin-bottom: 20px !important;
+            }
+            &--input{
+                font-size: 1rem;
+                margin-left: 20px;
+                width: 60%;
+                &--placeholder{
+                    font-size: 1rem;
+                    padding-right: 20px;
+                }
+                
+            }
+            &--input--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--input--container{
+                margin-left: 0;
+                width: 80%;
+            }
+            &--select--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--select{
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+// Extra small devices (lanscape phones, less than 576px)
+@media (max-width: 575.98px) and (orientation: landscape) {
+    .step1{
+        width: 90%;
+        &__form{
+            padding-bottom: 40px;
+            padding-top: 40px;
+            width: 90%;
+            &--label{
+                margin-bottom: 20px !important;
+            }
+            &--input{
+                font-size: 1rem;
+                margin-left: 20px;
+                width: 60%;
+                &--placeholder{
+                    font-size: 1rem;
+                    padding-right: 20px;
+                }
+                
+            }
+            &--input--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--input--container{
+                margin-left: 0;
+                width: 80%;
+            }
+            &--select--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--select{
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .step1{
+        &__form{
+            padding-bottom: 40px;
+            padding-top: 40px;
+            width: 90%;
+            &--label{
+                margin-bottom: 20px !important;
+            }
+            &--input{
+                font-size: 1rem;
+                margin-left: 20px;
+                width: 60%;
+                &--placeholder{
+                    font-size: 1rem;
+                    padding-right: 20px;
+                }
+                
+            }
+            &--input--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--input--container{
+                margin-left: 0;
+                width: 80%;
+            }
+            &--select--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--select{
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .step1{
+        &__form{
+            width: 90%;
+            &--input{
+                font-size: 1rem;
+                margin-left: 20px;
+                width: 60%;
+                &--placeholder{
+                    font-size: 1rem;
+                    padding-right: 20px;
+                }
+                
+            }
+            &--input--wrap{
+                margin-left: 20px;
+            }
+            &--select--wrap{
+                margin-left: 20px;
+            }
+            &--select{
+                margin-left: 40px;
+            }
+        }
+    }
+}

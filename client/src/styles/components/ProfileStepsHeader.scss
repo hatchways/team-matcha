@@ -25,3 +25,30 @@
         }
     }
 }
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .stepHeader{
+        @include applyFlex(center, center, column);
+        padding-top: 30px;
+        padding-bottom: 30px;
+        text-align: center;
+        
+        &__title{
+            margin-bottom: 10px !important;
+            width: 85%;
+        }
+    
+        &__bar{
+            width: 80%;
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .stepHeader{
+        padding-top: 25px;
+        padding-bottom: 25px;
+    }
+}

@@ -38,3 +38,43 @@
         }
     }
 }
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .step2{
+        width: 90%;
+        &__content{
+            &--title{
+                font-size: 1.2rem !important;
+            }
+            &--text{
+                padding-left: 0;
+            }
+        }
+    }
+}
+
+@media (max-width: 575.98px) and (orientation: landscape) {
+    .step2{
+        width: 90%;
+        &__content{
+            &--title{
+                font-size: 1.2rem !important;
+            }
+            &--text{
+                padding-left: 0;
+            }
+        }
+    }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .step2{
+        &__content{
+            &--title{
+                font-size: 1.2rem !important;
+            }
+        }
+    }
+}

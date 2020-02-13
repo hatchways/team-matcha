@@ -1,6 +1,7 @@
 .profileSetup{
     @include applyFlex(center, center, column);
     background-color: whitesmoke;
+    padding-top: 50px;
     height: 100vh;
     
     &__logo{
@@ -13,5 +14,32 @@
             color: black;
             font-weight: $bold-text;
         }
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .profileSetup{
+        height: auto;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+}
+
+// Extra small devices (lanscape phones, less than 576px)
+@media (max-width: 575.98px) and (orientation: landscape) {
+    .profileSetup{
+        height: auto;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .profileSetup{
+        height: auto;
+        padding-top: 50px;
+        padding-bottom: 50px;
     }
 }

@@ -10,9 +10,7 @@ const ProfileStepsFooter = ({ buttonText, step, handleNextStep, handleDataSubmit
             variant="contained" 
             className="stepsFooter__btn">{buttonText}</Button>
         {/* change p tag to <Link to="/dashboard">Set up later</Link> */}
-        {step !== 3
-            ? <p className="stepsFooter__link">Set up later</p> 
-            : <p className="stepsFooter__link">&nbsp;</p> }
+        <p className="stepsFooter__link">&nbsp;</p>
     </Box>
 )
 
