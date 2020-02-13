@@ -1,11 +1,14 @@
 // importing modules
 import React from 'react';
 import { Box, MenuItem, Select, Typography } from '@material-ui/core';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { green, red } from '@material-ui/core/colors';
 // importing components
 import ProfileStepHeader from '../../ProfileStepsHeader/ProfileStepsHeader';
 import ProfileStepFooter from '../../ProfileStepsFooter/ProfileStepsFooter';
 
-const ProfileStep1 = ({ step, timezone, handleNextStep, handleUserInput }) => {
+const ProfileStep1 = ({ exists, step, username, timezone, handleNextStep, handleUserInput, handleUsernameCheck }) => {
     return(
     <Box boxShadow={3} className="step1">
         <ProfileStepHeader
@@ -20,11 +23,15 @@ const ProfileStep1 = ({ step, timezone, handleNextStep, handleUserInput }) => {
                         <p className="step1__form--input--placeholder">calendapp.com/</p>
                         {/*add event handler to check for available unique usernames*/}
                         <input 
-                            onChange={handleUserInput}
+                            onChange={handleUsernameCheck}
                             className="step1__form--input" 
                             name="username"
                             autoComplete="off"
-                            type="text"/>
+                            value={username}
+                            type="text"
+                        />
+                        { username.length > 0 && exists === false ? <CheckCircleIcon style={{ color: green[500] }} /> : null }
+                        { username.length > 0 && exists === true ? <CancelIcon style={{ color: red[800] }} /> : null }
                     </Box>
                 </Box>
                 <Box className="step1__form--select--wrap">
@@ -52,7 +59,8 @@ const ProfileStep1 = ({ step, timezone, handleNextStep, handleUserInput }) => {
         <ProfileStepFooter 
             handleNextStep={handleNextStep}
             buttonText="Continue"
-            displayLink={true}
+            username={username}
+            exists={exists}
         />
     </Box>
     )

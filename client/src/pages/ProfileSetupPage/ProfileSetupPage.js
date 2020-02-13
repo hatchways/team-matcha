@@ -23,7 +23,8 @@ class ProfileSetupPage extends Component {
                 thursday: false,
                 friday: false,
                 saturday: false
-            }
+            },
+            exists: false,
         }
     }
 
@@ -42,7 +43,7 @@ class ProfileSetupPage extends Component {
     handleUserInput = (e) => {
         const { value, name } = e.target;
         this.setState({ [name]: value });
-    }
+    };
 
     // method: gets the users checkbox values
     handleCheckbox = (e) => {
@@ -56,24 +57,47 @@ class ProfileSetupPage extends Component {
                 } 
             }
         });
-    }
+    };
+
+    // method: validates if username is unique
+    handleUsernameCheck = (e) => {
+        const { value, name } = e.target;
+        this.setState({ [name]: value });
+        
+        const userExists = this.state.users.find((user) => user.username.toLowerCase() === value.toLowerCase());
+        
+        if(userExists) {
+            this.setState((prevState) => {
+                return {
+                    exists: !prevState.exists,
+                }
+            });
+        } else {
+            this.setState({ exists: false });
+        }
+    };
 
     handleDataSubmit = () => {
         // submit data to the server
-    }
+    };
 
     render(){
-        const { step, timezone, timeAvlFrom, timeAvlUntil, daysAvl } = this.state;
+        const { step, timezone, 
+                timeAvlFrom, timeAvlUntil, 
+                daysAvl, exists, username } = this.state;
         let stepComponent;
 
         switch(step) {
             case 1:
                 stepComponent = (
                     <ProfileStep1
+                    exists={exists}
                     step={step}
                     timezone={timezone}
+                    username={username}
                     handleNextStep={this.handleNextStep}
                     handleUserInput={this.handleUserInput}
+                    handleUsernameCheck={this.handleUsernameCheck}
                     />
                 );
                 break;
@@ -103,10 +127,13 @@ class ProfileSetupPage extends Component {
             default:
                 stepComponent = (
                     <ProfileStep1 
+                    exists={exists}
                     step={step}
                     timezone={timezone}
+                    username={username}
                     handleNextStep={this.handleNextStep}
                     handleUserInput={this.handleUserInput}
+                    handleUsernameCheck={this.handleUsernameCheck}
                     />
                 );
         }

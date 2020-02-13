@@ -8,6 +8,13 @@
         background-color: $primary !important;
         color: whitesmoke !important;
         padding: 16px 64px !important;
+        &:hover{
+            cursor: pointer;
+        }
+        &:disabled{
+            background-color: #ffb74d !important;
+            cursor: not-allowed !important;
+        }
     }
     &__link{
         color: $off-black;
