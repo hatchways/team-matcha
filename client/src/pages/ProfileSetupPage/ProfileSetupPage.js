@@ -13,7 +13,7 @@ class ProfileSetupPage extends Component {
         super(props);
         this.state = {
             step: 1,
-            username: '',
+            userUrl: '',
             timezoneName: momentTZ.tz.guess(true),
             timeAvlFrom: '', 
             timeAvlUntil: '',
@@ -28,10 +28,10 @@ class ProfileSetupPage extends Component {
             },
             exists: false,
             users: [ // test user data
-                {username: "john-doe"},
-                {username: "jane-doe"},
-                {username: "johnny-doe"},
-                {username: "janey-doe"}
+                {userUrl: "john-doe"},
+                {userUrl: "jane-doe"},
+                {userUrl: "johnny-doe"},
+                {userUrl: "janey-doe"}
             ],
             timezonesArr: momentTZ.tz.names()
         }
@@ -68,13 +68,13 @@ class ProfileSetupPage extends Component {
         });
     };
 
-    // method: validates if username is unique
-    handleUsernameCheck = (e) => {
+    // method: validates if userUrl is unique
+    handleUserUrlCheck = (e) => {
         const { value, name } = e.target;
         this.setState({ [name]: value });
         
         // test data
-        const userExists = this.state.users.find((user) => user.username.toLowerCase() === value.toLowerCase());
+        const userExists = this.state.users.find((user) => user.userUrl.toLowerCase() === value.toLowerCase());
         
         if(userExists) {
             this.setState((prevState) => {
@@ -91,7 +91,7 @@ class ProfileSetupPage extends Component {
     handleDataSubmit = () => {
         const currentDate = momentTZ().format('YYYY-MM-D');
         const data = { // data to be sent to the server
-            username: this.state.username,
+            userUrl: this.state.userUrl,
             timezoneName: this.state.timezoneName,
             utcOffset: momentTZ(currentDate).tz(this.state.timezoneName).format('Z'),
             timeAvlFrom: this.state.timeAvlFrom, 
@@ -104,7 +104,7 @@ class ProfileSetupPage extends Component {
     render(){
         const { step, timezoneName, 
                 timeAvlFrom, timeAvlUntil, 
-                daysAvl, exists, username } = this.state;
+                daysAvl, exists, userUrl } = this.state;
         let stepComponent;
 
         switch(step) {
@@ -115,17 +115,17 @@ class ProfileSetupPage extends Component {
                     step={step}
                     timezoneName={timezoneName}
                     timezonesArr={this.state.timezonesArr}
-                    username={username}
+                    userUrl={userUrl}
                     handleNextStep={this.handleNextStep}
                     handleUserInput={this.handleUserInput}
-                    handleUsernameCheck={this.handleUsernameCheck}
+                    handleUserUrlCheck={this.handleUserUrlCheck}
                     />
                 );
                 break;
             case 2:
                 stepComponent = (
                     <ProfileStep2
-                    username={username}
+                    userUrl={userUrl}
                     step={step}
                     handleNextStep={this.handleNextStep}
                     />
@@ -152,10 +152,10 @@ class ProfileSetupPage extends Component {
                     step={step}
                     timezoneName={timezoneName}
                     timezonesArr={this.state.timezonesArr}
-                    username={username}
+                    userUrl={userUrl}
                     handleNextStep={this.handleNextStep}
                     handleUserInput={this.handleUserInput}
-                    handleUsernameCheck={this.handleUsernameCheck}
+                    handleUserUrlCheck={this.handleUserUrlCheck}
                     />
                 );
         }
