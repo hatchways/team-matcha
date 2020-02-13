@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 flask = "*"
-flask-sqlalchemy = "==2.3.2"
+flask-sqlalchemy = ""
 psycopg2-binary = "*"
 flask-testing = "*"
 flask-restx = "*"
