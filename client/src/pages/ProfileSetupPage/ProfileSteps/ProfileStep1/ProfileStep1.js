@@ -24,7 +24,6 @@ const ProfileStep1 = ({ exists, step,
                     <Typography variant="body1" className="step1__form--label">Create your CalendApp URL:</Typography>
                     <Box className="step1__form--input--container">
                         <p className="step1__form--input--placeholder">calendapp.com/</p>
-                        {/*add event handler to check for available unique usernames*/}
                         <input 
                             onChange={handleUsernameCheck}
                             className="step1__form--input" 
@@ -39,7 +38,6 @@ const ProfileStep1 = ({ exists, step,
                 </Box>
                 <Box className="step1__form--select--wrap">
                     <Typography variant="body1" className="step1__form--label">Select your Time zone:</Typography>
-                    {/*change to a drop down list of time zones*/}
                     <div className="step1__form--select">
                         <Select
                         disableUnderline
@@ -62,16 +60,18 @@ const ProfileStep1 = ({ exists, step,
                             }
                         </Select>
                     </div>
-                    {/*change to a drop down list of time zones*/}
                 </Box>
             </Box>
         </Box>
+        { username.length > 0 && exists === false ? 
         <ProfileStepFooter 
             handleNextStep={handleNextStep}
             buttonText="Continue"
-            username={username}
-            exists={exists}
-        />
+        /> : <ProfileStepFooter 
+                handleNextStep={handleNextStep}
+                buttonText="Continue"
+                disableBtn={true}
+        /> }
     </Box>
     )
 };

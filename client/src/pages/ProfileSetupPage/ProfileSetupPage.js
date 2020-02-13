@@ -31,7 +31,7 @@ class ProfileSetupPage extends Component {
                 {username: "john-doe"},
                 {username: "jane-doe"},
                 {username: "johnny-doe"},
-                {username: "janey-doe"},
+                {username: "janey-doe"}
             ],
             timezonesArr: momentTZ.tz.names()
         }
@@ -45,7 +45,7 @@ class ProfileSetupPage extends Component {
         }
         this.setState((prevState) => {
             return { step: prevState.step + 1 }
-        }, () => console.log(this.state));
+        });
     };
 
     // method: gets the users text-input & dropwDown selection values
@@ -137,10 +137,11 @@ class ProfileSetupPage extends Component {
                 break;
             default:
                 stepComponent = (
-                    <ProfileStep1 
+                    <ProfileStep1
                     exists={exists}
                     step={step}
                     timezone={timezone}
+                    timezonesArr={this.state.timezonesArr}
                     username={username}
                     handleNextStep={this.handleNextStep}
                     handleUserInput={this.handleUserInput}

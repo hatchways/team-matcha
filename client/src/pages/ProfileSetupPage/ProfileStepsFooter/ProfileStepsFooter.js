@@ -3,10 +3,11 @@ import React from 'react';
 // import { Link } from 'react-router-dom';
 import { Box, Button } from '@material-ui/core';
 
-const ProfileStepsFooter = ({ buttonText, exists, step, username, handleNextStep, handleDataSubmit }) => {
+const ProfileStepsFooter = ({ buttonText, disableBtn, step, handleNextStep, handleDataSubmit }) => {
     return (
     <Box className="stepsFooter">
         <Button 
+            disabled={disableBtn}
             onClick={step === 3 ? handleDataSubmit : handleNextStep}
             variant="contained" 
             className="stepsFooter__btn">{buttonText}</Button>
