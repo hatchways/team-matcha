@@ -16,7 +16,7 @@ const ProfileStep1 = ({ exists, step, username, timezone, handleNextStep, handle
             text="Welcome to CalendApp!" 
         />
         <Box className="step1__form--wrap">
-            <form className="step1__form">
+            <Box className="step1__form">
                 <Box className="step1__form--input--wrap">
                     <Typography variant="body1" className="step1__form--label">Create your CalendApp URL:</Typography>
                     <Box className="step1__form--input--container">
@@ -54,7 +54,7 @@ const ProfileStep1 = ({ exists, step, username, timezone, handleNextStep, handle
                     </div>
                     {/*change to a drop down list of time zones*/}
                 </Box>
-            </form>
+            </Box>
         </Box>
         <ProfileStepFooter 
             handleNextStep={handleNextStep}
