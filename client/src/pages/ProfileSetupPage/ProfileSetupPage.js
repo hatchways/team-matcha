@@ -25,7 +25,7 @@ class ProfileSetupPage extends Component {
                 saturday: false
             },
             exists: false,
-            users: [ // test data
+            users: [ // test user data
                 {username: "john-doe"},
                 {username: "jane-doe"},
                 {username: "johnny-doe"},
