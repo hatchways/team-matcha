@@ -4,8 +4,9 @@ from project.api.models import Availability
 from project.test.test_base import TestBase
 
 
-def add_availability(sunday, monday, tuesday, wednesday, thursday, friday,
-                     saturday, start, end):
+def add_availability(sunday=False, monday=True, tuesday=True, wednesday=True,
+                     thursday=True, friday=True, saturday=False,
+                     start=dt.time(8), end=dt.time(17)):
     availability = Availability(sunday, monday, tuesday, wednesday, thursday,
                                 friday, saturday, start, end)
     db.session.add(availability)
@@ -24,8 +25,7 @@ class AvailabilityModelTest(TestBase):
         saturday = False
         start = dt.time(8)
         end = dt.time(17)
-        add_availability(sunday, monday, tuesday, wednesday, thursday, friday,
-                         saturday, start, end)
+        add_availability()
         availability = Availability.query.filter_by(start=start).first()
         self.assertEqual(availability.sunday, sunday)
         self.assertEqual(availability.monday, monday)
