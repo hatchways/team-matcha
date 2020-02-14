@@ -39,7 +39,7 @@ class Availability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sunday = db.Column(db.Boolean, nullable=False)
     monday = db.Column(db.Boolean, nullable=False)
-    tuedsay = db.Column(db.Boolean, nullable=False)
+    tuesday = db.Column(db.Boolean, nullable=False)
     wednesday = db.Column(db.Boolean, nullable=False)
     thursday = db.Column(db.Boolean, nullable=False)
     friday = db.Column(db.Boolean, nullable=False)
