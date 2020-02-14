@@ -1,0 +1,11 @@
+// importing base styles
+@import './base/index.scss';
+@import './base/settings.scss';
+@import './base/mixins.scss';
+// importing component stylesheets
+@import './components/ProfileSetup.scss';
+@import './components/ProfileStepsHeader.scss';
+@import './components/ProfileStepsFooter.scss';
+@import './components/ProfileStep1.scss';
+@import './components/ProfileStep2.scss';
+@import './components/ProfileStep3.scss';

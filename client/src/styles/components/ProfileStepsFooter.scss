@@ -1,0 +1,22 @@
+// step1 footer
+.stepsFooter{
+    @include applyFlex(center, center, column);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+    &__btn{
+        background-color: $primary !important;
+        color: whitesmoke !important;
+        padding: 16px 64px !important;
+        &:hover{
+            cursor: pointer;
+        }
+        &:disabled{
+            background-color: #ffb74d !important;
+            cursor: not-allowed !important;
+        }
+    }
+    &__link{
+        color: $off-black;
+    }
+}

@@ -1,0 +1,13 @@
+// mixin for using flex-box
+@mixin applyFlex($align, $justify, $direction: row) {
+    align-items: $align;
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+}
+
+// semi-round solid 1px border
+@mixin solid1pxBorder {
+    border: solid 1px $off-white;
+    border-radius: 5px;
+}

@@ -1,0 +1,119 @@
+.step3{
+    background-color: #fff;
+    width: 80%;
+
+    &__content{
+        @include applyFlex(center, center, column);
+        width: 100%;
+
+        &--hours{
+            @include applyFlex(center, center, column);
+            padding-top: 35px;
+            padding-bottom: 5px;
+            width: 80%;
+
+            &--values{
+                @include applyFlex(flex-start, flex-start);
+                width: 100%;
+            }
+            &--title{
+                font-weight: $bold-text;
+                margin-bottom: 10px !important;
+                width: 100%;
+            }
+            
+            &--select{
+                @include solid1pxBorder;
+                font-size: 2rem;
+                padding: 12px 32px;
+                & *{
+                    font-weight: $bold-text;
+                    color: black;
+                }
+
+            }
+
+            &--span{
+                color: black;
+                font-size: 2rem;
+                padding: 12px 24px;
+                font-weight: $bold-text;
+            }
+        }
+
+        &--days{
+            @include applyFlex(center, center, column);
+            padding-top: 35px;
+            padding-bottom: 60px;
+            width: 80%;
+
+            &--title{
+                font-weight: $bold-text;
+                margin-bottom: 10px !important;
+                width: 100%;
+            }
+            &--list{
+                @include applyFlex(center, space-between);
+                @include solid1pxBorder;
+                width: 100%;
+            }
+            &--item{
+                text-align: center;
+                padding: 16px 16px;
+                flex: 1;
+                border-right: solid 1px $off-white;
+            }
+        }
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .step3{
+        width: 90%;
+        &__content{
+            &--hours{
+                text-align: center;
+                &--values{
+                    @include applyFlex(center, center, column);
+                }
+                &--select{
+                    width: 50%;
+                }
+            }
+            
+            &--days{
+                &--list{
+                    overflow-x: scroll;
+                }
+            }
+        }
+    }
+}
+
+// Extra small devices (landscape phones, less than 576px)
+@media (max-width: 575.98px) and (orientation: landscape){
+    .step3{
+        width: 90%;
+        &__content{
+            &--days{
+                &--list{
+                    overflow-x: scroll;
+                }
+            }
+        }
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 576px) and (max-width: 1199.98px) {
+    .step3{
+        &__content{
+            &--days{
+                &--list{
+                    overflow-x: scroll;
+                }
+            }
+        }
+    }
+}

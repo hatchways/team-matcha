@@ -1,0 +1,233 @@
+.step1{
+    background-color: #fff;
+    width: 80%;
+
+    // step1 form
+    &__form--wrap{
+        @include applyFlex(center, center);
+        width: 100%;
+    }
+    &__form{
+        @include applyFlex(center, center, column);
+        padding-bottom: 90px;
+        padding-top: 90px;
+        width: 80%;
+
+        &--input--wrap{
+            @include applyFlex(center, flex-start);
+            margin-left: 80px;
+            margin-bottom: 50px;
+            position: relative;
+            width: 100%;
+
+        }
+        &--label{
+            color: black;
+            font-weight: $bold-text;
+        }
+        &--input--container{
+            @include applyFlex(center, flex-start);
+            @include solid1pxBorder;
+            margin-left: 20px;
+            outline: none;
+            padding: 24px 16px;
+            position: relative;
+            width: 60%;
+        }
+        &--input{
+            border: none;
+            font-size: 1.2rem;
+            font-weight: $bold-text;
+            margin-left: 25px;
+            outline: none;
+            overflow: hidden;
+            width: 60%;
+            &--placeholder{
+                color: $off-black;
+                font-size: 1.2rem;
+                font-weight: $bold-text;
+                border-right: solid 1px $off-black;
+                padding-right: 25px;
+                margin: 0;
+                text-align: left;
+            }
+            &--icon{
+                animation:  animateIcon .75s linear;
+                transition: all .75s ease-out;
+            }
+        }
+
+        &--select--wrap{
+            @include applyFlex(center, flex-start);
+            margin-left: 80px;
+            width: 100%;
+        }
+        &--select{
+            @include solid1pxBorder;
+            font-size: 2rem;
+            margin-left: 60px;
+            padding-left: 10px;
+            padding-right: 10px;
+            &--text{
+                font-size: 1.2rem;
+                font-weight: $bold-text;
+                &--span{
+                    color: $off-black;
+                }
+            }
+        }
+    }
+}
+
+// opacity animation
+@keyframes animateIcon {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .step1{
+        width: 90%;
+        &__form{
+            padding-bottom: 40px;
+            padding-top: 40px;
+            width: 90%;
+            &--label{
+                margin-bottom: 20px !important;
+            }
+            &--input{
+                font-size: 1rem;
+                margin-left: 20px;
+                width: 60%;
+                &--placeholder{
+                    font-size: 1rem;
+                    padding-right: 20px;
+                }
+                
+            }
+            &--input--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--input--container{
+                margin-left: 0;
+                width: 80%;
+            }
+            &--select--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--select{
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+// Extra small devices (lanscape phones, less than 576px)
+@media (max-width: 575.98px) and (orientation: landscape) {
+    .step1{
+        width: 90%;
+        &__form{
+            padding-bottom: 40px;
+            padding-top: 40px;
+            width: 90%;
+            &--label{
+                margin-bottom: 20px !important;
+            }
+            &--input{
+                font-size: 1rem;
+                margin-left: 20px;
+                width: 60%;
+                &--placeholder{
+                    font-size: 1rem;
+                    padding-right: 20px;
+                }
+                
+            }
+            &--input--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--input--container{
+                margin-left: 0;
+                width: 80%;
+            }
+            &--select--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--select{
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .step1{
+        &__form{
+            padding-bottom: 40px;
+            padding-top: 40px;
+            width: 90%;
+            &--label{
+                margin-bottom: 20px !important;
+            }
+            &--input{
+                font-size: 1rem;
+                margin-left: 20px;
+                width: 60%;
+                &--placeholder{
+                    font-size: 1rem;
+                    padding-right: 20px;
+                }
+                
+            }
+            &--input--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--input--container{
+                margin-left: 0;
+                width: 80%;
+            }
+            &--select--wrap{
+                @include applyFlex(center, flex-star, column);
+                margin-left: 0;
+            }
+            &--select{
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .step1{
+        &__form{
+            width: 90%;
+            &--input{
+                font-size: 1rem;
+                margin-left: 20px;
+                width: 60%;
+                &--placeholder{
+                    font-size: 1rem;
+                    padding-right: 20px;
+                }
+                
+            }
+            &--input--wrap{
+                margin-left: 20px;
+            }
+            &--select--wrap{
+                margin-left: 20px;
+            }
+            &--select{
+                margin-left: 40px;
+            }
+        }
+    }
+}
