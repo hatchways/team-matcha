@@ -9,6 +9,7 @@ def add_availability(sunday=False, monday=True, tuesday=True, wednesday=True,
                      start=dt.time(8), end=dt.time(17)):
     availability = Availability(sunday, monday, tuesday, wednesday, thursday,
                                 friday, saturday, start, end)
+    """Commits a row to the availability table."""
     db.session.add(availability)
     db.session.commit()
     return availability
