@@ -10,7 +10,7 @@ users_blueprint = Blueprint('users', __name__)
 def add_user(params):
     name = params['name']
     email = params['email']
-    user = User(public_id=uuid.uuid4(), name=name, email=email)
+    user = User(name=name, email=email)
     db.session.add(user)
     db.session.commit()
     return user
