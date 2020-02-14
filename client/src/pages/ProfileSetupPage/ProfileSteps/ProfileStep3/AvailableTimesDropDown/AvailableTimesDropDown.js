@@ -12,30 +12,7 @@ const AvailableTimesDropDown = ({timeAvlFrom, timeAvlUntil, handleUserInput}) =>
             name="timeAvlFrom"
             value={timeAvlFrom}
             >
-                <MenuItem value={0}>00:00</MenuItem>
-                <MenuItem value={1}>01:00</MenuItem>
-                <MenuItem value={2}>02:00</MenuItem>
-                <MenuItem value={3}>03:00</MenuItem>
-                <MenuItem value={4}>04:00</MenuItem>
-                <MenuItem value={5}>05:00</MenuItem>
-                <MenuItem value={6}>06:00</MenuItem>
-                <MenuItem value={7}>07:00</MenuItem>
-                <MenuItem value={8}>08:00</MenuItem>
-                <MenuItem value={9}>09:00</MenuItem>
-                <MenuItem value={10}>10:00</MenuItem>
-                <MenuItem value={11}>11:00</MenuItem>
-                <MenuItem value={12}>12:00</MenuItem>
-                <MenuItem value={13}>13:00</MenuItem>
-                <MenuItem value={14}>14:00</MenuItem>
-                <MenuItem value={15}>15:00</MenuItem>
-                <MenuItem value={16}>16:00</MenuItem>
-                <MenuItem value={17}>17:00</MenuItem>
-                <MenuItem value={18}>18:00</MenuItem>
-                <MenuItem value={19}>19:00</MenuItem>
-                <MenuItem value={20}>20:00</MenuItem>
-                <MenuItem value={21}>21:00</MenuItem>
-                <MenuItem value={22}>22:00</MenuItem>
-                <MenuItem value={23}>23:00</MenuItem>
+            {[...Array(24).keys()].map(t => <MenuItem key={t} value={t}> {("00" + t).slice (-2) + ":00"}</MenuItem>) }
             </Select>
             </Box>
             <div className="step3__content--hours--span">&mdash;</div>
@@ -46,30 +23,7 @@ const AvailableTimesDropDown = ({timeAvlFrom, timeAvlUntil, handleUserInput}) =>
             name="timeAvlUntil"
             value={timeAvlUntil}
             >
-                <MenuItem value={0}>00:00</MenuItem>
-                <MenuItem value={1}>01:00</MenuItem>
-                <MenuItem value={2}>02:00</MenuItem>
-                <MenuItem value={3}>03:00</MenuItem>
-                <MenuItem value={4}>04:00</MenuItem>
-                <MenuItem value={5}>05:00</MenuItem>
-                <MenuItem value={6}>06:00</MenuItem>
-                <MenuItem value={7}>07:00</MenuItem>
-                <MenuItem value={8}>08:00</MenuItem>
-                <MenuItem value={9}>09:00</MenuItem>
-                <MenuItem value={10}>10:00</MenuItem>
-                <MenuItem value={11}>11:00</MenuItem>
-                <MenuItem value={12}>12:00</MenuItem>
-                <MenuItem value={13}>13:00</MenuItem>
-                <MenuItem value={14}>14:00</MenuItem>
-                <MenuItem value={15}>15:00</MenuItem>
-                <MenuItem value={16}>16:00</MenuItem>
-                <MenuItem value={17}>17:00</MenuItem>
-                <MenuItem value={18}>18:00</MenuItem>
-                <MenuItem value={19}>19:00</MenuItem>
-                <MenuItem value={20}>20:00</MenuItem>
-                <MenuItem value={21}>21:00</MenuItem>
-                <MenuItem value={22}>22:00</MenuItem>
-                <MenuItem value={23}>23:00</MenuItem>
+            {[...Array(24).keys()].map(t => <MenuItem key={t} value={t}> {("00" + t).slice (-2) + ":00"}</MenuItem>) }
             </Select>
             </Box>
         </div>
