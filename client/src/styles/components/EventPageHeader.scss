@@ -1,0 +1,40 @@
+.eventPageHeader{
+    @include applyFlex(center, center);
+    width: 100%;
+
+    &__container{
+        @include applyFlex(flex-start, space-between);
+        padding: 32px 12px;
+        width: 80%;
+    }
+
+    &__profile{
+        @include applyFlex(center, center);
+        &--img{
+            border-radius: 100px;
+            height: 50px;
+            width: 50px;
+        }
+        &--text{
+            margin-left: 25px;
+            &--name{
+                font-weight: $bold-text;
+            }
+            &--url{
+                color:  rgba(69, 69, 69, 0.66);
+            }
+        }
+    }
+
+    &__btn{
+        background: none;
+        border: solid 1px $primary !important;
+        color: $primary !important;
+        padding: 12px 32px !important;
+        transition: all .75s ease !important;
+        &:hover{
+            background-color: $primary !important;
+            color: whitesmoke !important;
+        }
+    }
+}

@@ -1,0 +1,39 @@
+.subNavigation{
+    @include applyFlex(center, center);
+    width: 100%;
+
+    &__container{
+        @include applyFlex(flex-start, flex-end, column);
+        padding-top: 40px;
+        padding-bottom: 15px;
+        width: 80%;
+    }
+
+    &__title{
+        font-weight: $bold-text;
+        margin-bottom: 30px !important;
+    }
+
+    &__nav{
+        width: 100%;
+        &--link{
+            color: black;
+            font-weight: $bold-text;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            width: 100%;
+            &--right{
+                margin-left: 25px;
+            }
+            &--isActive{
+                color: $primary;
+                border-bottom: solid 5px $primary;
+            }
+            &:hover{
+                color: $primary;
+                border-bottom: solid 5px $primary;
+            }
+        }
+    }
+}
