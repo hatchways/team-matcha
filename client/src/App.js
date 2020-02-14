@@ -4,7 +4,7 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { theme } from "./themes/theme";
 // importing components
-import LandingPage from "./pages/Landing";
+import LoginPage from "./pages/LoginPage/LoginPage";
 import ProfileSetupPage from "./pages/ProfileSetupPage/ProfileSetupPage";
 // importing stylesheet
 import "./App.css";
@@ -19,7 +19,7 @@ class App extends Component{
           path="/"
           exact
           render={props => (
-            <LandingPage
+            <LoginPage
               {...props}
             />
         )} 
