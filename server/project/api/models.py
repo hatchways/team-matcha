@@ -5,6 +5,7 @@ import jwt
 import datetime
 from project.error_handlers import *
 
+
 class User(db.Model):
     __tablename__ = "users"
 
@@ -63,24 +64,6 @@ class User(db.Model):
             return e
 
 
-class Timezone(db.Model):
-    __tablename__ = "timezones"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, nullable=False)
-    hours = db.Column(db.Integer, nullable=False)
-    minutes = db.Column(db.Integer)
-    dst_hours = db.Column(db.Integer, nullable=False)
-    dst_minutes = db.Column(db.Integer)
-
-    def __init__(self, name, hours, minutes, dst_hours, dst_minutes):
-        self.name = name
-        self.hours = hours
-        self.minutes = minutes
-        self.dst_hours = dst_hours
-        self.dst_minutes = dst_minutes
-
-
 class Availability(db.Model):
     __tablename__ = 'availability'
 
@@ -106,6 +89,47 @@ class Availability(db.Model):
         self.saturday = saturday
         self.start = start
         self.end = end
+
+
+class Timezone(db.Model):
+    __tablename__ = "timezones"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True, nullable=False)
+    hours = db.Column(db.Integer, nullable=False)
+    minutes = db.Column(db.Integer)
+    dst_hours = db.Column(db.Integer, nullable=False)
+    dst_minutes = db.Column(db.Integer)
+
+    def __init__(self, name, hours, minutes, dst_hours, dst_minutes):
+        self.name = name
+        self.hours = hours
+        self.minutes = minutes
+        self.dst_hours = dst_hours
+        self.dst_minutes = dst_minutes
+
+
+class Event(db.Model):
+    __tablename__ = 'events'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), nullable=False)
+    location = db.Column(db.String(256))
+    description = db.Column(db.String(1024))
+    url = db.Column(db.String(32), nullable=False, unique=True)
+    user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable=True)
+    availability_id = db.Column(db.Integer, ForeignKey('availability.id'),
+                                nullable=False)
+
+    def __init__(self, name, location, description, url, user_id,
+                 availability_id):
+        self.name = name
+        self.location = location
+        self.description = description
+        self.url = url
+        self.user_id = user_id
+        self.availability_id = availability_id
+
 
 class BlacklistToken(db.Model):
     """
