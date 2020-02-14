@@ -44,8 +44,8 @@ class Availability(db.Model):
     thursday = db.Column(db.Boolean, nullable=False)
     friday = db.Column(db.Boolean, nullable=False)
     saturday = db.Column(db.Boolean, nullable=False)
-    start = db.Column(db.Time)
-    end = db.Column(db.Time)
+    start = db.Column(db.Time, nullable=False)
+    end = db.Column(db.Time, nullable=False)
 
     def __init__(self, sunday, monday, tuesday, wednesday, thursday, friday,
                  saturday, start, end):
