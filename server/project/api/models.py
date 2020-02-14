@@ -31,3 +31,30 @@ class Timezone(db.Model):
         self.minutes = minutes
         self.dst_hours = dst_hours
         self.dst_minutes = dst_minutes
+
+
+class Availability(db.Model):
+    __tablename__ = 'availability'
+
+    id = db.Column(db.Integer, primary_key=True)
+    sunday = db.Column(db.Boolean, nullable=False)
+    monday = db.Column(db.Boolean, nullable=False)
+    tuedsay = db.Column(db.Boolean, nullable=False)
+    wednesday = db.Column(db.Boolean, nullable=False)
+    thursday = db.Column(db.Boolean, nullable=False)
+    friday = db.Column(db.Boolean, nullable=False)
+    saturday = db.Column(db.Boolean, nullable=False)
+    start = db.Column(db.Time)
+    end = db.Column(db.Time)
+
+    def __init__(self, sunday, monday, tuesday, wednesday, thursday, friday,
+                 saturday, start, end):
+        self.sunday = sunday
+        self.monday = monday
+        self.tuesday = tuesday
+        self.wednesday = wednesday
+        self.thursday = thursday
+        self.friday = friday
+        self.saturday = saturday
+        self.start = start
+        self.end = end
