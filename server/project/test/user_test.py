@@ -6,8 +6,13 @@ from project.test.test_base import TestBase
 import uuid
 
 
+<<<<<<< HEAD
 def add_user(name='kenny', email='test@email.com'):
     user = User(public_id=uuid.uuid4(), name=name, email=email)
+=======
+def add_user(name, email):
+    user = User(name=name, email=email)
+>>>>>>> client sends google id_token to server
     db.session.add(user)
     db.session.commit()
     return user
