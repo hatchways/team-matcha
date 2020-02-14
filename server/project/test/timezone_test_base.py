@@ -21,6 +21,9 @@ def seed_timezones():
 
 
 class TimezoneTestBase(unittest.TestCase):
+    """Test base to be used whenever timezones are needed. This test base will
+    populate the timezones table and will significantly add to the time
+    required to run a test."""
     def create_app(self):
         app.config.from_object('project.config.TestingConfig')
         return app
