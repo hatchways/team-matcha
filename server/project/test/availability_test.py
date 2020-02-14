@@ -28,6 +28,7 @@ class AvailabilityModelTest(TestBase):
         end = dt.time(17)
         add_availability()
         availability = Availability.query.filter_by(start=start).first()
+
         self.assertEqual(availability.sunday, sunday)
         self.assertEqual(availability.monday, monday)
         self.assertEqual(availability.tuesday, tuesday)
