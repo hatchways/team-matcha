@@ -8,9 +8,10 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import ProfileSetupPage from "./pages/ProfileSetupPage/ProfileSetupPage";
 import Dashboard from './pages/Dashboard/Dashboard';
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
+import UpgradePage from "./pages/UpgradePage/UpgradePage";
 // importing stylesheet
 import "./App.css";
-import UpgradePage from "./pages/UpgradePage/UpgradePage";
+
 
 class App extends Component{
   render(){
