@@ -23,6 +23,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 #Prevents Python from buffering stdout and stderr (equivalent to python -u option)
 ENV PYTHONUNBUFFERED 1
 
+# Creating Time
+CMD python manage.py seed_timezones
 
 COPY . /usr/src/app
 
