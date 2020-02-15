@@ -49,7 +49,11 @@ class Login(Resource):
 
             # Create and send session token
             jwt_token = user.encode_auth_token(user.id)
-            return {'token': jwt_token.decode('UTF-8')}, 200
+            return {
+                'status': 'success',
+                'message': 'Successfully logged in',
+                'auth_token': jwt_token.decode('UTF-8')
+            }, 200
         except ValueError:
             # Invalid token
             return {'message': 'ValueError'}, 401
