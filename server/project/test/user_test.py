@@ -4,6 +4,8 @@ from project import db
 from project.api.models import User
 from project.test.test_base import TestBase
 import uuid
+from unittest.mock import Mock, patch
+from google.oauth2 import id_token
 
 
 def add_user(name, email):
@@ -19,6 +21,9 @@ class UserModelTest(TestBase):
         email = "test@email.com"
         add_user(name, email)
         user = User.query.filter_by(name=name).first()
+        auth_token = user.encode_auth_token(user.id)
+
+        self.assertTrue(isinstance(auth_token, bytes))
 
         self.assertEqual(user.name, name)
 
@@ -62,6 +67,7 @@ class UserCreateTest(TestBase):
 
 
 class UserGetTest(TestBase):
+
     def test_get_user(self):
         name = "Joe"
         email = "joe@email.com"

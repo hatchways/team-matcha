@@ -40,6 +40,7 @@ class UserList(Resource):
 
     @api.marshal_with(user_output, as_list=True,
                       envelope='data')  #output validation
+    @token_required
     def get(self):
         return User.query.all(), 200
 
@@ -47,9 +48,20 @@ class UserList(Resource):
 @api.route('/users/<public_id>')
 class Users(Resource):
     @api.marshal_with(user_output, envelope='data')  #output validation
-    # @token_required
     def get(self, public_id):
         user = User.query.filter_by(public_id=public_id).first()
         if not user:
             abort(400, "User not Found!")
         return user, 200
+
+
+@api.route('/users/details')
+class UserDetail(Resource):
+    @api.marshal_with(user_output, envelope='data')  #output validation
+    @token_required
+    def get(self, current_user):
+        if current_user:
+            return current_user, 200
+        else:
+            abort(400, "User not Found!")
+
