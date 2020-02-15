@@ -2,7 +2,7 @@ from flask import Blueprint, abort
 from flask_restx import Resource, fields
 from project import db, api
 from project.api.models import User
-import uuid
+from project.decorators import token_required
 
 users_blueprint = Blueprint('users', __name__)
 
@@ -47,6 +47,7 @@ class UserList(Resource):
 @api.route('/users/<public_id>')
 class Users(Resource):
     @api.marshal_with(user_output, envelope='data')  #output validation
+    # @token_required
     def get(self, public_id):
         user = User.query.filter_by(public_id=public_id).first()
         if not user:

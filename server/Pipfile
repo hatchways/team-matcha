@@ -15,6 +15,7 @@ python-dotenv = "*"
 google-auth = "*"
 requests = "*"
 oauthlib = "==3.0.1"
+pyjwt = "*"
 
 
 

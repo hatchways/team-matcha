@@ -1,24 +1,27 @@
+import datetime
+
+import jwt
 from flask import Blueprint, current_app
 from flask_restx import Resource, fields
 from google.auth.transport import requests
 from google.oauth2 import id_token
-from project import api
+from project import api, db
 from project.api.models import User
+from project.api.users_handler import add_user
 
 login_blueprint = Blueprint('login', __name__)
 
 login_input = api.model('login', {
-    'tokenId': fields.Raw(required=False),
+    'tokenId': fields.Raw(required=True),
 })
 
 
 @api.route('/login')
 class Login(Resource):
-    # @api.expect(login_input, validate=False)  #input validation
+    @api.expect(login_input)  #input validation
     def post(self):
         # (Receive token by HTTPS POST)
         data = api.payload
-        print(data)
         token = data['tokenId']
         try:
             # Specify the CLIENT_ID of the app that accesses the backend:
@@ -33,10 +36,26 @@ class Login(Resource):
 
             # ID token is valid. Get the user's Google Account ID from the decoded token.
             userid = idinfo['sub']
-
             #Query for user
-            user = User.query.filter_by(google_id=userid)
-            return idinfo, 200
+            user = User.query.filter_by(google_id=userid).first()
+            if not user:
+                user = {
+                    'name': idinfo['name'],
+                    'email': idinfo['email'],
+                }
+                user = add_user(user)
+                user.google_id = userid
+                db.session.commit()
+
+            # Create and send session token
+            jwt_token = jwt.encode(
+                {
+                    'public_id':
+                    user.public_id,
+                    'exp':
+                    datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+                }, current_app.config['SECRET_KEY'])
+            return {'token': jwt_token.decode('UTF-8')}, 200
         except ValueError:
             # Invalid token
             return {'message': 'ValueError'}, 401
