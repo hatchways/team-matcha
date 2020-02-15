@@ -1,4 +1,5 @@
 import React from 'react';
+import copy from 'clipboard-copy';
 import { Button, Box, Typography } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ScheduleIcon from '@material-ui/icons/Schedule';
@@ -24,7 +25,7 @@ const EventPageCard = ({ eventDuration, eventLink, eventName, eventType, eventCo
                 </Typography>
             </Box>
             <Button 
-                value={eventLink} 
+                onClick={() => copy(eventLink)}
                 className="eventCard__event--btn">COPY LINK</Button>
         </Box>
     </Box>
