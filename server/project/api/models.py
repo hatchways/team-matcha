@@ -119,7 +119,7 @@ class Event(db.Model):
     location = db.Column(db.String(256))
     description = db.Column(db.String(1024))
     url = db.Column(db.String(32), nullable=False, unique=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     availability_id = db.Column(db.Integer, db.ForeignKey('availability.id'),
                                 nullable=False)
 
