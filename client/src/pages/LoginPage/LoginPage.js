@@ -33,25 +33,6 @@ class LoginPage extends React.Component {
         .catch(err => (err));
         }
 
-  //   handleGoogleAuth = async (res) => {
-  //   try {
-  //     const response = await fetch('/login', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({
-  //         access_token: res.accessToken,
-  //         profileObj: res.profileObj
-  //       })
-  //     });
-  //     const token = await response.json()['tokenId'];
-  //     console.log(token);
-  //   } catch(err) {
-  //     alert(err);
-  //   }
-  // };
-
 
     render(){
         return(
