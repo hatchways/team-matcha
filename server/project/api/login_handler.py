@@ -48,13 +48,7 @@ class Login(Resource):
                 db.session.commit()
 
             # Create and send session token
-            jwt_token = jwt.encode(
-                {
-                    'public_id':
-                    user.public_id,
-                    'exp':
-                    datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
-                }, current_app.config['SECRET_KEY'])
+            jwt_token = user.encode_auth_token(user.id)
             return {'token': jwt_token.decode('UTF-8')}, 200
         except ValueError:
             # Invalid token

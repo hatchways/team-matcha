@@ -1,5 +1,8 @@
 from project import db
+from flask import current_app
 import uuid
+import jwt
+import datetime
 
 
 class User(db.Model):
@@ -15,3 +18,19 @@ class User(db.Model):
         self.public_id = uuid.uuid4()
         self.name = name
         self.email = email
+
+    def encode_auth_token(self, user_id):
+        """
+        exp: expiration date of the token
+        iat: the time the token is generated
+        sub: the subject of the token (the user whom it identifies)
+        """
+        try:
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
+                'iat': datetime.datetime.utcnow(),
+                'sub': user_id
+            }
+            return jwt.encode(payload, current_app.config.get('SECRET_KEY'))
+        except Exception as e:
+            return e
