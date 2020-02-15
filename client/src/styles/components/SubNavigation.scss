@@ -37,3 +37,30 @@
         }
     }
 }
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .subNavigation{
+        &__container{
+            width: 90%;
+        }
+
+        &__nav{
+            &--link{
+                font-size: .85rem !important;
+                padding: 8px 10px;
+                &--right{
+                    margin-left: 15px;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 576px) and (max-width: 1199.98px) {
+    .subNavigation{
+        &__container{
+            width: 90%;
+        }
+    }
+}

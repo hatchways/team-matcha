@@ -67,3 +67,39 @@
         }
     }
 }
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .header{
+        &__container{
+            padding: 16px 16px;
+        }
+        &__nav{
+            display: none;
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 798.98px) {
+    .header{
+        &__container{
+            padding: 16px 32px;
+        }
+        &__nav{
+            display: none;
+        }
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 799px) and (max-width: 1199.98px) {
+    .header{
+        &__container{
+            padding: 16px 32px;
+        }
+        &__nav{
+            width: 60%;
+        }
+    }
+}

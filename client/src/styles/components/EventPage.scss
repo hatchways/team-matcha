@@ -17,3 +17,32 @@
         }
     }
 }
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .eventPage{
+        &__container{
+            @include applyFlex(center, center, column);
+            width: 90%;
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 798.98px) {
+    .eventPage{
+        &__container{
+            @include applyFlex(center, center, column);
+            width: 90%;
+        }
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 799px) and (max-width: 1199.98px) {
+    .eventPage{
+        &__container{
+            width: 90%;
+        }
+    }
+}

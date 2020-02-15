@@ -39,3 +39,36 @@
         }
     }
 }
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .eventPageHeader{
+        &__container{
+            @include applyFlex(center, center, column);
+            padding: 24px 12px;
+            width: 90%;
+        }
+
+        &__profile{
+            @include applyFlex(center, flex-start);
+            border-bottom: solid 1px $off-white;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            width: 100%;
+        }
+
+        &__btn{
+            padding: 4px 16px !important;
+            width: 100%;
+        }
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 576px) and (max-width: 1199.98px) {
+    .eventPageHeader{
+        &__container{
+            width: 90%;
+        }
+    }
+}
