@@ -8,10 +8,12 @@
         margin-bottom: 20px;
         &--main{
             color: $primary;
+            font-family: $logo-font !important;
             font-weight: $bold-text;
         }
         &--span{
             color: black;
+            font-family: $logo-font !important;
             font-weight: $bold-text;
         }
     }

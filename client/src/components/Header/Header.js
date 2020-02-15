@@ -10,7 +10,7 @@ const Header = () => (
                 className="header__logo"
                 variant="h4">
                 calend
-                <span className="header__logo--span">App</span>
+                <span className="header__logo--span">app</span>
             </Typography>
             <nav className="header__nav">
                 <NavLink 

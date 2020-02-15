@@ -8,7 +8,7 @@
 
         &--hours{
             @include applyFlex(center, center, column);
-            padding-top: 35px;
+            padding-top: 25px;
             padding-bottom: 5px;
             width: 80%;
 
@@ -43,8 +43,8 @@
 
         &--days{
             @include applyFlex(center, center, column);
-            padding-top: 35px;
-            padding-bottom: 60px;
+            padding-top: 25px;
+            padding-bottom: 50px;
             width: 80%;
 
             &--title{

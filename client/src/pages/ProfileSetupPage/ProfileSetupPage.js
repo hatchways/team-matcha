@@ -170,7 +170,7 @@ class ProfileSetupPage extends Component {
                     className="profileSetup__logo--main"
                     variant="h4">
                     calend
-                    <span className="profileSetup__logo--span">App</span>
+                    <span className="profileSetup__logo--span">app</span>
                 </Typography>
             </Box>
                 { stepComponent }

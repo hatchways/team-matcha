@@ -65,7 +65,7 @@ class App extends Component{
           )}
           />
           <Route
-          path="/profileSetup/:userid"
+          path="/intro/:userid"
           exact
           render={props => (
             <ProfileSetupPage

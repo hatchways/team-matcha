@@ -12,6 +12,7 @@
     &__logo{
         margin-bottom: 20px;
         color: $primary;
+        font-family: $logo-font !important;
         font-weight: $bold-text;
 
         &--span{
