@@ -27,7 +27,6 @@ const EventPageHeader = () => (
                 </Box>
             </Box>
             <Button 
-                variant="default"
                 className="eventPageHeader__btn"
             >
             + NEW EVENT TYPE

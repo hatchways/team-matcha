@@ -4,6 +4,7 @@
 
     &__container{
         @include applyFlex(flex-start, space-between);
+        border-bottom: solid 1px $off-white;
         padding: 32px 12px;
         width: 80%;
     }
