@@ -1,9 +1,7 @@
-import datetime
 from functools import wraps
 from flask import request, jsonify
 from project.api.models import User
 
-import jwt
 
 
 def token_required(f):

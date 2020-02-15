@@ -3,9 +3,6 @@ import json
 from project import db
 from project.api.models import User
 from project.test.test_base import TestBase
-import uuid
-from unittest.mock import Mock, patch
-from google.oauth2 import id_token
 
 
 def add_user(name='kenny', email='test@email.com'):
@@ -67,7 +64,6 @@ class UserCreateTest(TestBase):
 
 
 class UserGetTest(TestBase):
-
     def test_get_user(self):
         name = "Joe"
         email = "joe@email.com"
