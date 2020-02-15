@@ -1,8 +1,8 @@
 from project import db
 from project.api.models import Availability, Event, User
 from project.test.test_base import TestBase
-from .availability_test import add_availability
-from .user_test import add_user
+from project.test.availability_test import add_availability
+from project.test.user_test import add_user
 
 
 def add_event(name='♪┏(・o･)┛♪┗ ( ･o･) ┓♪', location='my home',
@@ -11,7 +11,7 @@ def add_event(name='♪┏(・o･)┛♪┗ ( ･o･) ┓♪', location='my ho
     """Add's a row to the event table."""
     if not user_id:
         add_user()
-        user = User.query.filter(url=url).first()
+        user = User.query.first()
         user_id = user.id
 
     if not availability_id:
@@ -31,6 +31,6 @@ class EventModelTest(TestBase):
         name = '♪┏(・o･)┛♪┗ ( ･o･) ┓♪'
         url = 'myCoolParty'
         add_event()
-        event = Event.query.filter(name=name).first()
+        event = Event.query.filter_by(name=name).first()
 
         self.assertEqual(event.url, url)

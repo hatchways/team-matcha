@@ -14,6 +14,7 @@ class User(db.Model):
     google_id = db.Column(db.String(128), unique=True)
     name = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
+    event = db.relationship('Event', backref='users')
 
     def __init__(self, name, email, google_id=None):
         self.public_id = uuid.uuid4()
@@ -77,6 +78,7 @@ class Availability(db.Model):
     saturday = db.Column(db.Boolean, nullable=False)
     start = db.Column(db.Time, nullable=False)
     end = db.Column(db.Time, nullable=False)
+    event = db.relationship('Event', backref='availability')
 
     def __init__(self, sunday, monday, tuesday, wednesday, thursday, friday,
                  saturday, start, end):
@@ -117,8 +119,8 @@ class Event(db.Model):
     location = db.Column(db.String(256))
     description = db.Column(db.String(1024))
     url = db.Column(db.String(32), nullable=False, unique=True)
-    user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable=True)
-    availability_id = db.Column(db.Integer, ForeignKey('availability.id'),
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    availability_id = db.Column(db.Integer, db.ForeignKey('availability.id'),
                                 nullable=False)
 
     def __init__(self, name, location, description, url, user_id,
