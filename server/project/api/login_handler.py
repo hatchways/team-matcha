@@ -1,6 +1,4 @@
-import datetime
 
-import jwt
 from flask import Blueprint, current_app
 from flask_restx import Resource, fields
 from google.auth.transport import requests

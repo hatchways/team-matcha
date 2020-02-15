@@ -1,11 +1,8 @@
 import json
-
-from project import db
-from project.api.models import User
-from project.test.test_base import TestBase
-import uuid
 from unittest.mock import Mock, patch
+
 from google.oauth2 import id_token
+from project.test.test_base import TestBase
 
 
 class LoginTest(TestBase):
@@ -24,7 +21,8 @@ class LoginTest(TestBase):
 
             response = self.api.post('/login',
                                      data=json.dumps({
-                                         'tokenId': "SOME_AUTH_TOKEN",
+                                         'tokenId':
+                                         "SOME_AUTH_TOKEN",
                                      }),
                                      content_type='application/json')
             data = json.loads(response.data.decode())
@@ -37,7 +35,6 @@ class LoginTest(TestBase):
 
             self.assertTrue('auth_token' in data)
 
-
     def test_invalid_login(self):
         with patch.object(id_token, 'verify_oauth2_token') as mock_method:
             mock_method.raiseError.side_effect = Mock(
@@ -46,7 +43,8 @@ class LoginTest(TestBase):
             email = "joe@email.com"
             response = self.api.post('/login',
                                      data=json.dumps({
-                                         'tokenId': "SOME_INVALID_ID_TOKEN",
+                                         'tokenId':
+                                         "SOME_INVALID_ID_TOKEN",
                                      }),
                                      content_type='application/json')
 
@@ -54,7 +52,6 @@ class LoginTest(TestBase):
             self.assertEqual(response.status_code, 401)
 
             self.assertEqual(data['message'], 'ValueError')
-
 
     @patch.object(id_token, 'verify_oauth2_token')
     def test_roken_required_endpoint(self, verify_oauth2_token):
