@@ -20,13 +20,12 @@ const EventPageCard = ({ eventDuration, eventLink, eventName, eventType, eventCo
         <Box className="eventCard__col--link">
             <Box className="eventCard__event--icon">
                 <ScheduleIcon className=""/>
-                <Typography>
-                    &nbsp;&nbsp;{eventDuration}
-                </Typography>
+                <Typography>&nbsp;&nbsp;{eventDuration}</Typography>
             </Box>
             <Button 
                 onClick={() => copy(eventLink)}
-                className="eventCard__event--btn">COPY LINK</Button>
+                className="eventCard__event--btn"
+            >COPY LINK</Button>
         </Box>
     </Box>
     )

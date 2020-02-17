@@ -4,13 +4,9 @@ import { NavLink } from 'react-router-dom';
 import { Box, Typography } from '@material-ui/core';
 
 const SubNavigation = ({ isActive }) => (
-    <Box
-        className="subNavigation"
-    >
+    <Box className="subNavigation">
         <Box className="subNavigation__container">
-            <Typography variant="h4" className="subNavigation__title">
-                My CalendApp
-            </Typography>
+            <Typography variant="h4" className="subNavigation__title">My CalendApp</Typography>
             <nav className="subNavigation__nav">
                 <NavLink 
                     className="subNavigation__nav--link" 

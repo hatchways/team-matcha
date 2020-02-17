@@ -3,9 +3,7 @@ import React from 'react';
 import { Box, Button, Typography } from '@material-ui/core';
 
 const EventPageHeader = () => (
-    <Box
-        className="eventPageHeader"
-    >
+    <Box className="eventPageHeader">
         <Box className="eventPageHeader__container">
             <Box className="eventPageHeader__profile">
                 <img 

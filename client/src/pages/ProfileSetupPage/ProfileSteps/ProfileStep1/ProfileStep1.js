@@ -38,7 +38,7 @@ const ProfileStep1 = ({ exists, step,
                 </Box>
                 <Box className="step1__form--select--wrap">
                     <Typography variant="body1" className="step1__form--label">Select your Time zone:</Typography>
-                    <div className="step1__form--select">
+                    <Box className="step1__form--select">
                         <Select
                         disableUnderline
                         name="timezoneName"
@@ -59,7 +59,7 @@ const ProfileStep1 = ({ exists, step,
                                     : null
                             }
                         </Select>
-                    </div>
+                    </Box>
                 </Box>
             </Box>
         </Box>
