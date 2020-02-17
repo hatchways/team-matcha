@@ -1,11 +1,12 @@
 
-from flask import Blueprint, current_app
+from flask import Blueprint, current_app, request
 from flask_restx import Resource, fields
 from google.auth.transport import requests
 from google.oauth2 import id_token
 from project import api, db
-from project.api.models import User
+from project.api.models import User, BlacklistToken
 from project.api.users_handler import add_user
+from project.decorators import token_required
 
 login_blueprint = Blueprint('login', __name__)
 
@@ -55,3 +56,27 @@ class Login(Resource):
         except ValueError:
             # Invalid token
             return {'message': 'ValueError'}, 401
+
+
+@api.route('/logout')
+class Logout(Resource):
+    @token_required
+    def post(self, current_user):
+        auth_token = request.headers['x-access-token']
+        # mark the token as blacklisted
+        blacklist_token = BlacklistToken(token=auth_token)
+        try:
+            # insert the token
+            db.session.add(blacklist_token)
+            db.session.commit()
+            responseObject = {
+                'status': 'success',
+                'message': 'Successfully logged out.'
+            }
+            return responseObject, 200
+        except Exception as e:
+            responseObject = {
+                'status': 'fail',
+                'message': e
+            }
+            return responseObject, 401
