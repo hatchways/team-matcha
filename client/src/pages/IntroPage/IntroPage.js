@@ -4,11 +4,11 @@ import { Box, Container, Typography } from '@material-ui/core';
 import momentTZ from 'moment-timezone';
 
 // importing components
-import ProfileStep1 from './ProfileSteps/ProfileStep1/ProfileStep1';
-import ProfileStep2 from './ProfileSteps/ProfileStep2/ProfileStep2';
-import ProfileStep3 from './ProfileSteps/ProfileStep3/ProfileStep3';
+import IntroStep1 from './IntroSteps/IntroStep1/IntroStep1';
+import IntroStep2 from './IntroSteps/IntroStep2/IntroStep2';
+import IntroStep3 from './IntroSteps/IntroStep3/IntroStep3';
 
-class ProfileSetupPage extends Component {
+class IntroPage extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -110,7 +110,7 @@ class ProfileSetupPage extends Component {
         switch(step) {
             case 1:
                 stepComponent = (
-                    <ProfileStep1
+                    <IntroStep1
                     exists={exists}
                     step={step}
                     timezoneName={timezoneName}
@@ -124,7 +124,7 @@ class ProfileSetupPage extends Component {
                 break;
             case 2:
                 stepComponent = (
-                    <ProfileStep2
+                    <IntroStep2
                     userUrl={userUrl}
                     step={step}
                     handleNextStep={this.handleNextStep}
@@ -133,7 +133,7 @@ class ProfileSetupPage extends Component {
                 break;
             case 3:
                 stepComponent = (
-                    <ProfileStep3 
+                    <IntroStep3 
                     daysAvl={daysAvl}
                     step={step}
                     timeAvlFrom={timeAvlFrom}
@@ -147,7 +147,7 @@ class ProfileSetupPage extends Component {
                 break;
             default:
                 stepComponent = (
-                    <ProfileStep1
+                    <IntroStep1
                     exists={exists}
                     step={step}
                     timezoneName={timezoneName}
@@ -179,4 +179,4 @@ class ProfileSetupPage extends Component {
     }
 }
 
-export default ProfileSetupPage;
+export default IntroPage;

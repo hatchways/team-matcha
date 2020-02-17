@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { theme } from "./themes/theme";
 // importing components
 import LoginPage from "./pages/LoginPage/LoginPage";
-import ProfileSetupPage from "./pages/ProfileSetupPage/ProfileSetupPage";
+import IntroPage from "./pages/IntroPage/IntroPage";
 import Dashboard from './pages/Dashboard/Dashboard';
 import SchedulePage from './pages/SchedulePage/SchedulePage';
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
@@ -76,7 +76,7 @@ class App extends Component{
           path="/intro/:userid"
           exact
           render={props => (
-            <ProfileSetupPage
+            <IntroPage
               {...props}
             />
           )}

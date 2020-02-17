@@ -5,16 +5,16 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { green, red } from '@material-ui/core/colors';
 // importing components
-import ProfileStepHeader from '../../ProfileStepsHeader/ProfileStepsHeader';
-import ProfileStepFooter from '../../ProfileStepsFooter/ProfileStepsFooter';
+import IntroStepHeader from '../../IntroStepsHeader/IntroStepsHeader';
+import IntroStepFooter from '../../IntroStepsFooter/IntroStepsFooter';
 
-const ProfileStep1 = ({ exists, step, 
+const IntroStep1 = ({ exists, step, 
     userUrl, timezoneName, 
     timezonesArr, handleNextStep, 
     handleUserInput, handleUserUrlCheck }) => {
     return(
     <Box boxShadow={3} className="step1">
-        <ProfileStepHeader
+        <IntroStepHeader
             step={step}
             text="Welcome to CalendApp!" 
         />
@@ -64,10 +64,10 @@ const ProfileStep1 = ({ exists, step,
             </Box>
         </Box>
         { userUrl.length >= 8 && exists === false && userUrl.length <= 32 ? 
-        <ProfileStepFooter 
+        <IntroStepFooter 
             handleNextStep={handleNextStep}
             buttonText="Continue"
-        /> : <ProfileStepFooter 
+        /> : <IntroStepFooter 
                 handleNextStep={handleNextStep}
                 buttonText="Continue"
                 disableBtn={true}
@@ -76,4 +76,4 @@ const ProfileStep1 = ({ exists, step,
     )
 };
 
-export default ProfileStep1;
+export default IntroStep1;

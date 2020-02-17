@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 
-const ProfileStepsHeader = ({step, text}) => {
+const IntroStepsHeader = ({step, text}) => {
     let width;
     let barStyles;
     switch(step) {
@@ -33,5 +33,5 @@ const ProfileStepsHeader = ({step, text}) => {
     
 };
 
-export default ProfileStepsHeader;
+export default IntroStepsHeader;
 

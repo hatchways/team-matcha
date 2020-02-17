@@ -2,12 +2,12 @@
 import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 // importing components
-import ProfileStepHeader from '../../ProfileStepsHeader/ProfileStepsHeader';
-import ProfileStepFooter from '../../ProfileStepsFooter/ProfileStepsFooter';
+import IntroStepHeader from '../../IntroStepsHeader/IntroStepsHeader';
+import IntroStepFooter from '../../IntroStepsFooter/IntroStepsFooter';
 
-const ProfileStep2 = ({ userUrl, step, handleNextStep }) => (
+const IntroStep2 = ({ userUrl, step, handleNextStep }) => (
     <Box boxShadow={3} className="step2">
-        <ProfileStepHeader 
+        <IntroStepHeader 
             step={step}
             text="Your Google Calendar is connected!" 
         />
@@ -28,7 +28,7 @@ const ProfileStep2 = ({ userUrl, step, handleNextStep }) => (
                 </Typography>
             </Box>
         </Box>
-        <ProfileStepFooter 
+        <IntroStepFooter 
             handleNextStep={handleNextStep}
             buttonText="Continue"
             displayLink={true}
@@ -36,4 +36,4 @@ const ProfileStep2 = ({ userUrl, step, handleNextStep }) => (
     </Box>
 );
 
-export default ProfileStep2;
+export default IntroStep2;
