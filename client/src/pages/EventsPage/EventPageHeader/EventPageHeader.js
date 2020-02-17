@@ -1,8 +1,9 @@
 // importing modules
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { Box, Button, Typography } from '@material-ui/core';
 
-const EventPageHeader = () => (
+const EventPageHeader = (props) => (
     <Box className="eventPageHeader">
         <Box className="eventPageHeader__container">
             <Box className="eventPageHeader__profile">
@@ -26,6 +27,7 @@ const EventPageHeader = () => (
             </Box>
             <Button 
                 className="eventPageHeader__btn"
+                onClick={() => props.history.push('/events/new')}
             >
             + NEW EVENT TYPE
             </Button>
@@ -33,4 +35,4 @@ const EventPageHeader = () => (
     </Box>
 );
 
-export default EventPageHeader;
+export default withRouter(EventPageHeader);

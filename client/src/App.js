@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import IntroPage from "./pages/IntroPage/IntroPage";
 import Dashboard from './pages/Dashboard/Dashboard';
 import SchedulePage from './pages/SchedulePage/SchedulePage';
+import EventCreationPage from './pages/EventCreationPage/EventCreationPage';
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
 // importing stylesheet
@@ -32,6 +33,15 @@ class App extends Component{
           exact
           render={props => (
             <Dashboard
+              {...props}
+            />
+          )}
+          />
+          <Route
+          path="/events/new"
+          exact
+          render={props => (
+            <EventCreationPage
               {...props}
             />
           )}

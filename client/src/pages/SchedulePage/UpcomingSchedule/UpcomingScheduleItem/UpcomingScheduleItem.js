@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import UpcomingScheduleItemDropdown from './UpcomingScheduleItemDropdown/UpcomingScheduleItemDropdown';
 
 const UpcomingScheduleItem = ({ 
