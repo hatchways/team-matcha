@@ -49,7 +49,7 @@
     }
 
     &__settings{
-        color: rgba(45, 45, 45, 0.523) !important;
+        color: $light-gray !important;
         &:hover{
             color: black !important;
             cursor: pointer;
@@ -61,7 +61,7 @@
             font-weight: $bold-text;
             padding: 12px 16px;
             &--span{
-                color: rgba(45, 45, 45, 0.523);
+                color: $light-gray;
                 font-size: 1.2rem !important;
                 font-weight: 400 !important;
             }

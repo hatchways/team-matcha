@@ -1,0 +1,54 @@
+.eventType{
+    @include applyFlex(center, center, column);
+    width: 100%;
+
+    &__header--container{
+        @include applyFlex(center, center);
+        border-bottom: solid 1px $off-white;
+        width: 100%;
+    }
+    &__header{
+        @include applyFlex(center, flex-start);
+        padding: 32px 0px;
+        position: relative;
+        width: 80%;
+        &--btn{
+            border: solid 1px $primary !important;
+            color: $primary !important;
+            padding: 6px 32px !important;
+        }
+        &--text{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        &--icon{
+            font-size: 1rem !important;
+        }
+    }
+
+    &__types{
+        @include applyFlex(center, space-between);
+        margin-top: 25px;
+        width: 80%;
+        &--col{
+            @include applyFlex(center, center);
+        }
+        &--btn{
+            border: solid 1px $primary !important;
+            color: $primary !important;
+            padding: 6px 32px !important;
+        }
+        &--text{
+            margin-left: 20px !important;
+            &--span{
+                color: $light-gray;
+            }
+        }
+        &--icon{
+            color: $gray;
+            font-size: 4rem !important;
+        }
+    }
+}
