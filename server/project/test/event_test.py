@@ -7,7 +7,7 @@ from project.test.user_test import add_user
 
 def add_event(name='♪┏(・o･)┛♪┗ ( ･o･) ┓♪', location='my home',
               description='It will be cool show up!', url='myCoolParty',
-              user_id=False, availability_id=False):
+              colour='FFC0CB', user_id=False, availability_id=False):
     """Add's a row to the event table."""
     if not user_id:
         add_user()
@@ -19,7 +19,8 @@ def add_event(name='♪┏(・o･)┛♪┗ ( ･o･) ┓♪', location='my ho
         availability = Availability.query.first()
         availability_id = availability.id
 
-    event = Event(name, location, description, url, user_id, availability_id)
+    event = Event(name, location, description, url, colour, user_id,
+                  availability_id)
     db.session.add(event)
     db.session.commit()
     return event
