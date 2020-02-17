@@ -1,6 +1,6 @@
 .upcomingSchedule{
     &__header{
-        padding: 24px 16px;
+        padding: 24px 0px;
         text-align: right;
         margin-bottom: 10px;
         width: 100%;
@@ -14,12 +14,13 @@
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
         border: solid 1px $off-white;
-        padding: 12px 16px;
+        padding: 12px 0px;
         width: 100%;
     }
 
     &__item{
         @include applyFlex(flex-start, center, column);
+        padding: 12px 16px;
         border-bottom: solid 1px $off-white;
         &--date{
             font-weight: 100;
@@ -29,11 +30,17 @@
 
     &__content{
         @include applyFlex(center, space-between);
-        padding: 12px 12px;
+        padding-bottom: 10px;
+        position: relative;
         width: 100%;
 
-        &--col{
-            @include applyFlex(center, center);
+        &--col1{
+            @include applyFlex(center, flex-start);
+            flex: 1;
+        }
+        &--col2{
+            @include applyFlex(center, flex-start);
+            flex: 2;
         }
 
         &--color{
@@ -56,9 +63,12 @@
             background: none;
             border: none;
             color: $off-black;
-            font-size: 1.2rem;
+            font-size: 1rem;
             padding: 12px 16px;
+            position: absolute;
             outline: none;
+            right: 0;
+            top: 0;
             &:hover{
                 cursor: pointer;
             }
@@ -66,15 +76,15 @@
     }
 
     &__dropdown{
-        @include applyFlex(center, space-between);
+        @include applyFlex(center, center);
         padding-bottom: 50px;
         width: 100%;
         &--col1{
-            width: 45%;
+            flex: 1;
         }
         &--col2{
             border-top: solid 1px $off-white;
-            width: 55%;
+            flex: 2;
         }
         &--btn{
             background-color: none !important;
@@ -82,7 +92,7 @@
             color: $off-black !important;
             padding: 5px;
             margin-bottom: 10px !important;
-            margin-left: 60px !important;
+            margin-left: 40px !important;
             width: 200px;
         }
         &--text--wrap{
@@ -98,6 +108,99 @@
                 color: $off-black;
                 font-style: italic;
             }
+        }
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .upcomingSchedule{
+        &__container{
+            width: 100%;
+        }
+
+        &__item{
+            &--date{
+                padding: 12px 0px;
+            }
+        }
+
+        &__header{
+            padding: 12px 0px;
+            width: 95%;
+        }
+
+        &__content{
+            @include applyFlex(flex-start, flex-start, column);
+            &--col1{
+                @include applyFlex(center, flex-start);
+                margin-bottom: 10px;
+            }
+        }
+
+        &__dropdown{
+            @include applyFlex(flex-start, center, column);
+    
+            &--btn{
+                margin-left: 0px !important;
+            }
+            &--col1{
+                width: 100%;
+            }
+            &--col2{
+                width: 75%;
+            }
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 798.98px) {
+    .upcomingSchedule{
+        &__container{
+            width: 100%;
+        }
+
+        &__item{
+            &--date{
+                padding: 12px 0px;
+            }
+        }
+
+        &__header{
+            padding: 12px 0px;
+            width: 95%;
+        }
+
+        &__content{
+            @include applyFlex(flex-start, flex-start, column);
+            &--col1{
+                @include applyFlex(center, flex-start);
+                margin-bottom: 10px;
+            }
+        }
+
+        &__dropdown{
+            @include applyFlex(flex-start, center, column);
+    
+            &--btn{
+                margin-left: 0px !important;
+            }
+            &--col1{
+                width: 100%;
+            }
+            &--col2{
+                width: 100%;
+            }
+        }
+    }
+}
+
+@media (min-width: 800px) and (max-width: 1199.98px) {
+    .upcomingSchedule{
+        &__header{
+            padding: 12px 0px;
+            width: 95%;
         }
     }
 }

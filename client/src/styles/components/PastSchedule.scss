@@ -1,6 +1,6 @@
 .pastSchedule{
     &__header{
-        padding: 24px 16px;
+        padding: 24px 0px;
         text-align: right;
         margin-bottom: 10px;
         width: 100%;
@@ -13,7 +13,7 @@
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
         border: solid 1px $off-white;
-        padding: 12px 16px;
+        padding: 12px 0px;
         width: 100%;
     }
 
@@ -36,6 +36,35 @@
                 color: $gray;
                 font-weight: $bold-text;
             }
+        }
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .pastSchedule{
+        &__header{
+            padding: 12px 0px;
+            width: 95%;
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 798.98px) {
+    .pastSchedule{
+        &__header{
+            padding: 12px 0px;
+            width: 95%;
+        }
+    }
+}
+
+@media (min-width: 800px) and (max-width: 1199.98px) {
+    .pastSchedule{
+        &__header{
+            padding: 12px 0px;
+            width: 95%;
         }
     }
 }
