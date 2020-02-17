@@ -1,5 +1,8 @@
 .schedulePage{
-    background-color: whitesmoke;
-    height: 100vh;
+    @include applyFlex(center, center, column);
     width: 100%;
+
+    &__container{
+        width: 80%;
+    }
 }

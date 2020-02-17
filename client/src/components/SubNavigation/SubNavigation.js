@@ -3,7 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Box, Typography } from '@material-ui/core';
 
-const SubNavigation = () => (
+const SubNavigation = ({ isActive }) => (
     <Box
         className="subNavigation"
     >
@@ -21,7 +21,8 @@ const SubNavigation = () => (
                 <NavLink 
                     className="subNavigation__nav--link subNavigation__nav--link--right" 
                     activeClassName="subNavigation__nav--link--isActive"
-                    to="/schedule"
+                    style={isActive ? { color: '#ef6c00', borderBottom: 'solid 5px #ef6c00' } : null}
+                    to="/schedule/upcoming"
                 >SCHEDULED EVENTS
                 </NavLink>
             </nav>

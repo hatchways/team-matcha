@@ -11,12 +11,12 @@ class EventsPage extends Component {
         super(props);
         this.state = {
             events: [ // test events
-                {
+                {   
                     eventDuration: '15 min',
                     eventName: '15 minute meeting',
                     eventLink: 'calendapp/john-doe/15min',
                     eventType: 'One-on-One',
-                    eventColor: '#7b1fa2'
+                    eventColor: '#651fff'
                 },
                 {
                     eventDuration: '30 min',
@@ -37,7 +37,7 @@ class EventsPage extends Component {
     }
 
     componentDidMount(){
-        console.log('fetch events from server');
+        console.log('fetch event types from the server')
     }
 
     render(){

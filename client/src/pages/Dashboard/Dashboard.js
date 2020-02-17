@@ -15,7 +15,7 @@ const Dashboard = () => (
         <SubNavigation /> 
         {/* nested routes */}
         <Route path="/events" exact component={EventsPage} />
-        <Route path="/schedule" exact component={SchedulePage} />
+        <Route path="/schedule/upcoming" exact component={SchedulePage} />
     </div>
 );
 

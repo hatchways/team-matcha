@@ -1,0 +1,103 @@
+.upcomingSchedule{
+    &__header{
+        padding: 24px 16px;
+        text-align: right;
+        margin-bottom: 10px;
+        width: 100%;
+        &--text{
+            font-weight: 100 !important;
+        }
+    }
+
+    &__list{
+        background-color: #fff;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border: solid 1px $off-white;
+        padding: 12px 16px;
+        width: 100%;
+    }
+
+    &__item{
+        @include applyFlex(flex-start, center, column);
+        border-bottom: solid 1px $off-white;
+        &--date{
+            font-weight: 100;
+            padding: 12px 12px;
+        }
+    }
+
+    &__content{
+        @include applyFlex(center, space-between);
+        padding: 12px 12px;
+        width: 100%;
+
+        &--col{
+            @include applyFlex(center, center);
+        }
+
+        &--color{
+            border-radius: 50%;
+            height: 32px;
+            width: 32px;
+        }
+        &--time{
+            font-weight: 400;
+            margin-left: 10px;
+        }
+        &--text{
+            font-weight: $bold-text;
+            &--span{
+                font-size: 1rem;
+                font-weight: 400;
+            }
+        }
+        &--btn{
+            background: none;
+            border: none;
+            color: $off-black;
+            font-size: 1.2rem;
+            padding: 12px 16px;
+            outline: none;
+            &:hover{
+                cursor: pointer;
+            }
+        }
+    }
+
+    &__dropdown{
+        @include applyFlex(center, space-between);
+        padding-bottom: 50px;
+        width: 100%;
+        &--col1{
+            width: 45%;
+        }
+        &--col2{
+            border-top: solid 1px $off-white;
+            width: 55%;
+        }
+        &--btn{
+            background-color: none !important;
+            border: solid 1px $off-black !important;
+            color: $off-black !important;
+            padding: 5px;
+            margin-bottom: 10px !important;
+            margin-left: 60px !important;
+            width: 200px;
+        }
+        &--text--wrap{
+            margin-top: 20px;
+        }
+        &--text{
+            font-weight: $bold-text;
+            &--span{
+                font-size: 1rem;
+                font-weight: 400;
+            }
+            &--italic{
+                color: $off-black;
+                font-style: italic;
+            }
+        }
+    }
+}

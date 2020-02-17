@@ -7,6 +7,7 @@ import { theme } from "./themes/theme";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import ProfileSetupPage from "./pages/ProfileSetupPage/ProfileSetupPage";
 import Dashboard from './pages/Dashboard/Dashboard';
+import SchedulePage from './pages/SchedulePage/SchedulePage';
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
 // importing stylesheet
@@ -15,11 +16,9 @@ import "./App.css";
 
 class App extends Component{
   render(){
-    return (
-      <MuiThemeProvider theme={theme}>
-        <BrowserRouter>
-        <Switch>
-          <Route
+      let routes = (
+        <React.Fragment>
+        <Route
           path="/"
           exact
           render={props => (
@@ -38,10 +37,19 @@ class App extends Component{
           )}
           />
           <Route
-          path="/schedule"
+          path="/schedule/upcoming"
           exact
           render={props => (
-            <Dashboard
+            <SchedulePage
+              {...props}
+            />
+          )}
+          />
+          <Route
+          path="/schedule/past"
+          exact
+          render={props => (
+            <SchedulePage
               {...props}
             />
           )}
@@ -73,7 +81,14 @@ class App extends Component{
             />
           )}
           />
-          </Switch>
+      </React.Fragment>
+      )
+    return (
+      <MuiThemeProvider theme={theme}>
+        <BrowserRouter>
+        <Switch>
+          {routes}
+        </Switch>
         </BrowserRouter>
       </MuiThemeProvider>
     );

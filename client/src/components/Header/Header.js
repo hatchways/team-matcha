@@ -3,7 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Box, Typography } from '@material-ui/core';
 
-const Header = () => (
+const Header = ({ isActive }) => (
     <Box boxShadow={3} className="header">
         <Box className="header__container">
             <Typography 
@@ -17,6 +17,7 @@ const Header = () => (
                     activeClassName="header__nav--link--isActive"
                     className="header__nav--link" 
                     to="/events"
+                    style={isActive ? { fontWeight: 'bold' } : null}
                 >Home
                 </NavLink>
                 <NavLink 

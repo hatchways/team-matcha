@@ -1,0 +1,19 @@
+.noScheduledItems{
+    @include applyFlex(center, center);
+    padding-bottom: 50px;
+    padding-top: 50px;
+    width: 100%;
+
+    &__content{
+        @include applyFlex(center, center, column);
+        position: relative;
+    }
+    &__icon{
+        color: $gray;
+        font-size: 8rem !important;
+    }
+    &__text{
+        color: $gray;
+        font-weight: $bold-text;
+    }
+}
