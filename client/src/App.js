@@ -9,6 +9,8 @@ import IntroPage from "./pages/IntroPage/IntroPage";
 import Dashboard from './pages/Dashboard/Dashboard';
 import SchedulePage from './pages/SchedulePage/SchedulePage';
 import EventTypePage from './pages/EventTypePage/EventTypePage';
+import SoloEventPage from './pages/EventTypePage/SoloEventPage/SoloEventPage';
+import GroupEventPage from './pages/EventTypePage/GroupEventPage/GroupEventPage';
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
 // importing stylesheet
@@ -42,6 +44,24 @@ class App extends Component{
           exact
           render={props => (
             <EventTypePage
+              {...props}
+            />
+          )}
+          />
+          <Route
+          path="/events/event-type/solo"
+          exact
+          render={props => (
+            <SoloEventPage
+              {...props}
+            />
+          )}
+          />
+          <Route
+          path="/events/event-type/group"
+          exact
+          render={props => (
+            <GroupEventPage
               {...props}
             />
           )}
