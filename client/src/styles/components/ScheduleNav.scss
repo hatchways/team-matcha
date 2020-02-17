@@ -1,0 +1,23 @@
+.scheduleNav{
+    background-color: #fff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border: solid 1px $off-white;
+    padding: 16px 0px;
+    width: 100%;
+    &__link{
+        color: black;
+        font-weight: $bold-text;
+        text-decoration: none;
+        margin-left: 15px;
+        padding: 12px 8px;
+        &--isActive{
+            color: $primary;
+            border-bottom: solid 3px $primary;
+        }
+        &:hover{
+            color: $primary;
+            border-bottom: solid 3px $primary;
+        }
+    }
+}

@@ -1,0 +1,26 @@
+.schedulePage{
+    @include applyFlex(center, center, column);
+    width: 100%;
+
+    &__container{
+        width: 80%;
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .schedulePage{
+        &__container{
+            width: 100%;
+        }
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 576px) and (max-width: 1199.98px) {
+    .schedulePage{
+        &__container{
+            width: 100%;
+        }
+    }
+}

@@ -2,15 +2,15 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
 // importing components
-import ProfileStepHeader from '../../ProfileStepsHeader/ProfileStepsHeader';
-import ProfileStepFooter from '../../ProfileStepsFooter/ProfileStepsFooter';
+import IntroStepHeader from '../../IntroStepsHeader/IntroStepsHeader';
+import IntroStepFooter from '../../IntroStepsFooter/IntroStepsFooter';
 import AvailableTimesDropDown from './AvailableTimesDropDown/AvailableTimesDropDown';
 import DaysAvailableCheckBox from './DaysAvailableCheckBox/DaysAvailableCheckBox';
 
 
-const ProfileStep3 = ({ daysAvl, step, handleNextStep, timeAvlFrom, timeAvlUntil, handleUserInput, handleDataSubmit, handleCheckbox }) => (
+const IntroStep3 = ({ daysAvl, step, handleNextStep, timeAvlFrom, timeAvlUntil, handleUserInput, handleDataSubmit, handleCheckbox }) => (
     <Box boxShadow={3} className="step3">
-        <ProfileStepHeader 
+        <IntroStepHeader 
             step={step}
             text="Set your availability" 
         />
@@ -25,7 +25,7 @@ const ProfileStep3 = ({ daysAvl, step, handleNextStep, timeAvlFrom, timeAvlUntil
                 daysAvl={daysAvl}
             />
         </Box>
-        <ProfileStepFooter 
+        <IntroStepFooter 
             handleNextStep={handleNextStep}
             handleDataSubmit={handleDataSubmit}
             buttonText="Finish"
@@ -34,4 +34,4 @@ const ProfileStep3 = ({ daysAvl, step, handleNextStep, timeAvlFrom, timeAvlUntil
     </Box>
 );
 
-export default ProfileStep3;
+export default IntroStep3;

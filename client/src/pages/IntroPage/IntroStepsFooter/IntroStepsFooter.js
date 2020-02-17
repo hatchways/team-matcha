@@ -3,7 +3,7 @@ import React from 'react';
 // import { Link } from 'react-router-dom';
 import { Box, Button } from '@material-ui/core';
 
-const ProfileStepsFooter = ({ buttonText, disableBtn, step, handleNextStep, handleDataSubmit }) => {
+const IntroStepsFooter = ({ buttonText, disableBtn, step, handleNextStep, handleDataSubmit }) => {
     return (
     <Box className="stepsFooter">
         <Button 
@@ -16,4 +16,4 @@ const ProfileStepsFooter = ({ buttonText, disableBtn, step, handleNextStep, hand
     );
 }
 
-export default ProfileStepsFooter;
+export default IntroStepsFooter;

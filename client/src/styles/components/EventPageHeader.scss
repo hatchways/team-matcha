@@ -1,0 +1,74 @@
+.eventPageHeader{
+    @include applyFlex(center, center);
+    width: 100%;
+
+    &__container{
+        @include applyFlex(flex-start, space-between);
+        border-bottom: solid 1px $off-white;
+        padding: 32px 12px;
+        width: 80%;
+    }
+
+    &__profile{
+        @include applyFlex(center, center);
+        &--img{
+            border-radius: 100px;
+            height: 50px;
+            width: 50px;
+        }
+        &--text{
+            margin-left: 25px;
+            &--name{
+                font-weight: $bold-text;
+            }
+            &--url{
+                color:  rgba(69, 69, 69, 0.66);
+            }
+        }
+    }
+
+    &__btn{
+        background: none;
+        border: solid 1px $primary !important;
+        color: $primary !important;
+        padding: 12px 32px !important;
+        transition: all .75s ease !important;
+        &:hover{
+            background-color: $primary !important;
+            color: whitesmoke !important;
+        }
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .eventPageHeader{
+        &__container{
+            @include applyFlex(center, center, column);
+            padding: 24px 12px;
+            width: 90%;
+        }
+
+        &__profile{
+            @include applyFlex(center, flex-start);
+            border-bottom: solid 1px $off-white;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            width: 100%;
+        }
+
+        &__btn{
+            padding: 4px 16px !important;
+            width: 100%;
+        }
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 576px) and (max-width: 1199.98px) {
+    .eventPageHeader{
+        &__container{
+            width: 90%;
+        }
+    }
+}

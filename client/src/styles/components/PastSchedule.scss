@@ -1,0 +1,70 @@
+.pastSchedule{
+    &__header{
+        padding: 24px 0px;
+        text-align: right;
+        margin-bottom: 10px;
+        width: 100%;
+        &--text{
+            font-weight: 100 !important;
+        }
+    }
+    &__list{
+        background-color: #fff;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        border: solid 1px $off-white;
+        padding: 12px 0px;
+        width: 100%;
+    }
+
+    &__item{
+        &--none{
+            @include applyFlex(center, center);
+            padding-bottom: 50px;
+            padding-top: 50px;
+            width: 100%;
+
+            &--content{
+                @include applyFlex(center, center, column);
+                position: relative;
+            }
+            &--icon{
+                color: $gray;
+                font-size: 8rem !important;
+            }
+            &--text{
+                color: $gray;
+                font-weight: $bold-text;
+            }
+        }
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .pastSchedule{
+        &__header{
+            padding: 12px 0px;
+            width: 95%;
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 798.98px) {
+    .pastSchedule{
+        &__header{
+            padding: 12px 0px;
+            width: 95%;
+        }
+    }
+}
+
+@media (min-width: 800px) and (max-width: 1199.98px) {
+    .pastSchedule{
+        &__header{
+            padding: 12px 0px;
+            width: 95%;
+        }
+    }
+}
