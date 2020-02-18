@@ -1,7 +1,10 @@
+import datetime
 import json
 import time
 from unittest.mock import Mock, patch
 
+import jwt
+from flask import current_app
 from google.oauth2 import id_token
 from project import db
 from project.api.models import BlacklistToken, User
@@ -46,7 +49,7 @@ class LoginTest(TestBase):
 
         self.assertEqual(user.email, email)
 
-    def test_invalid_login(self):
+    def test_invalid_google_auth_token_login(self):
         with patch.object(id_token, 'verify_oauth2_token') as mock_method:
             mock_method.raiseError.side_effect = Mock(
                 side_effect=Exception(ValueError))
@@ -73,7 +76,7 @@ class Logout(TestBase):
         data = json.loads(resp_login.data.decode())
         auth_token = data['auth_token']
         response = self.api.post('/logout',
-                                headers={'x-access-token': auth_token})
+                                 headers={'x-access-token': auth_token})
         data = json.loads(response.data.decode())
 
         self.assertEqual(response.status_code, 200)
@@ -82,27 +85,41 @@ class Logout(TestBase):
 
         self.assertEqual(data['message'], 'Successfully logged out.')
 
-    def test_invalid_logout(self):
-        """Ensure a request to logout with an expired token returns fail"""
+    def test_expire_token_logout(self):
         name = "Joe"
         email = "joe@email.com"
-        response = register_user(self, name, email)
-        data = json.loads(response.data.decode())
-        auth_token = data['auth_token']
+        google_id = "123456789"
+        token_payload = {
+            'exp':
+            datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=2),
+            'iat':
+            datetime.datetime.utcnow(),
+            'sub':
+            google_id
+        }
+        mock_response = jwt.encode(token_payload,
+                                   current_app.config.get('SECRET_KEY'))
+        with patch.object(User,
+                          'encode_auth_token',
+                          return_value=mock_response):
 
-        time.sleep(6)
-        response = self.api.post('/logout',
-                                headers={'x-access-token': auth_token})
-        data = json.loads(response.data.decode())
+            response = register_user(self, name, email)
+            data = json.loads(response.data.decode())
+            auth_token = data['auth_token']
 
-        self.assertEqual(response.status_code , 401)
+            time.sleep(3)
+            response = self.api.post('/logout',
+                                     headers={'x-access-token': auth_token})
+            data = json.loads(response.data.decode())
 
-        self.assertEqual(data['status'], 'fail')
+            self.assertEqual(response.status_code, 401)
 
-        self.assertEqual(data['message'], 'Signature expired. Please log in again.')
+            self.assertEqual(data['status'], 'fail')
+
+            self.assertEqual(data['message'],
+                             'Signature expired. Please log in again.')
 
     def test_valid_blacklisted_token_logout(self):
-        """Ensure a request to logout with a blacklisted token returns failure"""
         name = "Joe"
         email = "joe@email.com"
         response = register_user(self, name, email)
@@ -115,17 +132,15 @@ class Logout(TestBase):
         db.session.commit()
 
         response = self.api.post('/logout',
-                                headers={'x-access-token': auth_token})
+                                 headers={'x-access-token': auth_token})
 
         data = json.loads(response.data.decode())
-        print(data)
-        self.assertEqual(response.status_code , 401)
+        self.assertEqual(response.status_code, 401)
 
         self.assertEqual(data['status'], 'fail')
 
-        self.assertEqual(data['message'], 'Token blacklisted. Please log in again.')
-
-
+        self.assertEqual(data['message'],
+                         'Token blacklisted. Please log in again.')
 
 
 class AuthorizationTest(TestBase):
@@ -164,10 +179,9 @@ class AuthorizationTest(TestBase):
 
         data = json.loads(response.data.decode())
 
-
-        print(data)
-        self.assertEqual(response.status_code , 401)
+        self.assertEqual(response.status_code, 401)
 
         self.assertEqual(data['status'], 'fail')
 
-        self.assertEqual(data['message'], 'Token blacklisted. Please log in again.')
+        self.assertEqual(data['message'],
+                         'Token blacklisted. Please log in again.')
