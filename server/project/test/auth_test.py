@@ -85,6 +85,8 @@ class Logout(TestBase):
 
         self.assertEqual(data['message'], 'Successfully logged out.')
 
+        self.assertTrue(BlacklistToken.check_blacklist(auth_token))
+
     def test_expire_token_logout(self):
         name = "Joe"
         email = "joe@email.com"
