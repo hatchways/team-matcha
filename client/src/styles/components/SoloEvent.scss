@@ -1,0 +1,152 @@
+.soloEvent{
+    padding-bottom: 100px;
+    width: 100%;
+
+    &__container{
+        @include applyFlex(center, center);
+        margin-top: 50px;
+        width: 100%;
+    }
+    
+    &__form{
+        @include applyFlex(center, center, column);
+        border: solid 1px $gray;
+        overflow: hidden;
+        width: 80%;
+
+        &--header{
+            @include applyFlex(center, space-between);
+            border-bottom: solid 1px $off-white;
+            padding: 12px 0px;
+            width: 100%;
+            &--text{
+                padding-left: 10px;
+            }
+        }
+        &--footer{
+            @include applyFlex(center, flex-end);
+            border-top: solid 1px $off-white;
+            padding: 12px 0px;
+            width: 100%;
+        }
+
+        &--location{
+            border: solid 1px $off-black;
+            padding: 12px 16px;
+            position: relative;
+            width: 40%;
+        }
+        &--input{
+            width: 100%;
+            margin-left: 75px;
+            margin-bottom: 25px;
+            &--label{
+                font-size: .85rem !important;
+                margin-top: 10px !important;
+                margin-bottom: 10px !important;
+                &--link{
+                    color: $gray;
+                    font-size: .85rem !important;
+                    width: 33%;
+                }
+            }
+            &--name,
+            &--location,
+            &--textarea,
+            &--link{
+                background: none;
+                border: none;
+                border: solid 1px $off-black;
+                outline: none;
+                padding: 16px 16px;
+                width: 40%;
+            }
+            &--link{
+                &--wrap{
+                    @include applyFlex(center, flex-start);
+                    width: 55%;
+                }
+            }
+        }
+        &--radio{
+            @include applyFlex(center, space-between);
+            width: 43.5%;
+            &--red{
+                background-color: #ff3d00 !important;
+                color: white !important;
+            }
+            &--pink{
+                background-color: #ec407a !important;
+                color: white !important;
+                margin-left: 8px !important;
+            }
+            &--violet{
+                background-color: #d500f9 !important;
+                color: white !important;
+                margin-left: 8px !important;
+            }
+            &--purple{
+                background-color: #ab47bc !important;
+                color: white !important;
+                margin-left: 8px !important;
+            }
+            &--blue{
+                background-color: #3d5afe !important;
+                color: white !important;
+                margin-left: 8px !important;
+            }
+            &--teal{
+                background-color: #26a69a !important;
+                color: white!important;
+                margin-left: 8px !important;
+            }
+            &--lime{
+                background-color: #76ff03 !important;
+                color: white!important;
+                margin-left: 8px !important;
+            }
+            &--green{
+                background-color: #4caf50 !important;
+                color: white  !important;
+                margin-left: 8px !important;
+            }
+            &--yellow{
+                background-color: #ffd600 !important;
+                color: white !important;
+                margin-left: 8px !important;
+            }
+            &--orange{
+                background-color: #ef6c00 !important;
+                color: white  !important;
+                margin-left: 8px !important;
+            }
+        }
+    }
+
+    &__btn{
+        &--cancel{
+            margin-right: 10px !important;
+            &:hover{
+                border-bottom: solid 1px black !important;
+            }
+        }
+        &--next{
+            background-color: $primary !important;
+            color: whitesmoke !important;
+            margin-right: 10px !important;
+        }
+    }
+}
+
+// colorList: [
+//     "#ff3d00",
+//     '#ec407a',
+//     "#d500f9",
+//     "#ab47bc",
+//     "#3d5afe",
+//     "#26a69a",
+//     "#76ff03",
+//     "#4caf50",
+//     "#ffd600",
+//     "#ef6c00"
+// ]
