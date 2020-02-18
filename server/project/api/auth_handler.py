@@ -34,16 +34,16 @@ class Login(Resource):
                 raise ValueError('Wrong issuer.')
 
             # ID token is valid. Get the user's Google Account ID from the decoded token.
-            userid = idinfo['sub']
+            user_id = idinfo['sub']
             #Query for user
-            user = User.query.filter_by(google_id=userid).first()
+            user = User.query.filter_by(google_id=user_id).first()
             if not user:
                 user = {
                     'name': idinfo['name'],
                     'email': idinfo['email'],
                 }
                 user = add_user(user)
-                user.google_id = userid
+                user.google_id = user_id
                 db.session.commit()
 
             # Create and send session token
