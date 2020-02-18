@@ -1,7 +1,11 @@
 // importing modules
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Box, Button, Typography } from '@material-ui/core';
+import { Box, Button, MenuList, MenuItem, Paper, Radio, Typography } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import CallIcon from '@material-ui/icons/Call';
 // importing components
 import Header from '../../../components/Header/Header';
 import FormSubmitControls from './FormSubmitControls/FormSubmitControls';
@@ -12,10 +16,16 @@ class SoloEventPage extends Component {
     constructor(props){
         super(props);
         this.state = {
-            eventColor: '',
-            eventName: '',
+            eventColor: '#3d5afe',
             eventDescription: '',
-            eventLink: ''
+            eventDuration: '',
+            eventLink: '',
+            eventLocation: '',
+            eventName: '',
+            locationDropDownField: 'Add a location',
+            active: false,
+            showLocationModal: false,
+            showPhoneCallModal: false
         }
     }
 
@@ -25,13 +35,47 @@ class SoloEventPage extends Component {
         this.setState({ [name]: value }, () => console.log(this.state));
     };
 
+    //method: handles solo-event creation/submit
+    handleFormSubmit = (e) => {
+        e.preventDefault();
+        // send data to the server
+        this.setState({}, console.log('event-form submitted', this.state));
+    }
+
+    handleDropdown = () => {
+        this.setState((prevState) => {
+            return {
+                active: !prevState.active
+            }
+        })
+    }
+
+    handleLocationModal = () => {
+        this.setState((prevState) => {
+            return {
+                showLocationModal: !prevState.showLocationModal
+            }
+        });
+    };
+    handleLocationUpdate = () => (
+        this.setState({ locationDropDownField: this.state.eventLocation, showLocationModal: false, showPhoneCallModal: false })
+    );
+
+    handlePhoneCallModal = () => {
+        this.setState((prevState) => {
+            return {
+                showPhoneCallModal: !prevState.showPhoneCallModal
+            }
+        });
+    };
+
     render(){
         return (
             <Box className="soloEvent">
                 <Header />
                 <EventTypeHeader text="Add One-on-One Event Type"/>
                 <Box className="soloEvent__container">
-                    <form className="soloEvent__form">
+                    <form onSubmit={this.handleFormSubmit} className="soloEvent__form">
                         {/*form header*/}
                         <FormSubmitControls isFormHeader={true}/>
 
@@ -47,9 +91,31 @@ class SoloEventPage extends Component {
 
                         <Box className="soloEvent__form--input">
                             <Typography className="soloEvent__form--input--label" variant="h6">Location</Typography>
-                            <Box className="soloEvent__form--location">
-                                <Typography className="soloEvent__form--location--title" variant="body1">Add a location</Typography>
+                            <Box onClick={this.handleDropdown} className="soloEvent__form--location">
+                                <Typography className="soloEvent__form--location--title" variant="body1">
+                                    {this.state.locationDropDownField}
+                                </Typography>
+                                { this.state.active ? <ExpandLessIcon /> : <ExpandMoreIcon/> }
                                 {/*add location drop down here*/}
+                                {this.state.active 
+                                ? <Paper className="soloEvent__form--location--settings--dropdown">
+                                    <MenuList>
+                                        <MenuItem onClick={this.handleLocationModal} className="soloEvent__form--location--settings--dropdown--item">
+                                            <LocationOnIcon className="soloEvent__form--location--settings--dropdown--icon"/>
+                                            <Box>
+                                                <Typography variant="body2">In-person meeting</Typography>
+                                                <span className="soloEvent__form--location--settings--dropdown--span">set an address or place</span>
+                                            </Box>
+                                        </MenuItem>
+                                        <MenuItem onClick={this.handlePhoneCallModal} className="soloEvent__form--location--settings--dropdown--item">
+                                            <CallIcon className="soloEvent__form--location--settings--dropdown--icon"/>
+                                            <Box>
+                                                <Typography variant="body2">Phone-call</Typography>
+                                                <span className="soloEvent__form--location--settings--dropdown--span">Inbound or outbound calls</span>
+                                            </Box>
+                                        </MenuItem>
+                                    </MenuList>
+                                </Paper> : null }
                             </Box>
                         </Box>
 
@@ -67,7 +133,7 @@ class SoloEventPage extends Component {
                         <Box className="soloEvent__form--input">
                             <Typography className="soloEvent__form--input--label" variant="h6">Event Link *</Typography>
                             <Box className="soloEvent__form--input--link--wrap">
-                                <Typography className="soloEvent__form--input--label--link" variant="h6">calendapp.com/gerardparedes23/</Typography>
+                                <Typography className="soloEvent__form--input--label--link" variant="h6">calendapp.com/john-doe/</Typography>
                                 <input onChange={this.handleUserInput} name="eventLink"
                                     className="soloEvent__form--input--link" 
                                     autoComplete="off"
@@ -85,9 +151,112 @@ class SoloEventPage extends Component {
                         <FormSubmitControls isFormHeader={false}/>
                     </form>
                 </Box>
+                {this.state.showLocationModal 
+                    ? <LocationModal 
+                    handleLocationUpdate={this.handleLocationUpdate}
+                    handleLocationModal={this.handleLocationModal}
+                    handleUserInput={this.handleUserInput}
+                    /> : null}
+                {this.state.showPhoneCallModal 
+                    ? <PhoneCallModal 
+                    eventLocation={this.state.eventLocation}
+                    handleLocationUpdate={this.handleLocationUpdate}
+                    handlePhoneCallModal={this.handlePhoneCallModal}
+                    handleUserInput={this.handleUserInput}
+                    /> : null}
             </Box>
         );
     };
 };
 
 export default withRouter(SoloEventPage);
+
+
+const LocationModal = ({ handleLocationUpdate, handleLocationModal, handleUserInput }) => (
+    <Box className="locationModal">
+        <Box boxShadow={3} className="locationModal__window">
+            <Box className="locationModal__window--header">
+                Edit Location
+            </Box>
+            <Box className="locationModal__window--col">
+                <Box className="locationModal__window--col--selected">
+                    <LocationOnIcon className="soloEvent__form--location--settings--dropdown--icon"/>
+                    <Typography variant="body2">
+                        In-person meeting
+                    </Typography>
+                </Box>
+                <input 
+                    onChange={handleUserInput}
+                    name="eventLocation" 
+                    className="locationModal__window--col--input" 
+                    autoComplete="off"/>
+            </Box>
+            <Box className="locationModal__window--footer">
+                <Button 
+                    onClick={handleLocationUpdate}
+                    className="locationModal__window--btn locationModal__window--btn--update"
+                >Update</Button>
+                <Button 
+                    onClick={handleLocationModal}
+                    className="locationModal__window--btn locationModal__window--btn--cancel"
+                >Cancel</Button>
+            </Box>
+        </Box>
+    </Box>
+);
+
+const PhoneCallModal = ({ handleLocationUpdate, handlePhoneCallModal, handleUserInput, eventLocation }) => (
+    <Box className="phoneCallModal">
+        <Box boxShadow={3} className="phoneCallModal__window">
+            <Box className="phoneCallModal__window--header">
+                Edit Location
+            </Box>
+            <Box className="phoneCallModal__window--col">
+                <Box className="phoneCallModal__window--col--selected">
+                    <CallIcon className="soloEvent__form--location--settings--dropdown--icon"/>
+                    <Typography variant="body2">
+                        Phone Call
+                    </Typography>
+                </Box>
+                <Box className="phoneCallModal__window--radios">
+                    <Box className="phoneCallModal__window--radio--wrap">
+                        <Radio
+                            onChange={handleUserInput}
+                            checked={eventLocation === 'phone call: (I will call invitee)'}
+                            name="eventLocation"
+                            className="phoneCallModal__window--radio"
+                            value="phone call: (I will call invitee)"
+                        />
+                        <Typography className="phoneCallModal__window--radio--label" variant="body2">
+                            I will call my invitee<br/>
+                            <span className="phoneCallModal__window--radio--label--span">Calendly will require your invitee’s phone number before scheduling.</span>
+                        </Typography>
+                    </Box>
+                    <Box className="phoneCallModal__window--radio--wrap">
+                        <Radio
+                            onChange={handleUserInput}
+                            checked={eventLocation === 'phone call: (Invitee should call me)'}
+                            name="eventLocation"
+                            className="phoneCallModal__window--radio"
+                            value="phone call: (Invitee should call me)"
+                        />
+                        <Typography className="phoneCallModal__window--radio--label" variant="body2">
+                            My invitee should call me<br/>
+                            <span className="phoneCallModal__window--radio--label--span">Calendly will provide your number after the call has been scheduled.</span>
+                        </Typography>
+                    </Box>
+                </Box>
+            </Box>
+            <Box className="phoneCallModal__window--footer">
+                <Button 
+                    onClick={handleLocationUpdate}
+                    className="phoneCallModal__window--btn phoneCallModal__window--btn--update"
+                >Update</Button>
+                <Button 
+                    onClick={handlePhoneCallModal}
+                    className="phoneCallModal__window--btn phoneCallModal__window--btn--cancel"
+                >Cancel</Button>
+            </Box>
+        </Box>
+    </Box>
+);

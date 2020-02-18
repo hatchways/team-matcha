@@ -1,5 +1,6 @@
 .soloEvent{
     padding-bottom: 100px;
+    position: relative;
     width: 100%;
 
     &__container{
@@ -17,6 +18,7 @@
         &--header{
             @include applyFlex(center, space-between);
             border-bottom: solid 1px $off-white;
+            border-top: solid 1px $off-white;
             padding: 12px 0px;
             width: 100%;
             &--text{
@@ -31,10 +33,44 @@
         }
 
         &--location{
+            @include applyFlex(center, space-between);
             border: solid 1px $off-black;
             padding: 12px 16px;
             position: relative;
             width: 40%;
+            &:hover{
+                cursor: pointer;
+            }
+            &--title{
+                color: $off-black;
+            }
+            &--settings{
+                position: relative !important;
+                &--dropdown{
+                    background-color: whitesmoke !important;
+                    border: solid 1px $off-black;
+                    position: absolute !important;
+                    top: 48px !important;
+                    right: 0px !important;
+                    width: 100% !important;
+                    z-index: 100;
+                    &--item{
+                        padding: 8px 12px !important;
+                        margin: 0 !important;
+                        text-align: left;
+                        width: 100%;
+                    }
+                    &--icon{
+                        margin: 0 !important;
+                        margin-right: 10px !important;
+                        padding: 0 !important;
+                    }
+                    &--span{
+                        color: $light-gray;
+                        font-size: .75rem;
+                    }
+                }
+            }
         }
         &--input{
             width: 100%;
