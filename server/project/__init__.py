@@ -31,7 +31,7 @@ def create_app(script_info=None):
     from project.api.users_handler import users_blueprint
     app.register_blueprint(users_blueprint)
 
-    from project.api.login_handler import login_blueprint
+    from project.api.auth_handler import login_blueprint
     app.register_blueprint(login_blueprint)
 
     from project.error_handlers import errors_blueprint
