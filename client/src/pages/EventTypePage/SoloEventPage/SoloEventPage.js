@@ -12,14 +12,17 @@ class SoloEventPage extends Component {
     constructor(props){
         super(props);
         this.state = {
-            color: ''
+            eventColor: '',
+            eventName: '',
+            eventDescription: '',
+            eventLink: ''
         }
     }
 
-    handleCheckBox = (e) => {
-        const color = e.target.value;
-        console.log(color);
-        this.setState({ color: color });
+    // method: gets the users text-input & dropwDown selection values
+    handleUserInput = (e) => {
+        const { value, name } = e.target;
+        this.setState({ [name]: value }, () => console.log(this.state));
     };
 
     render(){
@@ -35,7 +38,11 @@ class SoloEventPage extends Component {
                         {/*form fields*/}
                         <Box className="soloEvent__form--input">
                             <Typography className="soloEvent__form--input--label" variant="h6">Event name *</Typography>
-                            <input className="soloEvent__form--input--name" required/>
+                            <input 
+                                onChange={this.handleUserInput} name="eventName" 
+                                className="soloEvent__form--input--name" 
+                                autoComplete="off"
+                                required/>
                         </Box>
 
                         <Box className="soloEvent__form--input">
@@ -49,6 +56,8 @@ class SoloEventPage extends Component {
                         <Box className="soloEvent__form--input">
                             <Typography className="soloEvent__form--input--label" variant="h6">Description/Instructions</Typography>
                             <textarea 
+                                onChange={this.handleUserInput}
+                                name="eventDescription"
                                 rows="10" cols="50"
                                 placeholder="Write a summary and any details your invitee should know about the event" 
                                 className="soloEvent__form--input--textarea">
@@ -59,14 +68,17 @@ class SoloEventPage extends Component {
                             <Typography className="soloEvent__form--input--label" variant="h6">Event Link *</Typography>
                             <Box className="soloEvent__form--input--link--wrap">
                                 <Typography className="soloEvent__form--input--label--link" variant="h6">calendapp.com/gerardparedes23/</Typography>
-                                <input className="soloEvent__form--input--link" required/>
+                                <input onChange={this.handleUserInput} name="eventLink"
+                                    className="soloEvent__form--input--link" 
+                                    autoComplete="off"
+                                    required/>
                             </Box>
                         </Box>
 
                         <Box className="soloEvent__form--input">
                             <RadioColorList 
-                            color={this.state.color}
-                            handleCheckBox={this.handleCheckBox}
+                            eventColor={this.state.eventColor}
+                            handleUserInput={this.handleUserInput}
                             />
                         </Box>
 

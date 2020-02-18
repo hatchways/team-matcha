@@ -5,85 +5,95 @@ import CheckIcon from '@material-ui/icons/Check';
 const Nothing = () => (<div style={{padding: "12px"}} />);
 
 // !!!?? mapping the Radio-component breaks the site ??!!!
-const RadioColorList = ({ color, handleCheckBox }) => (
+const RadioColorList = ({ eventColor, handleUserInput }) => (
     <React.Fragment>
         <Radio
-        checked={color === '#ff3d00'}
+        checked={eventColor === '#ff3d00'}
         icon={<Nothing />}
         checkedIcon={<CheckIcon />}
-        onChange={handleCheckBox}
+        onChange={handleUserInput}
         className="soloEvent__form--radio--red"
+        name="eventColor"
         value="#ff3d00"
         />
         <Radio
-        checked={color === '#ec407a'}
+        checked={eventColor === '#ec407a'}
         icon={<Nothing />}
         checkedIcon={<CheckIcon />}
-        onChange={handleCheckBox}
+        onChange={handleUserInput}
         className="soloEvent__form--radio--pink"
+        name="eventColor"
         value="#ec407a"
         />
         <Radio
-        checked={color === "#d500f9"}
+        checked={eventColor === "#d500f9"}
         icon={<Nothing />}
         checkedIcon={<CheckIcon />}
-        onChange={handleCheckBox}
+        onChange={handleUserInput}
+        name="eventColor"
         className="soloEvent__form--radio--violet"
         value="#d500f9"
         />
         <Radio
-        checked={color === "#ab47bc"}
+        checked={eventColor === "#ab47bc"}
         icon={<Nothing />}
         checkedIcon={<CheckIcon />}
-        onChange={handleCheckBox}
+        onChange={handleUserInput}
+        name="eventColor"
         className="soloEvent__form--radio--purple"
         value="#ab47bc"
         />
         <Radio
-        checked={color === "#3d5afe"}
+        checked={eventColor === "#3d5afe"}
         icon={<Nothing />}
         checkedIcon={<CheckIcon />}
-        onChange={handleCheckBox}
+        onChange={handleUserInput}
+        name="eventColor"
         className="soloEvent__form--radio--blue"
         value="#3d5afe"
         />
         <Radio
-        checked={color === "#26a69a"}
+        checked={eventColor === "#26a69a"}
         icon={<Nothing />}
         checkedIcon={<CheckIcon />}
-        onChange={handleCheckBox}
+        onChange={handleUserInput}
+        name="eventColor"
         className="soloEvent__form--radio--teal"
         value="#26a69a"
         />
         <Radio
-        checked={color === "#76ff03"}
+        checked={eventColor === "#76ff03"}
         icon={<Nothing />}
         checkedIcon={<CheckIcon />}
-        onChange={handleCheckBox}
+        onChange={handleUserInput}
+        name="eventColor"
         className="soloEvent__form--radio--lime"
         value="#76ff03"
         />
         <Radio
-        checked={color === "#4caf50"}
+        checked={eventColor === "#4caf50"}
         icon={<Nothing />}
         checkedIcon={<CheckIcon />}
-        onChange={handleCheckBox}
+        onChange={handleUserInput}
+        name="eventColor"
         className="soloEvent__form--radio--green"
         value="#4caf50"
         />
         <Radio
-        checked={color === "#ffd600"}
+        checked={eventColor === "#ffd600"}
         icon={<Nothing />}
         checkedIcon={<CheckIcon />}
-        onChange={handleCheckBox}
+        onChange={handleUserInput}
+        name="eventColor"
         className="soloEvent__form--radio--yellow"
         value="#ffd600"
         />
         <Radio
-        checked={color === "#ef6c00"}
+        checked={eventColor === "#ef6c00"}
         icon={<Nothing />}
         checkedIcon={<CheckIcon />}
-        onChange={handleCheckBox}
+        onChange={handleUserInput}
+        name="eventColor"
         className="soloEvent__form--radio--orange"
         value="#ef6c00"
         />
