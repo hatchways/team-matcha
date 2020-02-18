@@ -78,10 +78,11 @@ class Availability(db.Model):
     saturday = db.Column(db.Boolean, nullable=False)
     start = db.Column(db.Time, nullable=False)
     end = db.Column(db.Time, nullable=False)
-    event = db.relationship('Event', backref='availability')
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False,
+                         unique=True)
 
     def __init__(self, sunday, monday, tuesday, wednesday, thursday, friday,
-                 saturday, start, end):
+                 saturday, start, end, event_id):
         self.sunday = sunday
         self.monday = monday
         self.tuesday = tuesday
@@ -91,6 +92,7 @@ class Availability(db.Model):
         self.saturday = saturday
         self.start = start
         self.end = end
+        self.event_id = event_id
 
 
 class Timezone(db.Model):
@@ -121,18 +123,15 @@ class Event(db.Model):
     url = db.Column(db.String(32), nullable=False, unique=True)
     colour = db.Column(db.String(6), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    availability_id = db.Column(db.Integer, db.ForeignKey('availability.id'),
-                                nullable=False)
+    availability = db.relationship('Availability', backref='events')
 
-    def __init__(self, name, location, description, url, colour, user_id,
-                 availability_id):
+    def __init__(self, name, location, description, url, colour, user_id):
         self.name = name
         self.location = location
         self.description = description
         self.url = url
         self.colour = colour
         self.user_id = user_id
-        self.availability_id = availability_id
 
 
 class BlacklistToken(db.Model):
