@@ -12,6 +12,10 @@ psycopg2-binary = "*"
 flask-testing = "*"
 flask-restx = "*"
 python-dotenv = "*"
+google-auth = "*"
+requests = "*"
+pyjwt = "*"
+
 
 
 [requires]

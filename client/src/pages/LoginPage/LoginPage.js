@@ -14,15 +14,16 @@ class LoginPage extends React.Component {
     handGoogleAuth = (res) => {
         console.log('handGoogleAuth', res);
         console.log('access token', res.accessToken);
-        console.log('access token', res.profileObj);
-        fetch('/googleAuth', {
+        console.log('profile', res.profileObj);
+        console.log('id token', res.tokenId);
+        fetch('/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             access_token: res.accessToken,
-            profileObj: res.profileObj
+            tokenId: res.tokenId
         })
         })
         .then(data => data.json())

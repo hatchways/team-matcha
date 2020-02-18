@@ -2,7 +2,8 @@ from flask import Blueprint, abort
 from flask_restx import Resource, fields
 from project import db, api
 from project.api.models import User
-import uuid
+from project.decorators import token_required
+from project.error_handlers import *
 
 users_blueprint = Blueprint('users', __name__)
 
@@ -10,7 +11,7 @@ users_blueprint = Blueprint('users', __name__)
 def add_user(params):
     name = params['name']
     email = params['email']
-    user = User(public_id=uuid.uuid4(), name=name, email=email)
+    user = User(name=name, email=email)
     db.session.add(user)
     db.session.commit()
     return user
@@ -40,6 +41,7 @@ class UserList(Resource):
 
     @api.marshal_with(user_output, as_list=True,
                       envelope='data')  #output validation
+    @token_required
     def get(self):
         return User.query.all(), 200
 
@@ -52,3 +54,14 @@ class Users(Resource):
         if not user:
             abort(400, "User not Found!")
         return user, 200
+
+
+@api.route('/users/details')
+class UserDetail(Resource):
+    @api.marshal_with(user_output, envelope='data')  #output validation
+    @token_required
+    def get(self, current_user):
+        if current_user:
+            return current_user, 200
+        else:
+            abort(400, "User not Found!")

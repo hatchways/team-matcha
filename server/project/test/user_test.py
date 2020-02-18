@@ -3,26 +3,33 @@ import json
 from project import db
 from project.api.models import User
 from project.test.test_base import TestBase
-import uuid
 
 
 def add_user(name='kenny', email='test@email.com'):
-    user = User(public_id=uuid.uuid4(), name=name, email=email)
+    user = User(name=name, email=email)
     db.session.add(user)
     db.session.commit()
     return user
 
 
 class UserModelTest(TestBase):
+
     def test_user_model(self):
         name = "kenny"
         email = "test@email.com"
         add_user(name, email)
         user = User.query.filter_by(name=name).first()
+        auth_token = user.encode_auth_token(user.id)
 
         self.assertEqual(user.name, name)
 
         self.assertEqual(user.email, email)
+
+        self.assertTrue(isinstance(auth_token, bytes))
+
+        self.assertTrue(User.decode_auth_token(
+                auth_token.decode("utf-8") ) == 1)
+
 
 
 class UserCreateTest(TestBase):
