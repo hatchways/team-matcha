@@ -28,7 +28,7 @@ services:
     environment:
       - APP_SETTINGS=project.config.DevelopmentConfig
     env_file:
-      - ./server/.env
+      - "~/.team-matcha-secrets"
     depends_on:
       - postgres-db
 

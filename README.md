@@ -24,7 +24,7 @@ make docker-test
 
 #### To Create Table:
 ```
-docker-compose exec server python manage.py create_db
+make docker-recreate-db
 ```
 
 #### To enter postgres terminal:
