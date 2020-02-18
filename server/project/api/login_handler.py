@@ -51,7 +51,7 @@ class Login(Resource):
             return {
                 'status': 'success',
                 'message': 'Successfully logged in',
-                'auth_token': jwt_token.decode('UTF-8')
+                'auth_token': jwt_token.decode()
             }, 200
         except ValueError:
             # Invalid token
@@ -64,11 +64,12 @@ class Logout(Resource):
     def post(self, current_user):
         auth_token = request.headers['x-access-token']
         # mark the token as blacklisted
-        blacklist_token = BlacklistToken(token=auth_token)
+        blacklist_token = BlacklistToken(auth_token)
         try:
             # insert the token
             db.session.add(blacklist_token)
             db.session.commit()
+            # print(f"logout handler:{auth_token}")
             responseObject = {
                 'status': 'success',
                 'message': 'Successfully logged out.'

@@ -13,6 +13,7 @@ def add_user(name='kenny', email='test@email.com'):
 
 
 class UserModelTest(TestBase):
+
     def test_user_model(self):
         name = "kenny"
         email = "test@email.com"
@@ -20,11 +21,15 @@ class UserModelTest(TestBase):
         user = User.query.filter_by(name=name).first()
         auth_token = user.encode_auth_token(user.id)
 
-        self.assertTrue(isinstance(auth_token, bytes))
-
         self.assertEqual(user.name, name)
 
         self.assertEqual(user.email, email)
+
+        self.assertTrue(isinstance(auth_token, bytes))
+
+        self.assertTrue(User.decode_auth_token(
+                auth_token.decode("utf-8") ) == 1)
+
 
 
 class UserCreateTest(TestBase):

@@ -15,11 +15,11 @@ def token_required(f):
         if not token:
             return {'message': 'Token is missing!'}, 401
 
-        try:
-            resp = User.decode_auth_token(token)
-            current_user = User.query.get(resp)
-        except:
-            return {'status': 'fail', 'message': resp}, 401
+        resp = User.decode_auth_token(token)
+
+        current_user = User.query.get(resp)
+
         return f(current_user=current_user, *args, **kwargs)
 
     return decorated
+

@@ -3,6 +3,7 @@ from flask_restx import Resource, fields
 from project import db, api
 from project.api.models import User
 from project.decorators import token_required
+from project.error_handlers import *
 
 users_blueprint = Blueprint('users', __name__)
 
@@ -64,4 +65,3 @@ class UserDetail(Resource):
             return current_user, 200
         else:
             abort(400, "User not Found!")
-
