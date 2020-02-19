@@ -13,6 +13,7 @@ import SoloEventPage from './pages/EventTypePage/SoloEventPage/SoloEventPage';
 import GroupEventPage from './pages/EventTypePage/GroupEventPage/GroupEventPage';
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
+import PageNotFound from './pages/PageNotFound/PageNotFound';
 // importing stylesheet
 import "./App.css";
 
@@ -20,7 +21,7 @@ import "./App.css";
 class App extends Component{
   render(){
       let routes = (
-        <React.Fragment>
+        <Switch>
         <Route
           path="/"
           exact
@@ -111,14 +112,21 @@ class App extends Component{
             />
           )}
           />
-      </React.Fragment>
+          <Route
+          render={props => (
+            <PageNotFound
+              {...props}
+            />
+          )}
+          />
+          </Switch>
       )
     return (
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-        <Switch>
-          {routes}
-        </Switch>
+          <div>
+            {routes}
+          </div>
         </BrowserRouter>
       </MuiThemeProvider>
     );
