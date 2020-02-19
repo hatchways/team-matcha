@@ -120,15 +120,18 @@ class Event(db.Model):
     name = db.Column(db.String(32), nullable=False)
     location = db.Column(db.String(256))
     description = db.Column(db.String(1024))
+    duration = db.Column(db.Integer, nullable=False)
     url = db.Column(db.String(32), nullable=False, unique=True)
     colour = db.Column(db.String(6), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     availability = db.relationship('Availability', backref='events')
 
-    def __init__(self, name, location, description, url, colour, user_id):
+    def __init__(self, name, location, description, duration, url, colour,
+                 user_id):
         self.name = name
         self.location = location
         self.description = description
+        self.duration = duration
         self.url = url
         self.colour = colour
         self.user_id = user_id

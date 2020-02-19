@@ -5,14 +5,14 @@ from project.test.user_test import add_user
 
 
 def add_event(name='myevent', location='my home', description='A cool event',
-              url='mycoolevent', colour='FFC0CB', user_id=0):
+              duration=60, url='mycoolevent', colour='FFC0CB', user_id=0):
     """Add's a row to the event table."""
     if not user_id:
         add_user()
         user = User.query.first()
         user_id = user.id
 
-    event = Event(name, location, description, url, colour, user_id)
+    event = Event(name, location, description, duration, url, colour, user_id)
     db.session.add(event)
     return event
 
