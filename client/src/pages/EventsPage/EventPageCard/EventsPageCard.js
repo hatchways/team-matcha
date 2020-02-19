@@ -7,7 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 
-const EventPageCard = ({ eventDuration, eventLink, eventName, eventType, eventColor }) => {
+const EventPageCard = ({ eventDuration, eventLink, eventName, eventType, eventColor, eventId, handleRemoveEvent }) => {
     const [active, setToggle] = useState(false);
     const toggle = () => {
         setToggle(!active);
@@ -23,7 +23,7 @@ const EventPageCard = ({ eventDuration, eventLink, eventName, eventType, eventCo
                         <EditIcon className="eventCard__col--settings--dropdown--icon"/>
                         Edit
                     </MenuItem>
-                    <MenuItem className="eventCard__col--settings--dropdown--item">
+                    <MenuItem onClick={() => handleRemoveEvent(eventId)} className="eventCard__col--settings--dropdown--item">
                         <DeleteIcon className="eventCard__col--settings--dropdown--icon"/>
                         Delete
                     </MenuItem>

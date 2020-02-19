@@ -12,6 +12,7 @@ class EventsPage extends Component {
         this.state = {
             events: [ // test events
                 {   
+                    eventId: 1,
                     eventDuration: '15 min',
                     eventName: '15 minute meeting',
                     eventLink: 'calendapp/john-doe/15min',
@@ -19,6 +20,7 @@ class EventsPage extends Component {
                     eventColor: '#651fff'
                 },
                 {
+                    eventId: 2,
                     eventDuration: '30 min',
                     eventName: '30 minute meeting',
                     eventLink: 'calendapp/john-doe/30min',
@@ -26,6 +28,7 @@ class EventsPage extends Component {
                     eventColor: '#43a047'
                 },
                 {
+                    eventId: 3,
                     eventDuration: '60 min',
                     eventName: '60 minute meeting',
                     eventLink: 'calendapp/john-doe/60min',
@@ -40,6 +43,12 @@ class EventsPage extends Component {
         console.log('fetch event types from the server')
     }
 
+    handleRemoveEvent = (id) => {
+        this.setState((prevState) => ({
+            events: prevState.events.filter((event) => event.eventId !== id)
+        }))
+    };
+
     render(){
         const { events } = this.state;
 
@@ -51,6 +60,7 @@ class EventsPage extends Component {
                         events.length > 0 
                             ? events.map((event) => 
                             <EventCard 
+                                handleRemoveEvent={this.handleRemoveEvent}
                                 handleLinkToClipBoard={this.handleLinkToClipBoard}
                                 key={event.eventLink} 
                                 {...event} 
