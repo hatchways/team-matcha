@@ -7,7 +7,8 @@ import jwt
 from flask import current_app
 from google.oauth2 import id_token
 from project import db
-from project.api.models import BlacklistToken, User
+from project.models.blacklist_token import BlacklistToken
+from project.models.user import User
 from project.test.test_base import TestBase
 
 

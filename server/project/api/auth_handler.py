@@ -4,7 +4,8 @@ from flask_restx import Resource, fields
 from google.auth.transport import requests
 from google.oauth2 import id_token
 from project import api, db
-from project.api.models import User, BlacklistToken
+from project.models.blacklist_token import BlacklistToken
+from project.models.user import User
 from project.api.users_handler import add_user
 from project.decorators import token_required
 

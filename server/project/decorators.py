@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import request, jsonify
-from project.api.models import User
+from project.models.user import User
 
 
 def token_required(f):

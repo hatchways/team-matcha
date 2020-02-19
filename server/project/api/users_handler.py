@@ -2,8 +2,9 @@ from flask import Blueprint, abort
 from flask_restx import Resource, fields
 from project import db, api
 import uuid
-from project.api.models import User
+from project.models.user import User
 from project.error_handlers import *
+from project.decorators import token_required
 
 users_blueprint = Blueprint('users', __name__)
 
