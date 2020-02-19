@@ -157,6 +157,25 @@
                 margin-left: 8px !important;
             }
         }
+
+        &--duration{
+            @include applyFlex(center, flex-start);
+            &--time{
+                border: solid 1px $off-black;
+                padding: 2px 16px;
+                text-align: center;
+            }
+            &--text{
+                &--span{
+                    color: $light-gray;
+                }
+            }
+            &--radio{
+                color: $light-gray !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+        }
     }
 
     &__btn{

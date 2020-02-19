@@ -1,21 +1,22 @@
 // importing modules
-import React, { Component } from 'react';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { Box, Button, Typography } from '@material-ui/core';
 
-const FormSubmitControls = ({ isFormHeader }) => (
+const FormSubmitControls = (props) => (
     <Box className="soloEvent__form--header">
         {
-            isFormHeader 
+            props.isFormHeader 
             ? <Typography className="soloEvent__form--header--text"> 
                 What event is this? 
             </Typography> 
             : <p>&nbsp;</p>
         }
         <Box className="soloEvent__btn">
-            <Button  className="soloEvent__btn--cancel">Cancel</Button>
+            <Button  onClick={() => props.history.push('/events')} className="soloEvent__btn--cancel">Cancel</Button>
             <Button type="submit" className="soloEvent__btn--next">Next</Button>
         </Box>
     </Box>
 );
 
-export default FormSubmitControls;
+export default withRouter(FormSubmitControls);
