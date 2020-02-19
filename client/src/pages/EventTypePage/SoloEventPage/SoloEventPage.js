@@ -22,14 +22,51 @@ class SoloEventPage extends Component {
             eventDescription: '',
             eventDuration: "60",
             eventLink: '',
+            eventLinkError: '',
             eventLocation: '',
             eventName: '',
+            eventNameError: '',
             locationDropDownField: 'Add a location',
             active: false,
             showLocationModal: false,
             showPhoneCallModal: false
         }
     }
+
+    validate = () => {
+        let isError = false;
+        const errors = {
+            eventNameError: "",
+            eventLinkError: "",
+        };
+
+        if (this.state.eventName.length === 0) {
+            isError = true;
+            errors.eventNameError = "Event name cannot be empty";
+        }
+
+        if(this.state.eventName.length > 0 && this.state.eventName.length < 5) {
+            isError = true;
+            errors.eventNameError = "Event name must be atleast 5 characters long";
+        }
+
+        if (this.state.eventLink.length === 0) {
+            isError = true;
+            errors.eventLinkError = "Event link cannot be empty ";
+        }
+
+        if(this.state.eventLink.length > 0 && this.state.eventLink.length < 5) {
+            isError = true;
+            errors.eventLinkError = "Event link must be atleast 5 characters long";
+        }
+
+        this.setState({
+            ...this.state,
+            ...errors
+        });
+
+        return isError;
+    };
 
     // method: gets the users text-input & dropwDown selection values
     handleUserInput = (e) => {
@@ -40,8 +77,21 @@ class SoloEventPage extends Component {
     //method: handles solo-event creation/submit
     handleFormSubmit = (e) => {
         e.preventDefault();
-        // send data to the server
-        this.setState({}, console.log('event-form submitted', this.state));
+        // validate user input
+        const err = this.validate();
+        if(!err) {
+            // send event to the server
+            const event = {
+                eventColor: this.state.eventColor,
+                eventDescription: this.state.eventDescription,
+                eventDuration: this.state.eventDuration,
+                eventLink: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
+                eventLocation: this.state.eventLocation,
+                eventName: this.state.eventName,
+            }
+            console.log('event created!', event);
+            this.props.history.push('/events');
+        }
     }
 
     handleDropdown = () => {
@@ -88,7 +138,8 @@ class SoloEventPage extends Component {
                                 onChange={this.handleUserInput} name="eventName" 
                                 className="soloEvent__form--input--name" 
                                 autoComplete="off"
-                                required/>
+                                />
+                            <p className="soloEvent__error">{this.state.eventNameError}</p>
                         </Box>
 
                         <Box className="soloEvent__form--input">
@@ -134,12 +185,13 @@ class SoloEventPage extends Component {
 
                         <Box className="soloEvent__form--input">
                             <Typography className="soloEvent__form--input--label" variant="h6">Event Link *</Typography>
+                            <Typography className="soloEvent__form--input--label--link" variant="h6">calendapp.com/john-doe/</Typography>
                             <Box className="soloEvent__form--input--link--wrap">
-                                <Typography className="soloEvent__form--input--label--link" variant="h6">calendapp.com/john-doe/</Typography>
                                 <input onChange={this.handleUserInput} name="eventLink"
                                     className="soloEvent__form--input--link" 
                                     autoComplete="off"
-                                    required/>
+                                    />
+                                <p className="soloEvent__error">{this.state.eventLinkError}</p>
                             </Box>
                         </Box>
 
