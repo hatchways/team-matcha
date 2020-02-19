@@ -1,5 +1,6 @@
 from project import db
 from sqlalchemy import inspect
+from project.models.availability import Availability
 
 
 class Event(db.Model):
@@ -33,26 +34,26 @@ class Event(db.Model):
         return dict(self)
 
 
-def add_event(user_id,
-              availability,
-              name='my event',
-              location='my home',
-              description='A cool event',
-              duration=60,
-              url='mycoolevent',
-              color='FFC0CB'):
-    """Add's a row to the event table as well as the availability table."""
-    event = Event(name=name,
-                  location=location,
-                  description=description,
-                  duration=duration,
-                  url=url,
-                  color=color,
-                  user_id=user_id,
+def add_event(user_id: int, availability: Availability, name='my event',
+              location='my home', description='A cool event', duration=60,
+              url='mycoolevent', color='FFC0CB') -> Event:
+    """
+    Creates an Event, adds the created Event and availability param and returns the created Event.
+    :param user_id: (int) foreign key to User
+    :param availability: (Availability) to be used for foreign key
+    :param name: (str) name of the event
+    :param location: (str) location of the event
+    :param description: (str) description of the event
+    :param duration: (int) duration of the event in minutes
+    :param url: (str) url suffix of the event
+    :param color: color of the event in hexadecimal without the leading '#'
+    :return: the created Event
+    """
+    event = Event(name=name, location=location, description=description,
+                  duration=duration, url=url, color=color, user_id=user_id,
                   availability=availability)
     db.session.add(event)
     db.session.add(availability)
-    db.session.commit()
     return event
 
 
