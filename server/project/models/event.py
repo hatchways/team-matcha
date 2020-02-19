@@ -34,9 +34,9 @@ class Event(db.Model):
         return dict(self)
 
 
-def add_event(user_id: int, availability: Availability, name='my event',
-              location='my home', description='A cool event', duration=60,
-              url='mycoolevent', color='FFC0CB') -> Event:
+def add_event(user_id: int, availability: Availability, name='My event',
+              location='', description='', duration=60,
+              url='myEvent', color='000000') -> Event:
     """
     Creates an Event, adds the created Event and availability param and returns the created Event.
     :param user_id: (int) foreign key to User
@@ -45,9 +45,9 @@ def add_event(user_id: int, availability: Availability, name='my event',
     :param location: (str) location of the event
     :param description: (str) description of the event
     :param duration: (int) duration of the event in minutes
-    :param url: (str) url suffix of the event
+    :param url: (str) url suffix of the event must be unique
     :param color: color of the event in hexadecimal without the leading '#'
-    :return: the created Event
+    :return: an Event
     """
     event = Event(name=name, location=location, description=description,
                   duration=duration, url=url, color=color, user_id=user_id,
