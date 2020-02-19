@@ -160,9 +160,9 @@ class AuthorizationTest(TestBase):
 
         self.assertEqual(response.status_code, 200)
 
-        self.assertEqual(name, data['data']['name'])
+        self.assertEqual(name, data['name'])
 
-        self.assertEqual(email, data['data']['email'])
+        self.assertEqual(email, data['email'])
 
     def test_valid_blacklisted_token_user_details(self):
         name = "Joe"
