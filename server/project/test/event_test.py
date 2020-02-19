@@ -45,6 +45,35 @@ class EventModelTest(TestBase):
         query1 = User.query.\
             filter_by(email=email1).\
             join(Event, Availability).\
+            first()
+        query2 = User.query.\
+            filter_by(email=email2).\
+            join(Event, Availability).\
+            first()
+
+        self.assertEqual(query1.name, name1)
+        self.assertEqual(query2.name, name2)
+        self.assertEqual(query1.events[0].url, url1)
+        self.assertEqual(query2.events[0].url, url2)
+        self.assertEqual(query1.events[0].availability.start, start1)
+        self.assertEqual(query2.events[0].availability.start, start2)
+
+    def test_user_event_cardinality_1to1(self):
+        """Tests whether the User-Event relationship is set up correctly."""
+        email1 = 'iam@clever.ca'
+        email2 = 'iamnot@clever.ca'
+        add_user(email=email1)
+        add_user(email=email2)
+        user1_id = User.query.filter_by(email=email1).first().id
+        user2_id = User.query.filter_by(email=email2).first().id
+        availability1 = create_availability()
+        availability2 = create_availability()
+        add_event(user_id=user1_id, availability=availability1)
+        add_event(url='anEvent', user_id=user2_id, availability=availability2)
+        db.session.commit()
+        query1 = User.query.\
+            filter_by(email=email1).\
+            join(Event, Availability).\
             all()
         query2 = User.query.\
             filter_by(email=email2).\
@@ -53,11 +82,5 @@ class EventModelTest(TestBase):
 
         self.assertEqual(len(query1), 1)
         self.assertEqual(len(query2), 1)
-        self.assertEqual(query1[0].name, name1)
-        self.assertEqual(query2[0].name, name2)
         self.assertEqual(len(query1[0].events), 1)
         self.assertEqual(len(query2[0].events), 1)
-        self.assertEqual(query1[0].events[0].url, url1)
-        self.assertEqual(query2[0].events[0].url, url2)
-        self.assertEqual(query1[0].events[0].availability.start, start1)
-        self.assertEqual(query2[0].events[0].availability.start, start2)
