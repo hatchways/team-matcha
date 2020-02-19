@@ -65,5 +65,4 @@ class User(db.Model):
 def add_user(name='kenny', email='test@email.com'):
     user = User(public_id=uuid.uuid4(), name=name, email=email)
     db.session.add(user)
-    db.session.commit()
     return user
