@@ -22,6 +22,7 @@ class UserModelTest(TestBase):
         self.assertTrue(
             User.decode_auth_token(auth_token.decode("utf-8")) == 1)
 
+
 class UserCreateTest(TestBase):
     def test_add_user(self):
         response = self.api.post('/users',
@@ -138,7 +139,6 @@ class UserPutTest(TestBase):
 
         updated_user = User.query.get(user.id)
         self.assertEqual(updated_user.name, "Not Joe")
-
 
     def test_update_user_invalid_permission(self):
         user = add_user("Doe", "Doe@email.com")
