@@ -1,4 +1,5 @@
 .eventType{
+    padding-bottom: 50px;
     @include applyFlex(center, center, column);
     width: 100%;
 
@@ -49,6 +50,65 @@
         &--icon{
             color: $gray;
             font-size: 4rem !important;
+        }
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .eventType{
+        &__header{
+            width: 90%;
+            &--text{
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translate(0, -50%);
+                font-size: .85rem !important;
+                text-align: left;
+            }
+        }
+        &__types{
+            @include applyFlex(flex-start, flex-start, column);
+            width: 90%;
+            &--col{
+                @include applyFlex(center, flex-start);
+                width: 100%;
+            }
+            &--btn{
+                margin-top: 10px !important;
+                width: 100%;
+            }
+            &--icon{
+                font-size: 2.5rem !important;
+            }
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 798.98px) {
+    .eventType{
+        &__header{
+            width: 90%;
+            &--text{
+                font-size: 1rem !important;
+            }
+        }
+        &__types{
+            @include applyFlex(flex-start, flex-start, column);
+            width: 90%;
+            &--col{
+                @include applyFlex(center, flex-start);
+                width: 100%;
+            }
+            &--btn{
+                margin-top: 10px !important;
+                width: 100%;
+            }
+            &--icon{
+                font-size: 2.5rem !important;
+            }
         }
     }
 }

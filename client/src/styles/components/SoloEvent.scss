@@ -91,7 +91,7 @@
                 &--link{
                     color: $gray;
                     font-size: .85rem !important;
-                    width: 33%;
+                    width: 50%;
                 }
             }
             &--name,
@@ -113,8 +113,6 @@
             }
         }
         &--radio{
-            @include applyFlex(center, space-between);
-            width: 43.5%;
             &--red{
                 background-color: #ff3d00 !important;
                 color: white !important;
@@ -201,17 +199,66 @@
     }
 }
 
-// colorList: [
-//     "#ff3d00",
-//     '#ec407a',
-//     "#d500f9",
-//     "#ab47bc",
-//     "#3d5afe",
-//     "#26a69a",
-//     "#76ff03",
-//     "#4caf50",
-//     "#ffd600",
-//     "#ef6c00"
-// ]
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .soloEvent{
+        &__form{
+            width: 100%; // ! mq
+            &--label{
+                &--link{
+                    width: 100%;
+                }
+            }
+            &--location{
+                width: 85%; // ! mq
+            }
+            &--input{
+                margin-left: 25px;
+                &--name,
+                &--location,
+                &--textarea,
+                &--link{
+                    width: 85%; // ! mq
+                }
+            }
+            &--radio{
+                @include applyFlex(flex-start, flex-start);
+                flex-wrap: wrap;
+                width: 98%;
+                &--red,
+                &--pink,
+                &--violet,
+                &--purple,
+                &--blue,
+                &--teal,
+                &--lime,
+                &--green,
+                &--yellow,
+                &--orange{
+                    margin: 2px !important;
+                }
+            }
+        }
+    }
+}
 
-// docker-compose exec server python manage.py recreate_db
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 798.98px) {
+    .soloEvent{
+        &__form{
+            width: 100%; // ! mq
+            &--location{
+                width: 85%; // ! mq
+            }
+            &--input{
+                &--name,
+                &--location,
+                &--textarea,
+                &--link{
+                    width: 85%; // ! mq
+                }
+            }
+        }
+    }
+}
+

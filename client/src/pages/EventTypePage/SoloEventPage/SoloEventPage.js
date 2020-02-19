@@ -1,7 +1,7 @@
 // importing modules
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Box, Button, MenuList, MenuItem, Paper, Radio, Typography } from '@material-ui/core';
+import { Box, MenuList, MenuItem, Paper, Radio, Typography } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
@@ -84,7 +84,7 @@ class SoloEventPage extends Component {
             const event = {
                 eventColor: this.state.eventColor,
                 eventDescription: this.state.eventDescription,
-                eventDuration: this.state.eventDuration,
+                eventDuration: parseInt(this.state.eventDuration),
                 eventLink: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
                 eventLocation: this.state.eventLocation,
                 eventName: this.state.eventName,
@@ -253,7 +253,7 @@ class SoloEventPage extends Component {
                             </Box>
                         </Box>
 
-                        <Box className="soloEvent__form--input">
+                        <Box className="soloEvent__form--input soloEvent__form--radio">
                             <RadioColorList 
                             eventColor={this.state.eventColor}
                             handleUserInput={this.handleUserInput}
