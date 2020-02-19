@@ -19,16 +19,16 @@ class UserModelTest(TestBase):
 
         self.assertTrue(isinstance(auth_token, bytes))
 
-        self.assertTrue(User.decode_auth_token(
-                auth_token.decode("utf-8") ) == 1)
-
+        self.assertTrue(
+            User.decode_auth_token(auth_token.decode("utf-8")) == 1)
 
 class UserCreateTest(TestBase):
     def test_add_user(self):
         response = self.api.post('/users',
                                  data=json.dumps({
                                      'name': "Joe",
-                                     'email': "joe@email.com"
+                                     'email': "joe@email.com",
+                                     'bad_param': "badfsdf"
                                  }),
                                  content_type='application/json')
 
@@ -41,8 +41,8 @@ class UserCreateTest(TestBase):
     def test_bad_params_values(self):
         response = self.api.post('/users',
                                  data=json.dumps({
-                                     'name': 1,
-                                     'email': 1,
+                                     'name': 1234,
+                                     'email': 1234,
                                  }),
                                  content_type='application/json')
 
@@ -70,9 +70,9 @@ class UserGetTest(TestBase):
 
         self.assertEqual(response.status_code, 200)
 
-        self.assertEqual(name, data['data']['name'])
+        self.assertEqual(name, data['name'])
 
-        self.assertEqual(email, data['data']['email'])
+        self.assertEqual(email, data['email'])
 
     def test_get_list_of_users(self):
         user = add_user("Joe", "Joe@email.com")
@@ -80,7 +80,9 @@ class UserGetTest(TestBase):
         user = add_user("Doe", "Doe@email.com")
         db.session.commit()
         response = self.api.get(f'/users')
-        data = json.loads(response.data.decode())['data']
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(data), 3)
 
@@ -94,3 +96,65 @@ class UserGetTest(TestBase):
         self.assertEqual(response.status_code, 400)
 
         self.assertEqual(data['message'], "User not Found!")
+
+
+class UserPutTest(TestBase):
+    def test_update_user_successf(self):
+        user = add_user("Doe", "Doe@email.com")
+        auth_token = user.encode_auth_token(user.id)
+
+        response = self.api.put(f'/users/{user.public_id}',
+                                headers={'x-access-token': auth_token},
+                                data=json.dumps({
+                                    'name': "Not Joe",
+                                    'email': 'Doe@gmail.com'
+                                }),
+                                content_type='application/json')
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 200)
+
+        updated_user = User.query.get(user.id)
+        self.assertEqual(updated_user.name, "Not Joe")
+
+    def test_updaet_user_extraneous_params(self):
+        user = add_user("Doe", "Doe@email.com")
+        auth_token = user.encode_auth_token(user.id)
+
+        response = self.api.put(f'/users/{user.public_id}',
+                                headers={'x-access-token': auth_token},
+                                data=json.dumps({
+                                    'name': "Not Joe",
+                                    'email': 'Doe@gmail.com',
+                                    'weird_param1': "blahblah",
+                                    'weird_param2': "blahblah",
+                                    'weird_param3': "blahblah",
+                                }),
+                                content_type='application/json')
+
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 200)
+
+        updated_user = User.query.get(user.id)
+        self.assertEqual(updated_user.name, "Not Joe")
+
+
+    def test_update_user_invalid_permission(self):
+        user = add_user("Doe", "Doe@email.com")
+        user2 = add_user("Joe", "shmoe@email.com")
+        auth_token = user.encode_auth_token(user.id)
+
+        response = self.api.put(f'/users/{user2.public_id}',
+                                headers={'x-access-token': auth_token},
+                                data=json.dumps({
+                                    'name': "ChangedName",
+                                    'email': 'shmoe@email.com'
+                                }),
+                                content_type='application/json')
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 403)
+
+        self.assertEqual(data['message'],
+                         "You do not have permission to access this content")
