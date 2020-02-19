@@ -19,11 +19,11 @@ class IntroPage extends Component {
             timeAvlUntil: '',
             daysAvl: {
                 sunday: false,
-                monday: false,
-                tuesday: false,
-                wednesday: false,
-                thursday: false,
-                friday: false,
+                monday: true,
+                tuesday: true,
+                wednesday: true,
+                thursday: true,
+                friday: true,
                 saturday: false
             },
             exists: false,
@@ -99,6 +99,7 @@ class IntroPage extends Component {
             ...this.state.daysAvl
         }
         console.log(data);
+        this.props.history.push('/events');
     };
 
     render(){

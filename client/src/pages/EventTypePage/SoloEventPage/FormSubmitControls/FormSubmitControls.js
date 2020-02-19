@@ -14,7 +14,7 @@ const FormSubmitControls = (props) => (
         }
         <Box className="soloEvent__btn">
             <Button  onClick={() => props.history.push('/events')} className="soloEvent__btn--cancel">Cancel</Button>
-            <Button type="submit" className="soloEvent__btn--next">Next</Button>
+            <Button type="submit" className="soloEvent__btn--next">Create</Button>
         </Box>
     </Box>
 );
