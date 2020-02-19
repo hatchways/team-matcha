@@ -8,7 +8,7 @@ class UserModelTest(TestBase):
     def test_user_model(self):
         name = "kenny"
         email = "test@email.com"
-        add_user(name, email)
+        add_user(name=name, email=email)
         user = User.query.filter_by(name=name).first()
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
@@ -64,7 +64,7 @@ class UserGetTest(TestBase):
     def test_get_user(self):
         name = "Joe"
         email = "joe@email.com"
-        user = add_user(name, email)
+        user = add_user(name=name, email=email)
         db.session.commit()
         response = self.api.get(f'/users/{user.public_id}')
         data = json.loads(response.data.decode())
@@ -76,9 +76,9 @@ class UserGetTest(TestBase):
         self.assertEqual(email, data['email'])
 
     def test_get_list_of_users(self):
-        user = add_user("Joe", "Joe@email.com")
-        user = add_user("Shmoe", "Shmoe@email.com")
-        user = add_user("Doe", "Doe@email.com")
+        add_user(name="Joe", email="Joe@email.com")
+        add_user(name="Shmoe", email="Shmoe@email.com")
+        add_user(name="Doe", email="Doe@email.com")
         db.session.commit()
         response = self.api.get(f'/users')
         data = json.loads(response.data.decode())
@@ -101,7 +101,8 @@ class UserGetTest(TestBase):
 
 class UserPutTest(TestBase):
     def test_update_user_successf(self):
-        user = add_user("Doe", "Doe@email.com")
+        user = add_user(name="Doe", email="Doe@email.com")
+        db.session.commit()
         auth_token = user.encode_auth_token(user.id)
 
         response = self.api.put(f'/users/{user.public_id}',
@@ -119,7 +120,8 @@ class UserPutTest(TestBase):
         self.assertEqual(updated_user.name, "Not Joe")
 
     def test_updaet_user_extraneous_params(self):
-        user = add_user("Doe", "Doe@email.com")
+        user =add_user(name="Doe", email="Doe@email.com")
+        db.session.commit()
         auth_token = user.encode_auth_token(user.id)
 
         response = self.api.put(f'/users/{user.public_id}',
@@ -142,7 +144,8 @@ class UserPutTest(TestBase):
 
     def test_update_user_invalid_permission(self):
         user = add_user("Doe", "Doe@email.com")
-        user2 = add_user("Joe", "shmoe@email.com")
+        user2 = add_user("joe", "Joe@email.com")
+        db.session.commit()
         auth_token = user.encode_auth_token(user.id)
 
         response = self.api.put(f'/users/{user2.public_id}',

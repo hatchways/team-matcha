@@ -5,8 +5,7 @@ from google.auth.transport import requests
 from google.oauth2 import id_token
 from project import api, db
 from project.models.blacklist_token import BlacklistToken
-from project.models.user import User
-from project.api.users_handler import add_user
+from project.models.user import User, add_user
 from project.decorators import token_required
 
 login_blueprint = Blueprint('login', __name__)
@@ -39,11 +38,7 @@ class Login(Resource):
             #Query for user
             user = User.query.filter_by(google_id=user_id).first()
             if not user:
-                user = {
-                    'name': idinfo['name'],
-                    'email': idinfo['email'],
-                }
-                user = add_user(user)
+                user = add_user(idinfo['name'], idinfo['email'])
                 user.google_id = user_id
                 db.session.commit()
 

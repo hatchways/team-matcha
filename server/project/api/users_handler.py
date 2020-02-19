@@ -5,9 +5,10 @@ from flask_restx import Resource, fields, marshal, reqparse
 from project import api, db
 from project.decorators import token_required
 from project.error_handlers import *
-from project.models.user import User, create_user
+from project.models.user import User, create_user, update_user
 
 users_blueprint = Blueprint('users', __name__)
+
 
 #-------------------------------------------------------------------------------
 # Serializers
@@ -39,8 +40,8 @@ class UserList(Resource):
     @api.marshal_with(user_model)  #output validation
     @api.expect(user_model, validate=True)  #input validation
     def post(self):
-        data = api.payload
-        return create_user(api.payload), 201
+        user = create_user(api.payload)
+        return user, 201
 
     @api.marshal_with(user_model, as_list=True)
     def get(self):
