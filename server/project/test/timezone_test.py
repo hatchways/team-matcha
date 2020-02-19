@@ -1,5 +1,5 @@
 import csv
-from project.api.models import Timezone
+from project.models.timezone import Timezone
 from project.test.timezone_test_base import TimezoneTestBase
 
 

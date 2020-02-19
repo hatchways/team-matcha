@@ -1,7 +1,7 @@
 import csv
 from flask.cli import FlaskGroup
 from project import create_app, db
-from project.api.models import Timezone, User
+from project.models.timezone import Timezone
 import unittest
 import sys
 
