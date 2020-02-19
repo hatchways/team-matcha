@@ -79,18 +79,9 @@ class User(db.Model):
 #-------------------------------------------------------------------------------
 
 
-def add_user(name='kenny', email='test@email.com'):
+def add_user(name='kenny', email='test@email.com', **kwargs):
     user = User(public_id=uuid.uuid4(), name=name, email=email)
     db.session.add(user)
-    return user
-
-
-def create_user(params):
-    name = params.get('name')
-    email = params.get('email')
-    user = User(public_id=uuid.uuid4(), name=name, email=email)
-    db.session.add(user)
-    db.session.commit()
     return user
 
 
