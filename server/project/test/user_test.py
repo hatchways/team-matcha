@@ -1,24 +1,24 @@
 import json
-
 from project import db
-from project.api.models import User
+from project.models.user import User, add_user
 from project.test.test_base import TestBase
+import uuid
 
 
 def add_user(name='kenny', email='test@email.com'):
-    user = User(name=name, email=email)
+    user = User(public_id=uuid.uuid4(), name=name, email=email)
     db.session.add(user)
     db.session.commit()
     return user
 
 
 class UserModelTest(TestBase):
-
     def test_user_model(self):
         name = "kenny"
         email = "test@email.com"
         add_user(name, email)
         user = User.query.filter_by(name=name).first()
+        db.session.commit()
         auth_token = user.encode_auth_token(user.id)
 
         self.assertEqual(user.name, name)
@@ -29,7 +29,6 @@ class UserModelTest(TestBase):
 
         self.assertTrue(User.decode_auth_token(
                 auth_token.decode("utf-8") ) == 1)
-
 
 
 class UserCreateTest(TestBase):
@@ -73,6 +72,7 @@ class UserGetTest(TestBase):
         name = "Joe"
         email = "joe@email.com"
         user = add_user(name, email)
+        db.session.commit()
         response = self.api.get(f'/users/{user.public_id}')
         data = json.loads(response.data.decode())
 
@@ -86,6 +86,7 @@ class UserGetTest(TestBase):
         user = add_user("Joe", "Joe@email.com")
         user = add_user("Shmoe", "Shmoe@email.com")
         user = add_user("Doe", "Doe@email.com")
+        db.session.commit()
         response = self.api.get(f'/users')
         data = json.loads(response.data.decode())['data']
 

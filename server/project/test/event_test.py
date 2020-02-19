@@ -1,20 +1,9 @@
+import datetime as dt
 from project import db
-from project.api.models import Event, User
+from project.models.event import Event, add_event
+from project.models.availability import Availability, create_availability
+from project.models.user import User, add_user
 from project.test.test_base import TestBase
-from project.test.user_test import add_user
-
-
-def add_event(name='myevent', location='my home', description='A cool event',
-              duration=60, url='mycoolevent', colour='FFC0CB', user_id=0):
-    """Add's a row to the event table."""
-    if not user_id:
-        add_user()
-        user = User.query.first()
-        user_id = user.id
-
-    event = Event(name, location, description, duration, url, colour, user_id)
-    db.session.add(event)
-    return event
 
 
 class EventModelTest(TestBase):
@@ -22,7 +11,53 @@ class EventModelTest(TestBase):
         """Tests whether the event model is working correctly."""
         name = '♪┏(・o･)┛♪┗ ( ･o･) ┓♪'
         url = 'myCoolParty'
-        add_event(url=url, name=name)
+        location = 'da street!'
+        add_user()
+        user_id = User.query.first().id
+        availability = create_availability()
+        add_event(url=url, name=name, location=location, user_id=user_id,
+                  availability=availability)
         event = Event.query.filter_by(url=url).first()
 
         self.assertEqual(event.name, name)
+        self.assertEqual(event.location, location)
+
+    def test_event_foreign_key(self):
+        """Tests whether the foreign key relationship is working between
+        Event and User."""
+        name1 = 'timmy'
+        name2 = 'johny'
+        email1 = 'iam@clever.ca'
+        email2 = 'iamnot@clever.ca'
+        add_user(name=name1, email=email1)
+        add_user(name=name2, email=email2)
+        user1_id = User.query.filter_by(email=email1).first().id
+        user2_id = User.query.filter_by(email=email2).first().id
+        start1 = dt.time(6)
+        start2 = dt.time(8)
+        availability1 = create_availability(start=start1)
+        availability2 = create_availability(start=start2)
+        url1 = 'aCleverUrl'
+        url2 = 'aNotSoCleverUrl'
+        add_event(url=url1, user_id=user1_id, availability=availability1)
+        add_event(url=url2, user_id=user2_id, availability=availability2)
+        db.session.commit()
+        query1 = User.query.\
+            filter_by(email=email1).\
+            join(Event, Availability).\
+            all()
+        query2 = User.query.\
+            filter_by(email=email2).\
+            join(Event, Availability).\
+            all()
+
+        self.assertEqual(len(query1), 1)
+        self.assertEqual(len(query2), 1)
+        self.assertEqual(query1[0].name, name1)
+        self.assertEqual(query2[0].name, name2)
+        self.assertEqual(len(query1[0].events), 1)
+        self.assertEqual(len(query2[0].events), 1)
+        self.assertEqual(query1[0].events[0].url, url1)
+        self.assertEqual(query2[0].events[0].url, url2)
+        self.assertEqual(query1[0].events[0].availability.start, start1)
+        self.assertEqual(query2[0].events[0].availability.start, start2)

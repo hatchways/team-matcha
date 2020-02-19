@@ -1,5 +1,5 @@
 import csv
-from project.api.models import Timezone
+from project.models.timezone import Timezone
 import unittest
 from project import create_app, db
 
