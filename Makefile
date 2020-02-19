@@ -6,3 +6,6 @@ docker-up:
 
 docker-test:
 	docker-compose exec server python manage.py test
+
+docker-recreate-db:
+	docker-compose exec server python manage.py recreate_db
