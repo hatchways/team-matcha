@@ -1,49 +1,38 @@
-from flask import Blueprint, abort
-from flask_restx import Resource, fields, reqparse, marshal
-from project import db, api
 import uuid
-from project.models.user import User
-from project.error_handlers import *
+
+from flask import Blueprint, abort
+from flask_restx import Resource, fields, marshal, reqparse
+from project import api, db
 from project.decorators import token_required
+from project.error_handlers import *
+from project.models.user import User, create_user
 
 users_blueprint = Blueprint('users', __name__)
-
-#-------------------------------------------------------------------------------
-# Database Mutations
-#-------------------------------------------------------------------------------
-
-def add_user(params):
-    name = params.get('name')
-    email = params.get('email')
-    user = User(name=name, email=email)
-    db.session.add(user)
-    db.session.commit()
-    return user
-
-
-def update_user(user, params):
-    for key, value in params.items():
-        if value is not None:
-            setattr(user, key, value)
-    db.session.commit()
-    return user
 
 #-------------------------------------------------------------------------------
 # Serializers
 #-------------------------------------------------------------------------------
 
-user_model = api.model('User', {
-    'public_id': fields.String(description="unique identifier of the user"),
-    'name': fields.String(required=True, description="The name of the user"),
-    'email': fields.String(required=True, description="The unique email"),
-    'image_url': fields.String(description="The image url of the user's Google account"),
-    'user_url': fields.String(description="The unique base url of user for event inviations "),
-})
-
+user_model = api.model(
+    'User', {
+        'public_id':
+        fields.String(description="unique identifier of the user"),
+        'name':
+        fields.String(required=True, description="The name of the user"),
+        'email':
+        fields.String(required=True, description="The unique email"),
+        'image_url':
+        fields.String(
+            description="The image url of the user's Google account"),
+        'user_url':
+        fields.String(
+            description="The unique base url of user for event inviations "),
+    })
 
 #-------------------------------------------------------------------------------
 # Endpoints
 #-------------------------------------------------------------------------------
+
 
 @api.route('/users')
 class UserList(Resource):
@@ -51,7 +40,7 @@ class UserList(Resource):
     @api.expect(user_model, validate=True)  #input validation
     def post(self):
         data = api.payload
-        return add_user(api.payload), 201
+        return create_user(api.payload), 201
 
     @api.marshal_with(user_model, as_list=True)
     def get(self):
@@ -60,7 +49,6 @@ class UserList(Resource):
 
 @api.route('/users/<public_id>')
 class Users(Resource):
-
     @api.marshal_with(user_model)
     def get(self, public_id):
         user = User.query.filter_by(public_id=public_id).first()
