@@ -13,6 +13,16 @@ class BlacklistTokenError(Error):
    """Raised when Token has been blacklisted"""
    pass
 
+class AccessDeniedError(Error):
+   """Raised when  has been blacklisted"""
+   pass
+
+@api.errorhandler(PermissionError)
+def handle_permissionError(error):
+    return {
+        'status': 'fail',
+        'message': "You do not have permission to access this content"
+    }, 403
 
 @api.errorhandler(BlacklistTokenError)
 def handle_blacklistTokenError(error):
@@ -40,3 +50,4 @@ def handle_jwt_InvalidTokenError(error):
         'status': 'fail',
         'message': 'Invalid token. Please log in again.'
     }, 401
+

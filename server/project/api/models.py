@@ -13,12 +13,12 @@ class User(db.Model):
     google_id = db.Column(db.String(128), unique=True)
     name = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
+    image_url = db.Column(db.String(2048), unique=True)
 
-    def __init__(self, name, email, google_id=None):
+    def __init__(self, name, email):
         self.public_id = uuid.uuid4()
         self.name = name
         self.email = email
-        self.google_id = google_id
 
     @staticmethod
     def decode_auth_token(auth_token):
