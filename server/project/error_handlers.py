@@ -11,11 +11,7 @@ class Error(Exception):
    pass
 
 class BlacklistTokenError(Error):
-   """Raised when Token has been blacklisted"""
-   pass
-
-class AccessDeniedError(Error):
-   """Raised when  has been blacklisted"""
+   """Custom Error when Token has been blacklisted"""
    pass
 
 
