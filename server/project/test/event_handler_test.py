@@ -72,6 +72,19 @@ class EventCreateTest(TestBase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(event.url, url)
 
-    # def test_bad_params_values(self):
-    #     """Test whether passing bad values is rejected."""
-    #     add_user()
+    def test_blank_url(self):
+        """Test whether passing bad values is rejected."""
+        user = add_user()
+        db.session.commit()
+        public_id = user.public_id
+        auth_token = user.encode_auth_token(user.id)
+        url = 'clickme'
+        data = create_event_json(url=url)
+
+        response = self.api.post(f'/users/{public_id}/events',
+                                 headers={'x-access-token': auth_token},
+                                 data=data,
+                                 content_type='application/json')
+        event = Event.query.filter_by().first()
+
+        self.assertEqual(response.status_code, 400)
