@@ -1,18 +1,20 @@
 // importing modules
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Box, MenuList, MenuItem, Paper, Radio, Typography } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import CallIcon from '@material-ui/icons/Call';
+import { Box } from '@material-ui/core';
 // importing components
 import Header from '../../../components/Header/Header';
 import FormSubmitControls from './FormSubmitControls/FormSubmitControls';
 import EventTypeHeader from '../EventTypeHeader/EventTypeHeader';
+import EventNameInput from './EventNameInput/EventNameInput';
+import EventLinkInput from './EventLinkInput/EventLinkInput';
+import EventLocationDropdown from './EventLocationDropdown/EventLocationDropdown';
+import EventTextArea from './EventTextArea/EventTextArea';
 import RadioColorList from './RadioColorList/RadioColorList';
+import RadioDurationList from './RadioDurationList/RadioDurationList';
 import PhoneCallModal from './Modals/PhoneCallModal';
 import LocationModal from './Modals/LocationModal';
+
 
 class SoloEventPage extends Component {
     constructor(props){
@@ -28,7 +30,6 @@ class SoloEventPage extends Component {
             phone: '',
             eventNameError: '',
             locationDropDownField: 'Add a location',
-            active: false,
             showLocationModal: false,
             showPhoneCallModal: false
         }
@@ -61,10 +62,7 @@ class SoloEventPage extends Component {
             errors.eventLinkError = "Event link must be atleast 5 characters long";
         }
 
-        this.setState({
-            ...this.state,
-            ...errors
-        });
+        this.setState({ ...this.state, ...errors});
 
         return isError;
     };
@@ -88,23 +86,15 @@ class SoloEventPage extends Component {
             }
             const event = {
                 eventColor: this.state.eventColor,
-                eventDescription: this.state.eventDescription,
+                eventDescription: this.state.eventDescription.trim(),
                 eventDuration: parseInt(this.state.eventDuration),
                 eventLink: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
                 eventLocation: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
-                eventName: this.state.eventName,
+                eventName: this.state.eventName.trim(),
             }
             console.log('event created!', event);
             this.props.history.push('/events');
         }
-    }
-
-    handleDropdown = () => {
-        this.setState((prevState) => {
-            return {
-                active: !prevState.active
-            }
-        })
     }
 
     handleLocationModal = () => {
@@ -139,136 +129,34 @@ class SoloEventPage extends Component {
                     <form onSubmit={this.handleFormSubmit} className="soloEvent__form">
                         {/*form header*/}
                         <FormSubmitControls isFormHeader={true}/>
-
                         {/*form fields*/}
-                        <Box className="soloEvent__form--input">
-                            <Typography className="soloEvent__form--input--label" variant="h6">Event name *</Typography>
-                            <input 
-                                onChange={this.handleUserInput} name="eventName" 
-                                className="soloEvent__form--input--name" 
-                                autoComplete="off"
-                                />
-                            <p className="soloEvent__error">{this.state.eventNameError}</p>
-                        </Box>
-
-                        <Box className="soloEvent__form--input">
-                            <Typography className="soloEvent__form--input--label" variant="h6">Location</Typography>
-                            <Box onClick={this.handleDropdown} className="soloEvent__form--location">
-                                <Typography className="soloEvent__form--location--title" variant="body1">
-                                    {this.state.locationDropDownField}
-                                </Typography>
-                                { this.state.active ? <ExpandLessIcon /> : <ExpandMoreIcon/> }
-                                {/*add location drop down here*/}
-                                {this.state.active 
-                                ? <Paper className="soloEvent__form--location--settings--dropdown">
-                                    <MenuList>
-                                        <MenuItem onClick={this.handleLocationModal} className="soloEvent__form--location--settings--dropdown--item">
-                                            <LocationOnIcon className="soloEvent__form--location--settings--dropdown--icon"/>
-                                            <Box>
-                                                <Typography variant="body2">In-person meeting</Typography>
-                                                <span className="soloEvent__form--location--settings--dropdown--span">set an address or place</span>
-                                            </Box>
-                                        </MenuItem>
-                                        <MenuItem onClick={this.handlePhoneCallModal} className="soloEvent__form--location--settings--dropdown--item">
-                                            <CallIcon className="soloEvent__form--location--settings--dropdown--icon"/>
-                                            <Box>
-                                                <Typography variant="body2">Phone-call</Typography>
-                                                <span className="soloEvent__form--location--settings--dropdown--span">Inbound or outbound calls</span>
-                                            </Box>
-                                        </MenuItem>
-                                    </MenuList>
-                                </Paper> : null }
-                            </Box>
-                        </Box>
-
-                        <Box className="soloEvent__form--input">
-                            <Typography className="soloEvent__form--input--label" variant="h6">Description/Instructions</Typography>
-                            <textarea 
-                                onChange={this.handleUserInput}
-                                name="eventDescription"
-                                rows="10" cols="50"
-                                placeholder="Write a summary and any details your invitee should know about the event" 
-                                className="soloEvent__form--input--textarea">
-                            </textarea>
-                        </Box>
-
-                        <Box className="soloEvent__form--input">
-                            <Typography className="soloEvent__form--input--label" variant="h6">Event Link *</Typography>
-                            <Typography className="soloEvent__form--input--label--link" variant="h6">calendapp.com/john-doe/</Typography>
-                            <Box className="soloEvent__form--input--link--wrap">
-                                <input onChange={this.handleUserInput} name="eventLink"
-                                    className="soloEvent__form--input--link" 
-                                    autoComplete="off"
-                                    />
-                                <p className="soloEvent__error">{this.state.eventLinkError}</p>
-                            </Box>
-                        </Box>
-
-                        <Box className="soloEvent__form--input">
-                            <Typography className="soloEvent__form--input--label" variant="h6">Event Duration</Typography>
-                            <Box className="soloEvent__form--duration">
-                                <Box className="soloEvent__form--duration--time">
-                                    <Typography variant="body2" className="soloEvent__form--duration--text">
-                                        15<br/>
-                                        <span className="soloEvent__form--duration--text--span">min</span>
-                                    </Typography>
-                                    <Radio
-                                        onChange={this.handleUserInput}
-                                        checked={this.state.eventDuration === "15"}
-                                        name="eventDuration"
-                                        className="soloEvent__form--duration--radio"
-                                        value="15"
-                                    />
-                                </Box>
-                                <Box className="soloEvent__form--duration--time">
-                                    <Typography variant="body2" className="soloEvent__form--duration--text">
-                                        30<br/>
-                                        <span className="soloEvent__form--duration--text--span">min</span>
-                                    </Typography>
-                                    <Radio
-                                        onChange={this.handleUserInput}
-                                        checked={this.state.eventDuration === "30"}
-                                        name="eventDuration"
-                                        className="soloEvent__form--duration--radio"
-                                        value="30"
-                                    />
-                                </Box>
-                                <Box className="soloEvent__form--duration--time">
-                                    <Typography variant="body2" className="soloEvent__form--duration--text">
-                                        45<br/>
-                                        <span className="soloEvent__form--duration--text--span">min</span>
-                                    </Typography>
-                                    <Radio
-                                        onChange={this.handleUserInput}
-                                        checked={this.state.eventDuration === "45"}
-                                        name="eventDuration"
-                                        className="soloEvent__form--duration--radio"
-                                        value="45"
-                                    />
-                                </Box>
-                                <Box className="soloEvent__form--duration--time">
-                                    <Typography variant="body2" className="soloEvent__form--duration--text">
-                                        60<br/>
-                                        <span className="soloEvent__form--duration--text--span">min</span>
-                                    </Typography>
-                                    <Radio
-                                        onChange={this.handleUserInput}
-                                        checked={this.state.eventDuration === "60"}
-                                        name="eventDuration"
-                                        className="soloEvent__form--duration--radio"
-                                        value="60"
-                                    />
-                                </Box>
-                            </Box>
-                        </Box>
-
+                        <EventNameInput
+                            handleUserInput={this.handleUserInput}
+                            eventNameError={this.state.eventNameError}
+                        />
+                        <EventLocationDropdown 
+                            handleDropdown={this.handleDropdown}
+                            handleLocationModal={this.handleLocationModal}
+                            handlePhoneCallModal={this.handlePhoneCallModal}
+                            locationDropDownField={this.state.locationDropDownField}
+                        />
+                        <EventTextArea 
+                            handleUserInput={this.handleUserInput}
+                        />
+                        <EventLinkInput 
+                            handleUserInput={this.handleUserInput}
+                            eventLinkError={this.state.eventLinkError}
+                        />
+                        <RadioDurationList 
+                            handleUserInput={this.handleUserInput}
+                            eventDuration={this.state.eventDuration}
+                        />
                         <Box className="soloEvent__form--input soloEvent__form--radio">
                             <RadioColorList 
                             eventColor={this.state.eventColor}
                             handleUserInput={this.handleUserInput}
                             />
                         </Box>
-
                         <FormSubmitControls isFormHeader={false}/>
                     </form>
                 </Box>
