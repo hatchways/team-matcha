@@ -100,7 +100,7 @@ class UserGetTest(TestBase):
 
 
 class UserPutTest(TestBase):
-    def test_update_user_successf(self):
+    def test_update_user_success(self):
         user = add_user(name="Doe", email="Doe@email.com")
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
@@ -119,7 +119,7 @@ class UserPutTest(TestBase):
         updated_user = User.query.get(user.id)
         self.assertEqual(updated_user.name, "Not Joe")
 
-    def test_updaet_user_extraneous_params(self):
+    def test_update_user_extraneous_params(self):
         user =add_user(name="Doe", email="Doe@email.com")
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)

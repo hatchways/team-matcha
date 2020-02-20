@@ -94,7 +94,7 @@ class Logout(TestBase):
         google_id = "123456789"
         token_payload = {
             'exp':
-            datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=2),
+            datetime.datetime.utcnow() - datetime.timedelta(days=0, seconds=2),
             'iat':
             datetime.datetime.utcnow(),
             'sub':
@@ -110,7 +110,6 @@ class Logout(TestBase):
             data = json.loads(response.data.decode())
             auth_token = data['auth_token']
 
-            time.sleep(3)
             response = self.api.post('/logout',
                                      headers={'x-access-token': auth_token})
             data = json.loads(response.data.decode())

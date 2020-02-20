@@ -1,6 +1,7 @@
 from project import api
 from flask import Blueprint
 import jwt
+from werkzeug.exceptions import BadRequest
 
 
 errors_blueprint = Blueprint('errors', __name__)
@@ -10,12 +11,19 @@ class Error(Exception):
    pass
 
 class BlacklistTokenError(Error):
-   """Raised when Token has been blacklisted"""
+   """Custom Error when Token has been blacklisted"""
    pass
 
-class AccessDeniedError(Error):
-   """Raised when  has been blacklisted"""
-   pass
+
+class UrlContainsSpace(Exception):
+    """This is a custom error."""
+    pass
+
+
+class UserNotFound(Exception):
+    """This is a custom error."""
+    pass
+
 
 @api.errorhandler(PermissionError)
 def handle_permissionError(error):
@@ -51,3 +59,29 @@ def handle_jwt_InvalidTokenError(error):
         'message': 'Invalid token. Please log in again.'
     }, 401
 
+
+@api.errorhandler(BadRequest)
+def handle_url_contains_space(error):
+    """This is a custom error."""
+    return {
+        'status': 'fail',
+        'message': 'The url parameter contains a space please remove it and '
+                   'resubmit your request.'
+    }, 400
+
+
+@api.errorhandler(UrlContainsSpace)
+def handle_url_contains_space(error):
+    return {
+               'status': 'fail',
+               'message': 'The url parameter contains a space please remove it'
+                          'and resubmit your request.'
+           }, 400
+
+
+@api.errorhandler(UserNotFound)
+def handle_user_not_found(error):
+    return {
+        'status': 'fail',
+        'message': 'User not Found!'
+    }, 400

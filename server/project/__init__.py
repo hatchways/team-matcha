@@ -37,5 +37,8 @@ def create_app(script_info=None):
     from project.error_handlers import errors_blueprint
     app.register_blueprint(errors_blueprint)
 
+    from project.api.events_handler import events_blueprint
+    app.register_blueprint(events_blueprint)
+
     api.init_app(app)
     return app
