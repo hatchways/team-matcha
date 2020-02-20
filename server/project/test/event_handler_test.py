@@ -61,11 +61,10 @@ class EventCreateTest(TestBase):
         public_id = user.public_id
         auth_token = user.encode_auth_token(user.id)
         url = 'clickme'
-        data = create_event_json(url=url)
 
         response = self.api.post(f'/users/{public_id}/events',
                                  headers={'x-access-token': auth_token},
-                                 data=data,
+                                 data=create_event_json(url=url),
                                  content_type='application/json')
         event = Event.query.filter_by(url=url).first()
 
@@ -73,18 +72,73 @@ class EventCreateTest(TestBase):
         self.assertEqual(event.url, url)
 
     def test_blank_url(self):
-        """Test whether passing bad values is rejected."""
+        """Tests whether passing a blank url returns a 400 response."""
         user = add_user()
         db.session.commit()
         public_id = user.public_id
         auth_token = user.encode_auth_token(user.id)
-        url = 'clickme'
-        data = create_event_json(url=url)
+        url = ''
 
         response = self.api.post(f'/users/{public_id}/events',
                                  headers={'x-access-token': auth_token},
-                                 data=data,
+                                 data=create_event_json(url=url),
                                  content_type='application/json')
-        event = Event.query.filter_by().first()
+        data = json.loads(response.data.decode())
 
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['message'],
+                         'Input payload validation failed')
+        self.assertEqual(data['errors']['url'], f"'' is too short")
+
+    def test_blank_name(self):
+        """Tests whether passing a blank name returns a 400 response."""
+        user = add_user()
+        db.session.commit()
+        public_id = user.public_id
+        auth_token = user.encode_auth_token(user.id)
+        name = ''
+
+        response = self.api.post(f'/users/{public_id}/events',
+                                 headers={'x-access-token': auth_token},
+                                 data=create_event_json(name=name),
+                                 content_type='application/json')
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['message'],
+                         'Input payload validation failed')
+        self.assertEqual(data['errors']['name'], f"'' is too short")
+
+    def test_missing_token(self):
+        """Tests whether a request with a missing token returns a 401
+        response."""
+        user = add_user()
+        db.session.commit()
+        public_id = user.public_id
+
+        response = self.api.post(f'/users/{public_id}/events',
+                                 data=create_event_json(),
+                                 content_type='application/json')
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(data['message'], 'Token is missing!')
+
+    def test_bad_token(self):
+        """Tests whether a request with an invalid token returns a 403
+        response."""
+        user1 = add_user(email='test1@email.com')
+        user2 = add_user(email='test2@email.com')
+        db.session.commit()
+        public_id1 = user1.public_id
+        auth_token2 = user2.encode_auth_token(user2.id)
+
+        response = self.api.post(f'/users/{public_id1}/events',
+                                 headers={'x-access-token': auth_token2},
+                                 data=create_event_json(),
+                                 content_type='application/json')
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(data['message'],
+                         "You do not have permission to access this content")

@@ -40,7 +40,7 @@ event_input_output = api.model(
     'Event', {
         'name': fields.String(
             description='The name of the event', required=True,
-            example='My event', max_length=32),
+            example='My event', min_length=1, max_length=32),
         'location': fields.String(
             default='',
             description='The location where the event will take place',
@@ -53,7 +53,7 @@ event_input_output = api.model(
             example=60),
         'url': fields.String(
             description='The unique url for this event', required=True,
-            example='myevent', max_length=32),
+            example='myevent', min_length=1, max_length=32),
         'color': fields.String(
             description="A hex representation of a colour with the leading '#'",
             required=True, example='#000000', max_length=7),
@@ -62,18 +62,18 @@ event_input_output = api.model(
 
 @api.route('/users/<public_id>/events')
 class Events(Resource):
-    @token_required
-    @api.marshal_with(event_input_output, envelope='data')
-    def get(self, public_id, current_user=None):
-        """Returns all the events that the user has created."""
-        if current_user.public_id != public_id:
-            raise PermissionError
-
-        events = Event.query.\
-            join(User).\
-            filter(User.public_id == public_id).\
-            all()
-        return events, 200
+    # @token_required
+    # @api.marshal_with(event_input_output, envelope='data')
+    # def get(self, public_id, current_user=None):
+    #     """Returns all the events that the user has created."""
+    #     if current_user.public_id != public_id:
+    #         raise PermissionError
+    #
+    #     events = Event.query.\
+    #         join(User).\
+    #         filter(User.public_id == public_id).\
+    #         all()
+    #     return events, 200
 
     @token_required
     @api.expect(event_input_output, validate=True)
@@ -83,7 +83,7 @@ class Events(Resource):
             raise PermissionError
 
         payload = api.payload
-        user_id = User.query.filter_by(public_id=public_id).first().id
+        user_id = current_user.id
         availability = create_availability(
             sunday=payload['availability']['days']['sunday'],
             monday=payload['availability']['days']['monday'],
