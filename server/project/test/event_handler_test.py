@@ -9,7 +9,7 @@ from project.models.user import User, add_user
 def create_event_json(name='My event', location='', description='', duration=60,
                       url='myevent', color='#000000', start=8, end=17,
                       sunday=False, monday=True, tuesday=True, wednesday=True,
-                      thursday=True, friday=True, saturday=False,):
+                      thursday=True, friday=True, saturday=False):
     """
     Creates JSON dump to create an Event.
     :param name: name of the event
@@ -53,14 +53,24 @@ def create_event_json(name='My event', location='', description='', duration=60,
     return json.dumps(data)
 
 
+def create_user_id() -> int:
+    """
+    Commits a User and returns the User's public_id.
+    :return: The public_id of a created user
+    """
+    add_user()
+    db.session.commit()
+    public_id = User.query.first().public_id
+    return public_id
+
+
 class EventCreateTest(TestBase):
     def test_add_event(self):
-        add_user()
-        db.session.commit()
+        """Tests whether an event can be successfully created."""
+        public_id = create_user_id()
         url = 'clickme'
         data = create_event_json(url=url)
-        user_public_id = User.query.first().public_id
-        response = self.api.post(f'/users/{user_public_id}/events', data=data,
+        response = self.api.post(f'/users/{public_id}/events', data=data,
                                  content_type='application/json')
         event = Event.query.filter_by(url=url).first()
 
