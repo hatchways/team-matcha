@@ -12,10 +12,10 @@ import datetime as dt
 events_blueprint = Blueprint('events', __name__)
 
 weekday = fields.Boolean(
-    default=True, example=True,
+    default=True,
     description='Whether an event should be scheduled on this day')
 weekend = fields.Boolean(
-    default=False, example=False,
+    default=False,
     description='Whether an event should be scheduled on this day')
 days_input = api.model(
     'Days', {
@@ -31,10 +31,10 @@ availability_input = api.model(
     'Availability', {
         'start': fields.Integer(
             description='Your earliest availability for the event',
-            default=8, example=8),
+            default=8),
         'end': fields.Integer(
             description='Your latest availability for the event',
-            default=17, example=17),
+            default=17),
         'days': fields.Nested(days_input)})
 event_input_output = api.model(
     'Event', {
@@ -49,14 +49,13 @@ event_input_output = api.model(
             default='', description='A description for the event',
             example='This is an awesome description.', max_length=1024),
         'duration': fields.Integer(
-            description='The duration of the event in minutes', default=60,
-            example=60),
+            description='The duration of the event in minutes', default=60),
         'url': fields.String(
             description='The unique url for this event', required=True,
             example='myevent', min_length=1, max_length=32),
         'color': fields.String(
             description="A hex representation of a colour with the leading '#'",
-            required=True, example='#000000', max_length=7),
+            required=True, example='#000000', min_length=7, max_length=7),
         'availability': fields.Nested(availability_input)})
 
 
