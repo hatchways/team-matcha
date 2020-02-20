@@ -3,10 +3,13 @@ import uuid
 
 import jwt
 from flask import current_app
-
 from project import db
-from project.models.blacklist_token import BlacklistToken
 from project.error_handlers import BlacklistTokenError
+from project.models.blacklist_token import BlacklistToken
+
+#-------------------------------------------------------------------------------
+# Model
+#-------------------------------------------------------------------------------
 
 
 class User(db.Model):
@@ -18,6 +21,11 @@ class User(db.Model):
     name = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
     events = db.relationship('Event', backref='user')
+
+    # def __init__(self, name, email):
+    #     self.public_id = uuid.uuid4()
+    #     self.name = name
+    #     self.email = email
 
     @staticmethod
     def decode_auth_token(auth_token):
@@ -53,16 +61,33 @@ class User(db.Model):
         """
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=120),
-                'iat': datetime.datetime.utcnow(),
-                'sub': user_id
+                'exp':
+                datetime.datetime.utcnow() +
+                datetime.timedelta(days=0, seconds=120),
+                'iat':
+                datetime.datetime.utcnow(),
+                'sub':
+                user_id
             }
             return jwt.encode(payload, current_app.config.get('SECRET_KEY'))
         except Exception as e:
             return e
 
 
-def add_user(name='kenny', email='test@email.com'):
+#-------------------------------------------------------------------------------
+# Database Functions
+#-------------------------------------------------------------------------------
+
+
+def add_user(name='kenny', email='test@email.com', **kwargs):
     user = User(public_id=uuid.uuid4(), name=name, email=email)
     db.session.add(user)
+    return user
+
+
+def update_user(user, params):
+    for key, value in params.items():
+        if value is not None:
+            setattr(user, key, value)
+    db.session.commit()
     return user
