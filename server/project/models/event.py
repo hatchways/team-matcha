@@ -33,8 +33,10 @@ def add_event(user_id, availability, name='my event', location='my home',
               description='A cool event', duration=60, url='mycoolevent',
               color='FFC0CB'):
     """Add's a row to the event table as well as the availability table."""
+    user = User.get(user_id)
+    unique_url = f"calendapp/{user.public_id}/{url}"
     event = Event(name=name, location=location, description=description,
-                  duration=duration, url=url, color=color, user_id=user_id,
+                  duration=duration, url=unique_url, color=color, user_id=user_id,
                   availability=availability)
     db.session.add(event)
     db.session.add(availability)

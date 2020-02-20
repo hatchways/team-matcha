@@ -22,11 +22,6 @@ class User(db.Model):
     email = db.Column(db.String(128), unique=True, nullable=False)
     events = db.relationship('Event', backref='user')
 
-    # def __init__(self, name, email):
-    #     self.public_id = uuid.uuid4()
-    #     self.name = name
-    #     self.email = email
-
     @staticmethod
     def decode_auth_token(auth_token):
         """
