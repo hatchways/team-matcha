@@ -1,4 +1,5 @@
 from project import db
+from sqlalchemy import inspect
 
 
 class Event(db.Model):
@@ -18,6 +19,15 @@ class Event(db.Model):
                                    lazy='joined',
                                    backref=db.backref('event', uselist=False))
 
+    def __iter__(self):
+        values = vars(self)
+        for attr in self.__table__.columns.keys():
+            if attr in values:
+                yield attr, values[attr]
+
+    def logme(self):
+        return dict(self)
+
 
 def add_event(user_id, availability, name='my event', location='my home',
               description='A cool event', duration=60, url='mycoolevent',
@@ -28,4 +38,14 @@ def add_event(user_id, availability, name='my event', location='my home',
                   availability=availability)
     db.session.add(event)
     db.session.add(availability)
+    db.session.commit()
+    return event
+
+
+def update_event(event, params):
+    fields = inspect(Event).columns.keys()
+    fk = ['availability']
+    for key, value in params.items():
+        if key in fields and value is not None and key not in fk:
+            setattr(event, key, value)
     return event

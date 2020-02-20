@@ -1,9 +1,9 @@
 from flask import Blueprint, abort
-from flask_restx import Resource, fields
+from flask_restx import Resource, fields, marshal
 from project import db, api
 from project.models.availability import Availability, create_availability
 from project.models.user import User, add_user
-from project.models.event import Event, add_event
+from project.models.event import Event, add_event, update_event
 from typing import Tuple
 from project.decorators import token_required
 from project.error_handlers import *
@@ -42,11 +42,11 @@ event_input_output = api.model(
             description='The name of the event', required=True,
             example='My event', min_length=1, max_length=32),
         'location': fields.String(
-            default='',
+            default=None,
             description='The location where the event will take place',
             example='My office', max_length=256),
         'description': fields.String(
-            default='', description='A description for the event',
+            default=None, description='A description for the event',
             example='This is an awesome description.', max_length=1024),
         'duration': fields.Integer(
             description='The duration of the event in minutes', default=60,
@@ -105,3 +105,43 @@ class Events(Resource):
             color=payload['color'].lstrip('#'))
         db.session.commit()
         return 'success', 201
+
+
+@api.route('/users/<public_id>/events/<event_id>')
+class EventDetail(Resource):
+
+    @token_required
+    def put(self, public_id, event_id, current_user=None):
+
+        if current_user.public_id != public_id:
+            raise PermissionError
+
+        event = Event.query.get(event_id)
+        data = marshal(api.payload, event_input_output, skip_none=True)
+        if event is not None:
+            user = event.user
+            if user.public_id != current_user.public_id:
+                raise PermissionError
+            event = update_event(event, data)
+            return {"message": "Success"}, 200
+        return {"error": "Event not found"}, 404
+
+    @token_required
+    @api.marshal_with(event_input_output, skip_none=True)
+    def get(self, public_id, event_id, current_user=None):
+
+        if current_user.public_id != public_id:
+            raise PermissionError
+
+        event = Event.query.get(event_id)
+        if event is not None:
+            user = event.user
+            if user.public_id != current_user.public_id:
+                raise PermissionError
+
+            event.availability.start = event.availability.start.hour
+            event.availability.end = event.availability.end.hour
+            event.color = '#' + event.color
+            result = marshal(event ,event_input_output, skip_none=True)
+            return result, 200
+        return {"error": "Event not found"}, 404

@@ -60,7 +60,7 @@ class Users(Resource):
 
     @token_required
     @api.expect(user_model)
-    @api.marshal_with(user_model)
+    @api.marshal_with(user_model, skip_none=True)
     def put(self, public_id, current_user=None):
 
         if current_user.public_id != public_id:
@@ -76,7 +76,7 @@ class Users(Resource):
 
 @api.route('/users/details')
 class UserDetail(Resource):
-    @api.marshal_with(user_model)
+    @api.marshal_with(user_model, skip_none=True)
     @token_required
     def get(self, current_user=None):
         if current_user:
