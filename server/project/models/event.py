@@ -35,6 +35,7 @@ def add_event(user_id, availability, name='my event', location='my home',
     """Add's a row to the event table as well as the availability table."""
     user = User.get(user_id)
     unique_url = f"calendapp/{user.public_id}/{url}"
+    # TODO Check for url uniqueness
     event = Event(name=name, location=location, description=description,
                   duration=duration, url=unique_url, color=color, user_id=user_id,
                   availability=availability)
