@@ -89,6 +89,21 @@ class IntroPage extends Component {
 
     // method: handles data submission to the server
     handleDataSubmit = () => {
+        fetch('/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            // set to be sent to server
+        })
+        })
+        .then(data => data.json())
+        .then((data) => {
+            //data from server
+        })
+        .catch(err => (err));
+        
         const currentDate = momentTZ().format('YYYY-MM-D');
         const data = { // data to be sent to the server
             userUrl: this.state.userUrl,

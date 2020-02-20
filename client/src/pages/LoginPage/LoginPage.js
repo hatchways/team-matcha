@@ -2,6 +2,7 @@
 import React from 'react';
 import { Box, Container, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { tokenCreated, tokenExpires, setIsAuth, setToken, removeToken } from '../../Auth/Auth';
 // importing compnents
 import GoogleLogin from 'react-google-login';
 
@@ -11,11 +12,7 @@ class LoginPage extends React.Component {
         this.state = {};
     }
 
-    handGoogleAuth = (res) => {
-        console.log('handGoogleAuth', res);
-        console.log('access token', res.accessToken);
-        console.log('profile', res.profileObj);
-        console.log('id token', res.tokenId);
+    handleGoogleAuth = (res) => {
         fetch('/login', {
         method: 'POST',
         headers: {
@@ -28,10 +25,15 @@ class LoginPage extends React.Component {
         })
         .then(data => data.json())
         .then((data) => {
-            console.log(data);
+            this.props.handleLogin(data.auth_token);
+            tokenCreated();
+            tokenExpires();
+            setIsAuth();
+            setToken(data.auth_token);
+            this.props.history.push(`/intro/${data.auth_token}`);
         })
         .catch(err => (err));
-        }
+    }
 
 
     render(){
@@ -49,8 +51,8 @@ class LoginPage extends React.Component {
                     <GoogleLogin 
                     clientId="798726661513-p69g4p5hn1cmura8mgm0sth9kqlnjoke.apps.googleusercontent.com"
                     buttonText="LOGIN WITH GOOGLE"
-                    onSuccess={this.handGoogleAuth}
-                    onFailure={this.handGoogleAuth}
+                    onSuccess={this.handleGoogleAuth}
+                    onFailure={this.handleGoogleAuth}
                     className="login__btn"
                     />
                     <Box className="login__container--footer">

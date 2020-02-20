@@ -1,8 +1,10 @@
 //importing modules
 import React, { Component } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { theme } from "./themes/theme";
+import moment from 'moment';
+import { removeToken } from './Auth/Auth';
 // importing components
 import LoginPage from "./pages/LoginPage/LoginPage";
 import IntroPage from "./pages/IntroPage/IntroPage";
@@ -19,8 +21,70 @@ import "./App.css";
 
 
 class App extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      isAuth: false,
+      token: null
+    }
+  }
+
+  componentDidMount() {
+    // checking if auth token is set
+    const token = localStorage.getItem('token');
+    const expDate = localStorage.getItem('tokenExpires'); 
+    const date = Date.now(); // current date
+    const currentDate = moment(date).format('MMMM Do YYYY, h:mm:ss a'); // current date format
+    console.log(token);
+    if (token) {
+        this.setState({ isAuth: true, token }, () => console.log(this.state.isAuth));
+    }
+    if (expDate < currentDate) {
+        this.handleAutoLogout();
+    }
+}
+
+  handleLogin = (token) => {
+    this.setState(() => ({
+        isAuth: true,
+        token: token
+    }));
+  }
+
+  // method: handles logout
+  handleLogout = (e) => {
+      e.preventDefault();
+      this.setState(() => ({
+          isAuth: false
+      }));
+      removeToken();
+  }
+
+  // method : handles Auto logout 
+  handleAutoLogout = () => {
+      this.setState(() => ({
+          isAuth: false
+      }));
+      removeToken();
+  }
+
   render(){
       let routes = (
+        <Switch>
+        <Route
+        path="/"
+        exact
+        render={props => (
+          <LoginPage
+            handleLogin={this.handleLogin}
+            {...props}
+          />
+        )} 
+        />
+        </Switch>
+      )
+      if (this.state.isAuth) {
+      routes = (
         <Switch>
         <Route
           path="/"
@@ -121,6 +185,7 @@ class App extends Component{
           />
           </Switch>
       )
+    }
     return (
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
