@@ -12,6 +12,7 @@ import EventLocationDropdown from './EventLocationDropdown/EventLocationDropdown
 import EventTextArea from './EventTextArea/EventTextArea';
 import RadioColorList from './RadioColorList/RadioColorList';
 import RadioDurationList from './RadioDurationList/RadioDurationList';
+import EventDaysAvlCheckBox from './EventDaysAvlCheckBox/EventDaysAvlCheckBox';
 import PhoneCallModal from './Modals/PhoneCallModal';
 import LocationModal from './Modals/LocationModal';
 
@@ -31,7 +32,16 @@ class SoloEventPage extends Component {
             eventNameError: '',
             locationDropDownField: 'Add a location',
             showLocationModal: false,
-            showPhoneCallModal: false
+            showPhoneCallModal: false,
+            daysAvl: {
+                sunday: false,
+                monday: true,
+                tuesday: true,
+                wednesday: true,
+                thursday: true,
+                friday: true,
+                saturday: false
+            },
         }
     }
 
@@ -91,6 +101,7 @@ class SoloEventPage extends Component {
                 eventLink: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
                 eventLocation: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
                 eventName: this.state.eventName.trim(),
+                eventDaysAvl: this.state.daysAvl
             }
             console.log('event created!', event);
             this.props.history.push('/events');
@@ -119,6 +130,20 @@ class SoloEventPage extends Component {
     handlePhoneNumber = (e) => {
         this.setState({ phone: e });
     } 
+
+    // method: gets the users checkbox values
+    handleCheckbox = (e) => {
+        const { name } = e.target;
+        
+        this.setState((prevState) => {
+            return {
+                daysAvl: {
+                    ...this.state.daysAvl,
+                    [name]: !prevState.daysAvl[name]
+                } 
+            }
+        });
+    };
 
     render(){
         return (
@@ -150,6 +175,10 @@ class SoloEventPage extends Component {
                         <RadioDurationList 
                             handleUserInput={this.handleUserInput}
                             eventDuration={this.state.eventDuration}
+                        />
+                        <EventDaysAvlCheckBox
+                            handleCheckbox={this.handleCheckbox}
+                            daysAvl={this.state.daysAvl}
                         />
                         <Box className="soloEvent__form--input soloEvent__form--radio">
                             <RadioColorList 
