@@ -1,7 +1,7 @@
 // importing modules
 import React, { Component } from 'react';
 import { Box, Typography } from '@material-ui/core';
-import moment from 'moment';
+// import moment from 'moment';
 // importing components
 import ScheduleNav from '../ScheduleNav/ScheduleNav';
 import NoScheduledItems from '../NoScheduledItems/NoScheduledItems';

@@ -27,7 +27,7 @@ const EventPageHeader = (props) => (
             </Box>
             <Button 
                 className="eventPageHeader__btn"
-                onClick={() => props.history.push('/events/new')}
+                onClick={() => props.history.push('/events/event-types')}
             >
             + NEW EVENT TYPE
             </Button>

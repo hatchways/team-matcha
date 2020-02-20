@@ -3,11 +3,11 @@ import copy from 'clipboard-copy';
 import { Button, Box, Typography, MenuItem, MenuList, Paper } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+// import FileCopyIcon from '@material-ui/icons/FileCopy'; // use later
 import SettingsIcon from '@material-ui/icons/Settings';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 
-const EventPageCard = ({ eventDuration, eventLink, eventName, eventType, eventColor }) => {
+const EventPageCard = ({ eventDuration, eventLink, eventName, eventType, eventColor, eventId, handleRemoveEvent }) => {
     const [active, setToggle] = useState(false);
     const toggle = () => {
         setToggle(!active);
@@ -23,14 +23,16 @@ const EventPageCard = ({ eventDuration, eventLink, eventName, eventType, eventCo
                         <EditIcon className="eventCard__col--settings--dropdown--icon"/>
                         Edit
                     </MenuItem>
-                    <MenuItem className="eventCard__col--settings--dropdown--item">
+                    <MenuItem onClick={() => handleRemoveEvent(eventId)} className="eventCard__col--settings--dropdown--item">
                         <DeleteIcon className="eventCard__col--settings--dropdown--icon"/>
                         Delete
                     </MenuItem>
-                    <MenuItem className="eventCard__col--settings--dropdown--item">
+                    {/*<MenuItem className="eventCard__col--settings--dropdown--item">
                         <FileCopyIcon className="eventCard__col--settings--dropdown--icon"/>
                         Clone
                     </MenuItem>
+                    keep for later 
+                    */}
                 </MenuList>
             </Paper> : null }
         </Box>

@@ -8,9 +8,12 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import IntroPage from "./pages/IntroPage/IntroPage";
 import Dashboard from './pages/Dashboard/Dashboard';
 import SchedulePage from './pages/SchedulePage/SchedulePage';
-import EventCreationPage from './pages/EventCreationPage/EventCreationPage';
+import EventTypePage from './pages/EventTypePage/EventTypePage';
+import SoloEventPage from './pages/EventTypePage/SoloEventPage/SoloEventPage';
+import GroupEventPage from './pages/EventTypePage/GroupEventPage/GroupEventPage';
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
+import PageNotFound from './pages/PageNotFound/PageNotFound';
 // importing stylesheet
 import "./App.css";
 
@@ -18,7 +21,7 @@ import "./App.css";
 class App extends Component{
   render(){
       let routes = (
-        <React.Fragment>
+        <Switch>
         <Route
           path="/"
           exact
@@ -38,10 +41,28 @@ class App extends Component{
           )}
           />
           <Route
-          path="/events/new"
+          path="/events/event-types"
           exact
           render={props => (
-            <EventCreationPage
+            <EventTypePage
+              {...props}
+            />
+          )}
+          />
+          <Route
+          path="/events/event-type/solo"
+          exact
+          render={props => (
+            <SoloEventPage
+              {...props}
+            />
+          )}
+          />
+          <Route
+          path="/events/event-type/group"
+          exact
+          render={props => (
+            <GroupEventPage
               {...props}
             />
           )}
@@ -91,14 +112,21 @@ class App extends Component{
             />
           )}
           />
-      </React.Fragment>
+          <Route
+          render={props => (
+            <PageNotFound
+              {...props}
+            />
+          )}
+          />
+          </Switch>
       )
     return (
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
-        <Switch>
-          {routes}
-        </Switch>
+          <div>
+            {routes}
+          </div>
         </BrowserRouter>
       </MuiThemeProvider>
     );

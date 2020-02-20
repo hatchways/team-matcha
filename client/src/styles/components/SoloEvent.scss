@@ -1,0 +1,264 @@
+.soloEvent{
+    padding-bottom: 100px;
+    position: relative;
+    width: 100%;
+
+    &__error{
+        padding: 0;
+        margin: 0;
+        margin-top: 10px;
+        font-size: .85rem;
+        color: #ff3d00;
+    }
+
+    &__container{
+        @include applyFlex(center, center);
+        margin-top: 50px;
+        width: 100%;
+    }
+    
+    &__form{
+        @include applyFlex(center, center, column);
+        border: solid 1px $gray;
+        overflow: hidden;
+        width: 80%;
+
+        &--header{
+            @include applyFlex(center, space-between);
+            border-bottom: solid 1px $off-white;
+            border-top: solid 1px $off-white;
+            padding: 12px 0px;
+            width: 100%;
+            &--text{
+                padding-left: 10px;
+            }
+        }
+        &--footer{
+            @include applyFlex(center, flex-end);
+            border-top: solid 1px $off-white;
+            padding: 12px 0px;
+            width: 100%;
+        }
+
+        &--location{
+            @include applyFlex(center, space-between);
+            border: solid 1px $off-black;
+            padding: 12px 16px;
+            position: relative;
+            width: 40%;
+            &:hover{
+                cursor: pointer;
+            }
+            &--title{
+                color: $off-black;
+            }
+            &--settings{
+                position: relative !important;
+                &--dropdown{
+                    background-color: whitesmoke !important;
+                    border: solid 1px $off-black;
+                    position: absolute !important;
+                    top: 48px !important;
+                    right: 0px !important;
+                    width: 100% !important;
+                    z-index: 100;
+                    &--item{
+                        padding: 8px 12px !important;
+                        margin: 0 !important;
+                        text-align: left;
+                        width: 100%;
+                    }
+                    &--icon{
+                        margin: 0 !important;
+                        margin-right: 10px !important;
+                        padding: 0 !important;
+                    }
+                    &--span{
+                        color: $light-gray;
+                        font-size: .75rem;
+                    }
+                }
+            }
+        }
+        &--input{
+            width: 100%;
+            margin-left: 75px;
+            margin-bottom: 25px;
+            &--label{
+                font-size: .85rem !important;
+                margin-top: 10px !important;
+                margin-bottom: 10px !important;
+                &--link{
+                    color: $gray;
+                    font-size: .85rem !important;
+                    width: 50%;
+                }
+            }
+            &--name,
+            &--location,
+            &--textarea,
+            &--link{
+                background: none;
+                border: none;
+                border: solid 1px $off-black;
+                outline: none;
+                padding: 16px 16px;
+                width: 40%;
+            }
+            &--link{
+                &--wrap{
+                    @include applyFlex(flex-start, flex-start, column);
+                    width: 100%;
+                }
+            }
+        }
+        &--radio{
+            &--red{
+                background-color: #ff3d00 !important;
+                color: white !important;
+            }
+            &--pink{
+                background-color: #ec407a !important;
+                color: white !important;
+                margin-left: 8px !important;
+            }
+            &--violet{
+                background-color: #d500f9 !important;
+                color: white !important;
+                margin-left: 8px !important;
+            }
+            &--purple{
+                background-color: #ab47bc !important;
+                color: white !important;
+                margin-left: 8px !important;
+            }
+            &--blue{
+                background-color: #3d5afe !important;
+                color: white !important;
+                margin-left: 8px !important;
+            }
+            &--teal{
+                background-color: #26a69a !important;
+                color: white!important;
+                margin-left: 8px !important;
+            }
+            &--lime{
+                background-color: #76ff03 !important;
+                color: white!important;
+                margin-left: 8px !important;
+            }
+            &--green{
+                background-color: #4caf50 !important;
+                color: white  !important;
+                margin-left: 8px !important;
+            }
+            &--yellow{
+                background-color: #ffd600 !important;
+                color: white !important;
+                margin-left: 8px !important;
+            }
+            &--orange{
+                background-color: #ef6c00 !important;
+                color: white  !important;
+                margin-left: 8px !important;
+            }
+        }
+
+        &--duration{
+            @include applyFlex(center, flex-start);
+            &--time{
+                border: solid 1px $off-black;
+                padding: 2px 16px;
+                text-align: center;
+            }
+            &--text{
+                &--span{
+                    color: $light-gray;
+                }
+            }
+            &--radio{
+                color: $light-gray !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+        }
+    }
+
+    &__btn{
+        &--cancel{
+            margin-right: 10px !important;
+            &:hover{
+                border-bottom: solid 1px black !important;
+            }
+        }
+        &--next{
+            background-color: $primary !important;
+            color: whitesmoke !important;
+            margin-right: 10px !important;
+        }
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .soloEvent{
+        &__form{
+            width: 100%; // ! mq
+            &--label{
+                &--link{
+                    width: 100%;
+                }
+            }
+            &--location{
+                width: 85%; // ! mq
+            }
+            &--input{
+                margin-left: 25px;
+                &--name,
+                &--location,
+                &--textarea,
+                &--link{
+                    width: 85%; // ! mq
+                }
+            }
+            &--radio{
+                @include applyFlex(flex-start, flex-start);
+                flex-wrap: wrap;
+                width: 98%;
+                &--red,
+                &--pink,
+                &--violet,
+                &--purple,
+                &--blue,
+                &--teal,
+                &--lime,
+                &--green,
+                &--yellow,
+                &--orange{
+                    margin: 2px !important;
+                }
+            }
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 798.98px) {
+    .soloEvent{
+        &__form{
+            width: 100%; // ! mq
+            &--location{
+                width: 85%; // ! mq
+            }
+            &--input{
+                &--name,
+                &--location,
+                &--textarea,
+                &--link{
+                    width: 85%; // ! mq
+                }
+            }
+        }
+    }
+}
+

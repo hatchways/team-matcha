@@ -3,6 +3,7 @@
 @import './base/settings.scss';
 @import './base/mixins.scss';
 // importing component stylesheets
+@import './components/PageNotFound.scss';
 @import './components/LoginPage.scss';
 @import './components/ProfileSetup.scss';
 @import './components/ProfileStepsHeader.scss';
@@ -21,3 +22,8 @@
 @import './components/UpcomingSchedule.scss';
 @import './components/PastSchedule.scss';
 @import './components/NoScheduledItems.scss';
+@import './components/EventTypePage.scss';
+@import './components/SoloEvent.scss';
+@import './components/LocationModal.scss';
+@import './components/PhoneCallModal.scss';
+@import './components/EventDaysAvlCheckbox.scss';
