@@ -39,5 +39,15 @@ def test():
     sys.exit(result)
 
 
+@cli.command()
+def testfull():
+    """Runs all the tests without code coverage"""
+    tests = unittest.TestLoader().discover('project/test', pattern='*test.py')
+    result = unittest.TextTestRunner(verbosity=2).run(tests)
+    if result.wasSuccessful():
+        return 0
+    sys.exit(result)
+
+
 if __name__ == "__main__":
     cli()

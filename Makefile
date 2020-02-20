@@ -9,3 +9,6 @@ docker-test:
 
 docker-recreate-db:
 	docker-compose exec server python manage.py recreate_db
+
+docker-test-full:
+	docker-compose exec server python manage.py testfull
