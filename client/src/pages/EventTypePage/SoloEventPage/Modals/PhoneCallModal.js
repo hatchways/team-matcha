@@ -2,8 +2,11 @@
 import React from 'react';
 import { Box, Button, Radio, Typography } from '@material-ui/core';
 import CallIcon from '@material-ui/icons/Call';
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
-const PhoneCallModal = ({ handleLocationUpdate, handlePhoneCallModal, handleUserInput, eventLocation }) => (
+
+const PhoneCallModal = ({ handleLocationUpdate, handlePhoneCallModal, handleUserInput, eventLocation, eventPhone, handlePhoneNumber }) => (
     <Box className="phoneCallModal">
         <Box boxShadow={3} className="phoneCallModal__window">
             <Box className="phoneCallModal__window--header">
@@ -42,6 +45,16 @@ const PhoneCallModal = ({ handleLocationUpdate, handlePhoneCallModal, handleUser
                             My invitee should call me<br/>
                             <span className="phoneCallModal__window--radio--label--span">Calendly will provide your number after the call has been scheduled.</span>
                         </Typography>
+                    </Box>
+                    <Box className="phoneCallModal__number--wrap">
+                    {
+                        eventLocation === 'phone call: (Invitee should call me)' 
+                        ? <PhoneInput
+                            country={'us'}
+                            value={eventPhone}
+                            onChange={handlePhoneNumber}
+                        />  : null
+                    }
                     </Box>
                 </Box>
             </Box>

@@ -25,6 +25,7 @@ class SoloEventPage extends Component {
             eventLinkError: '',
             eventLocation: '',
             eventName: '',
+            phone: '',
             eventNameError: '',
             locationDropDownField: 'Add a location',
             active: false,
@@ -71,22 +72,26 @@ class SoloEventPage extends Component {
     // method: gets the users text-input & dropwDown selection values
     handleUserInput = (e) => {
         const { value, name } = e.target;
-        this.setState({ [name]: value }, () => console.log(this.state));
+        this.setState({ [name]: value });
     };
 
     //method: handles solo-event creation/submit
     handleFormSubmit = (e) => {
         e.preventDefault();
+        let eventDesignatedLocation = '';
         // validate user input
         const err = this.validate();
         if(!err) {
             // send event to the server
+            if(this.state.eventLocation === 'phone call: (Invitee should call me)') {
+                eventDesignatedLocation = `${this.state.eventLocation} ${this.state.phone}`;
+            }
             const event = {
                 eventColor: this.state.eventColor,
                 eventDescription: this.state.eventDescription,
                 eventDuration: parseInt(this.state.eventDuration),
                 eventLink: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
-                eventLocation: this.state.eventLocation,
+                eventLocation: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
                 eventName: this.state.eventName,
             }
             console.log('event created!', event);
@@ -120,6 +125,10 @@ class SoloEventPage extends Component {
             }
         });
     };
+
+    handlePhoneNumber = (e) => {
+        this.setState({ phone: e });
+    } 
 
     render(){
         return (
@@ -271,10 +280,12 @@ class SoloEventPage extends Component {
                     /> : null}
                 {this.state.showPhoneCallModal 
                     ? <PhoneCallModal 
+                    eventPhone={this.state.phone}
                     eventLocation={this.state.eventLocation}
                     handleLocationUpdate={this.handleLocationUpdate}
                     handlePhoneCallModal={this.handlePhoneCallModal}
                     handleUserInput={this.handleUserInput}
+                    handlePhoneNumber={this.handlePhoneNumber}
                     /> : null}
             </Box>
         );

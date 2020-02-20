@@ -74,4 +74,9 @@
             margin-bottom: 15px;
         }
     }
+    &__number--wrap{
+        @include applyFlex(center, center);
+        text-align: center;
+        padding-left: 10px;
+    }
 }
