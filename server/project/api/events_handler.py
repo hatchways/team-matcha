@@ -61,18 +61,23 @@ event_input_output = api.model(
 
 @api.route('/users/<public_id>/events')
 class Events(Resource):
-    # @token_required
-    # @api.marshal_with(event_input_output, envelope='data')
-    # def get(self, public_id, current_user=None):
-    #     """Returns all the events that the user has created."""
-    #     if current_user.public_id != public_id:
-    #         raise PermissionError
-    #
-    #     events = Event.query.\
-    #         join(User).\
-    #         filter(User.public_id == public_id).\
-    #         all()
-    #     return events, 200
+    @token_required
+    @api.marshal_with(event_input_output)
+    def get(self, public_id, current_user=None):
+        """Returns all the events that the user has created."""
+        if current_user.public_id != public_id:
+            raise PermissionError
+
+        events = Event.query.\
+            filter(Event.user_id == current_user.id).\
+            all()
+
+        for event in events:
+            event.availability.start = event.availability.start.hour
+            event.availability.end = event.availability.end.hour
+            event.color = '#' + event.color
+
+        return events, 200
 
     @token_required
     @api.expect(event_input_output, validate=True)
@@ -82,6 +87,10 @@ class Events(Resource):
             raise PermissionError
 
         payload = api.payload
+
+        if ' ' in payload['url']:
+            raise UrlContainsSpace
+
         user_id = current_user.id
         availability = create_availability(
             sunday=payload['availability']['days']['sunday'],
@@ -103,4 +112,4 @@ class Events(Resource):
             url=payload['url'],
             color=payload['color'].lstrip('#'))
         db.session.commit()
-        return 'success', 201
+        return {'message': 'success'}, 201

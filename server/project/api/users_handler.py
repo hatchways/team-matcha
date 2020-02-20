@@ -55,7 +55,7 @@ class Users(Resource):
     def get(self, public_id):
         user = User.query.filter_by(public_id=public_id).first()
         if not user:
-            abort(400, "User not Found!")
+            raise UserNotFound
         return user, 200
 
     @token_required
