@@ -47,6 +47,7 @@ class Login(Resource):
             return {
                 'status': 'success',
                 'message': 'Successfully logged in',
+                'public_id': user.public_id,
                 'auth_token': jwt_token.decode()
             }, 200
         except ValueError:
