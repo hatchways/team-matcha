@@ -53,26 +53,25 @@ def create_event_json(name='My event', location='', description='', duration=60,
     return json.dumps(data)
 
 
-def create_user_id() -> int:
-    """
-    Commits a User and returns the User's public_id.
-    :return: The public_id of a created user
-    """
-    add_user()
-    db.session.commit()
-    public_id = User.query.first().public_id
-    return public_id
-
-
 class EventCreateTest(TestBase):
     def test_add_event(self):
         """Tests whether an event can be successfully created."""
-        public_id = create_user_id()
+        user = add_user()
+        db.session.commit()
+        public_id = user.public_id
+        auth_token = user.encode_auth_token(user.id)
         url = 'clickme'
         data = create_event_json(url=url)
-        response = self.api.post(f'/users/{public_id}/events', data=data,
+
+        response = self.api.post(f'/users/{public_id}/events',
+                                 headers={'x-access-token': auth_token},
+                                 data=data,
                                  content_type='application/json')
         event = Event.query.filter_by(url=url).first()
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(event.url, url)
+
+    # def test_bad_params_values(self):
+    #     """Test whether passing bad values is rejected."""
+    #     add_user()

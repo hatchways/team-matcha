@@ -60,19 +60,30 @@ event_input_output = api.model(
         'availability': fields.Nested(availability_input)})
 
 
-@api.route('/users/<user>/events')
+@api.route('/users/<public_id>/events')
 class Events(Resource):
+    @token_required
     @api.marshal_with(event_input_output, envelope='data')
-    def get(self, user):
+    def get(self, public_id, current_user=None):
         """Returns all the events that the user has created."""
-        events = Event.query.join(User).filter(User.public_id == user).all()
+        if current_user.public_id != public_id:
+            raise PermissionError
+
+        events = Event.query.\
+            join(User).\
+            filter(User.public_id == public_id).\
+            all()
         return events, 200
 
+    @token_required
     @api.expect(event_input_output, validate=True)
-    def post(self, user):
+    def post(self, public_id, current_user=None):
         """Creates an Event for the specified user."""
+        if current_user.public_id != public_id:
+            raise PermissionError
+
         payload = api.payload
-        user_id = User.query.filter_by(public_id=user).first().id
+        user_id = User.query.filter_by(public_id=public_id).first().id
         availability = create_availability(
             sunday=payload['availability']['days']['sunday'],
             monday=payload['availability']['days']['monday'],
