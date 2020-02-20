@@ -78,9 +78,8 @@ class User(db.Model):
 #-------------------------------------------------------------------------------
 
 
-def add_user(name='kenny', email='test@email.com', google_id=None):
-    user = User(public_id=uuid.uuid4(), name=name, email=email,
-                google_id=google_id)
+def add_user(name='kenny', email='test@email.com', **kwargs):
+    user = User(public_id=uuid.uuid4(), name=name, email=email)
     db.session.add(user)
     return user
 
