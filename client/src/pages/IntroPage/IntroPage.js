@@ -104,23 +104,19 @@ class IntroPage extends Component {
 
     // method: handles data submission to the server
     handleDataSubmit = () => {
-        fetch('/users', {
-            method: 'POST',
+        fetch(`/users/${this.props.userId}`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-            // set to be sent to server
-                public_id: this.props.userUrl,
-        })
+            }
         })
         .then(data => data.json())
         .then((data) => {
             //data from server
             console.log(data);
 
-            fetch(`/user/${this.props.state.userId}/events`, {
-                method: 'PUT',
+            fetch(`/users/${this.state.userUrl}/events`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -130,7 +126,7 @@ class IntroPage extends Component {
                     location: "Office",
                     description: "Second cubicle past the bathroom.",
                     duration: 60,
-                    url: this.props.userUrl,
+                    url: this.state.userUrl,
                     color: "#3d5afe",
                     availability: {
                         start: this.state.timeAvlFrom,
