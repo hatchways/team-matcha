@@ -124,11 +124,10 @@ class EventDetail(Resource):
         if current_user.public_id != public_id:
             raise PermissionError
 
+        event = Event.query.get(event_id)
+        data = marshal(api.payload, event_input_output, skip_none=True)
 
-        event = Event.query.filter_by(url=event_url).first()
-        data = marshal(api.payload, event_input_output)
-
-        if data['url'] and ' ' in data['url']:
+        if 'url' in data and data['url'] == ' ':
             raise UrlContainsSpace
 
         if event is not None:
