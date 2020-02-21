@@ -36,7 +36,6 @@ class App extends Component{
             this.setState({ isAuth: true, token, userId: userId });
         }
     }
-    }
 
   handleLogin = (token, userId) => {
     this.setState(() => ({
