@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { theme } from "./themes/theme";
 import { setToken, setUserId, removeToken } from './Auth/Auth';
 import RouteContext from './Context/Context';
+
 // importing components
 import LoginPage from "./pages/LoginPage/LoginPage";
 import IntroPage from "./pages/IntroPage/IntroPage";
@@ -16,6 +17,7 @@ import GroupEventPage from './pages/EventTypePage/GroupEventPage/GroupEventPage'
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
 import PageNotFound from './pages/PageNotFound/PageNotFound';
+
 // importing stylesheet
 import "./App.css";
 
@@ -55,6 +57,7 @@ class App extends Component{
           isAuth: false
       }));
       removeToken();
+      this.props.history.push('/');
   }
 
   // method : handles Auto logout 

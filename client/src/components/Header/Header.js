@@ -8,7 +8,7 @@ const Header = ({ isActive }) => {
     const { userId, token, isAuth, handleLogout } = useContext(RouteContext);
     const [user, setUser] = useState({ userDetails: {} });
 
-    React.useEffect(() => {
+    useEffect(() => {
         fetch(`/users/details`, {
             method: 'GET',
             headers: {
@@ -22,8 +22,6 @@ const Header = ({ isActive }) => {
             })
             .catch(err => (err));
     }, []);
-
-    console.log(isAuth);
 
     return (
     <Box boxShadow={3} className="header">
