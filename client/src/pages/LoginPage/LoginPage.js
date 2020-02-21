@@ -25,7 +25,7 @@ class LoginPage extends React.Component {
         })
         .then(data => data.json())
         .then((data) => {
-            this.props.handleLogin(data.auth_token);
+            this.props.handleLogin(data.auth_token, data.public_id);
             tokenCreated();
             tokenExpires();
             setIsAuth();
