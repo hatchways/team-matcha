@@ -32,8 +32,8 @@ const IntroStep1 = ({ exists, step,
                             value={userUrl}
                             type="text"
                         />
-                        { userUrl.length >= 8 && userUrl.length <= 32 && exists === false ? <CheckCircleIcon style={{ color: green[500] }} className="step1__form--input--icon" /> : null }
-                        { userUrl.length >= 8 && userUrl.length <= 32 && exists === true ? <CancelIcon style={{ color: red[800] }} className="step1__form--input--icon" /> : null }
+                        { userUrl.length >= 8 && userUrl.length < 128 && exists === false ? <CheckCircleIcon style={{ color: green[500] }} className="step1__form--input--icon" /> : null }
+                        { userUrl.length >= 8 && userUrl.length < 128 && exists === true ? <CancelIcon style={{ color: red[800] }} className="step1__form--input--icon" /> : null }
                     </Box>
                 </Box>
                 <Box className="step1__form--select--wrap">

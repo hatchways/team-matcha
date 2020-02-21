@@ -25,7 +25,8 @@ class App extends Component{
     super(props);
     this.state = {
       isAuth: false,
-      token: null
+      token: null,
+      userId: null,
     }
   }
 
@@ -35,19 +36,21 @@ class App extends Component{
     const expDate = localStorage.getItem('tokenExpires'); 
     const date = Date.now(); // current date
     const currentDate = moment(date).format('MMMM Do YYYY, h:mm:ss a'); // current date format
+    const userId = localStorage.getItem('userId');
     console.log(token);
     if (token) {
-        this.setState({ isAuth: true, token }, () => console.log(this.state.isAuth));
+        this.setState({ isAuth: true, token, userId: userId }, () => console.log(this.state.isAuth));
     }
     if (expDate < currentDate) {
         this.handleAutoLogout();
     }
 }
 
-  handleLogin = (token) => {
+  handleLogin = (token, userId) => {
     this.setState(() => ({
         isAuth: true,
-        token: token
+        token: token,
+        userId: userId
     }));
   }
 
@@ -91,6 +94,7 @@ class App extends Component{
           exact
           render={props => (
             <LoginPage
+              handleLogin={this.handleLogin}
               {...props}
             />
           )} 
@@ -172,6 +176,8 @@ class App extends Component{
           exact
           render={props => (
             <IntroPage
+              token={this.state.token}
+              userId={this.state.userId}
               {...props}
             />
           )}

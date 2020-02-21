@@ -1,5 +1,6 @@
 // importing modules
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { Box, Container, Typography } from '@material-ui/core';
 import momentTZ from 'moment-timezone';
 
@@ -35,6 +36,10 @@ class IntroPage extends Component {
             ],
             timezonesArr: momentTZ.tz.names()
         }
+    }
+
+    componentDidMount(){
+        console.log(this.props.userId);
     }
 
     // method: handles step increment
@@ -73,47 +78,90 @@ class IntroPage extends Component {
         const { value, name } = e.target;
         this.setState({ [name]: value.trim() });
         
+        fetch('/users')
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data);
+            const userExists = data.find((user) => user.public_id.toLowerCase() === value.toLowerCase());
+            if(userExists) {
+                this.setState((prevState) => {
+                    return {
+                        exists: !prevState.exists,
+                    }
+                });
+            } else {
+                this.setState({ exists: false });
+            }
+        });
+
         // test data
-        const userExists = this.state.users.find((user) => user.userUrl.toLowerCase() === value.toLowerCase());
+        // const userExists = this.state.users.find((user) => user.userUrl.toLowerCase() === value.toLowerCase());
         
-        if(userExists) {
-            this.setState((prevState) => {
-                return {
-                    exists: !prevState.exists,
-                }
-            });
-        } else {
-            this.setState({ exists: false });
-        }
+        
     };
 
     // method: handles data submission to the server
     handleDataSubmit = () => {
-        fetch('/', {
+        fetch('/users', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
             // set to be sent to server
+                public_id: this.props.userUrl,
         })
         })
         .then(data => data.json())
         .then((data) => {
             //data from server
+            console.log(data);
+
+            fetch(`/user/${this.props.state.userId}/events`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                // set to be sent to server
+                    name: "My first event",
+                    location: "Office",
+                    description: "Second cubicle past the bathroom.",
+                    duration: 60,
+                    url: this.props.userUrl,
+                    color: "#3d5afe",
+                    availability: {
+                        start: this.state.timeAvlFrom,
+                        end: this.state.timeAvlUntil,
+                        days: {
+                            ...this.state.daysAvl
+                        }
+                }
+            })
+            })
+            .then(data => data.json())
+            .then((data) => {
+                //data from server
+                console.log(data);
+                this.props.history.push('/events');
+            })
+            .catch(err => (err));
+
         })
         .catch(err => (err));
-        
-        const currentDate = momentTZ().format('YYYY-MM-D');
-        const data = { // data to be sent to the server
-            userUrl: this.state.userUrl,
-            timezoneName: this.state.timezoneName,
-            utcOffset: momentTZ(currentDate).tz(this.state.timezoneName).format('Z'),
-            timeAvlFrom: this.state.timeAvlFrom, 
-            timeAvlUntil: this.state.timeAvlUntil,
-            ...this.state.daysAvl
-        }
-        console.log(data);
+
+        // const currentDate = momentTZ().format('YYYY-MM-D');
+        // const data = { // data to be sent to the server
+        //     userUrl: this.state.userUrl,
+        //     timezoneName: this.state.timezoneName,
+        //     utcOffset: momentTZ(currentDate).tz(this.state.timezoneName).format('Z'),
+        //     timeAvlFrom: this.state.timeAvlFrom, 
+        //     timeAvlUntil: this.state.timeAvlUntil,
+        //     ...this.state.daysAvl
+        // }
+        // console.log(data);
         this.props.history.push('/events');
     };
 
@@ -195,4 +243,4 @@ class IntroPage extends Component {
     }
 }
 
-export default IntroPage;
+export default withRouter(IntroPage);
