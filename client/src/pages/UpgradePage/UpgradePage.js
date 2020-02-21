@@ -4,8 +4,6 @@ import React from 'react';
 import Header from '../../components/Header/Header';
 
 const UpgradePage = (props) => {
-    console.log(props.token);
-    console.log(props.userId);
     return (
         <div className="upgrade">
             <Header />

@@ -38,10 +38,6 @@ class IntroPage extends Component {
         }
     }
 
-    componentDidMount(){
-        console.log(this.props.userId);
-    }
-
     // method: handles step increment
     handleNextStep = () => {
         if(this.state.step === 3 ) {
@@ -94,12 +90,7 @@ class IntroPage extends Component {
             } else {
                 this.setState({ exists: false });
             }
-        });
-
-        // test data
-        // const userExists = this.state.users.find((user) => user.userUrl.toLowerCase() === value.toLowerCase());
-        
-        
+        });        
     };
 
     // method: handles data submission to the server
@@ -116,8 +107,6 @@ class IntroPage extends Component {
         })
         .then(data => data.json())
         .then((data) => {
-            //data from server
-            console.log(data);
             this.props.updateUserId(this.props.token, this.state.userUrl);
             fetch(`/users/${this.state.userUrl.trim()}/events`, {
                 method: 'POST',
@@ -125,8 +114,7 @@ class IntroPage extends Component {
                     'Content-Type': 'application/json',
                     'X-access-token': this.props.token
                 },
-                body: JSON.stringify({
-                // set to be sent to servers
+                body: JSON.stringify({ // default event created
                     name: "My first event",
                     location: "Office",
                     description: "Second cubicle past the bathroom.",
@@ -144,25 +132,12 @@ class IntroPage extends Component {
             })
             .then(data => data.json())
             .then((data) => {
-                //data from server
-                console.log(data);
                 this.props.history.push('/events');
             })
             .catch(err => (err));
 
         })
         .catch(err => (err));
-
-        // const currentDate = momentTZ().format('YYYY-MM-D');
-        // const data = { // data to be sent to the server
-        //     userUrl: this.state.userUrl,
-        //     timezoneName: this.state.timezoneName,
-        //     utcOffset: momentTZ(currentDate).tz(this.state.timezoneName).format('Z'),
-        //     timeAvlFrom: this.state.timeAvlFrom, 
-        //     timeAvlUntil: this.state.timeAvlUntil,
-        //     ...this.state.daysAvl
-        // }
-        // console.log(data);
     };
 
     render(){

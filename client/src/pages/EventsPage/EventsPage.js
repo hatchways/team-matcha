@@ -5,47 +5,17 @@ import { Box } from '@material-ui/core';
 import EventPageHeader from './EventPageHeader/EventPageHeader';
 import EventCard from './EventPageCard/EventsPageCard';
 import EventPageMsg from './EventPageMsg/EventPageMsg';
-import Header from '../../components/Header/Header';
-import SubNavigation from '../../components/SubNavigation/SubNavigation';
 
 class EventsPage extends Component {
     constructor(props){
         super(props);
         this.state = {
-            events: [ // test events
-                {   
-                    eventId: 1,
-                    eventDuration: '15 min',
-                    eventName: '15 minute meeting',
-                    eventLink: 'calendapp/john-doe/15min',
-                    eventType: 'One-on-One',
-                    eventColor: '#651fff'
-                },
-                {
-                    eventId: 2,
-                    eventDuration: '30 min',
-                    eventName: '30 minute meeting',
-                    eventLink: 'calendapp/john-doe/30min',
-                    eventType: 'One-on-One',
-                    eventColor: '#43a047'
-                },
-                {
-                    eventId: 3,
-                    eventDuration: '60 min',
-                    eventName: '60 minute meeting',
-                    eventLink: 'calendapp/john-doe/60min',
-                    eventType: 'One-on-One',
-                    eventColor: '#ef6c00'
-                }
-            ],
+            events: [],
             userDetails: {}
         };
     }
 
     componentDidMount(){
-        console.log('fetch event types from the server')
-        console.log(this.props.token);
-        console.log(this.props.userId);
         this.handleFetchUser();
     }
 

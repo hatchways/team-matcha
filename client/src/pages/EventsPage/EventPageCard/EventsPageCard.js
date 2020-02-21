@@ -40,13 +40,13 @@ const EventPageCard = ({ duration, url, name, type, color, eventId, handleRemove
             <Typography variant="h6" className="eventCard__event--name">
                 {name}
                 <br/>
-                <span className="eventCard__event--name--span">{type}</span>
+                <span className="eventCard__event--name--span">One-on-One</span>
             </Typography>
         </Box>
         <Box className="eventCard__col--link">
             <Box className="eventCard__event--icon">
                 <ScheduleIcon className=""/>
-                <Typography>&nbsp;&nbsp;{duration}</Typography>
+                <Typography>&nbsp;&nbsp;{duration}min</Typography>
             </Box>
             <Button 
                 onClick={() => copy(url)}
