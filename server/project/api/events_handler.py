@@ -38,9 +38,6 @@ availability_input = api.model(
         'days': fields.Nested(days_input)})
 event_input_output = api.model(
     'Event', {
-        'id': fields.String(
-            description='Id of the event',
-        ),
         'name': fields.String(
             description='The name of the event', required=True,
             example='My event', min_length=1, max_length=32),
@@ -118,17 +115,17 @@ class Events(Resource):
         return {'message': 'success'}, 201
 
 
-@api.route('/users/<public_id>/events/<event_id>')
+@api.route('/users/<public_id>/events/<event_url>')
 class EventDetail(Resource):
 
     @token_required
-    def put(self, public_id, event_id, current_user=None):
+    def put(self, public_id, event_url, current_user=None):
 
         if current_user.public_id != public_id:
             raise PermissionError
 
 
-        event = Event.query.get(event_id)
+        event = Event.query.filter_by(url=event_url).first()
         data = marshal(api.payload, event_input_output)
 
         if data['url'] and ' ' in data['url']:
@@ -144,13 +141,13 @@ class EventDetail(Resource):
 
     @token_required
     @api.marshal_with(event_input_output, skip_none=True)
-    def get(self, public_id, event_id, current_user=None):
+    def get(self, public_id, event_url, current_user=None):
 
         if current_user.public_id != public_id:
             raise PermissionError
 
         response = {}
-        event = Event.query.get(event_id)
+        event = Event.query.filter_by(url=event_url).first()
         if event is not None:
             user = event.user
             if user.public_id != current_user.public_id:
@@ -168,10 +165,10 @@ class EventDetail(Resource):
         return response, code
 
     @token_required
-    def delete(self, public_id, event_id, current_user=None):
+    def delete(self, public_id, event_url, current_user=None):
         if current_user.public_id != public_id:
             raise PermissionError
-        event = Event.query.get(event_id)
+        event = Event.query.filter_by(url=event_url).first()
 
         response = {}
         if event is not None:

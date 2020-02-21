@@ -225,7 +225,7 @@ class EventDetailPut(TestBase):
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
 
-        response = self.api.put(f'/users/{user.public_id}/events/{event.id}',
+        response = self.api.put(f'/users/{user.public_id}/events/{event.url}',
                                 headers={'x-access-token': auth_token},
                                 data=json.dumps({
                                     'location': 'New location',
@@ -251,7 +251,7 @@ class EventDetailGet(TestBase):
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
 
-        response = self.api.get(f'/users/{user.public_id}/events/{event.id}',
+        response = self.api.get(f'/users/{user.public_id}/events/{event.url}',
                                 headers={'x-access-token': auth_token})
 
         data = json.loads(response.data.decode())
@@ -273,7 +273,7 @@ class EventDetailDelete(TestBase):
         self.assertTrue(Event.query.get(event.id))
         self.assertTrue(Event.query.get(event.availability_id))
 
-        response = self.api.delete(f'/users/{user.public_id}/events/{event.id}',
+        response = self.api.delete(f'/users/{user.public_id}/events/{event.url}',
                                 headers={'x-access-token': auth_token})
 
         data = json.loads(response.data.decode())
