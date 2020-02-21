@@ -47,26 +47,9 @@ class EventsPage extends Component {
             .then(data => data.json())
             .then((data) => {
                 console.log('user details', data);
-                // this.setState({profileImage: data.img_url});
                 this.props.setImageUrl(data.img_url);
                 this.setState({ userDetails: data });
-
                 this.fetchEvents(data.public_id);
-
-                // fetch(`/users/${data.public_id}/events`, {
-                //     method: 'GET',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //         'X-access-token': this.props.token
-                //     }
-                //     })
-                //     .then(data => data.json())
-                //     .then((data) => {
-                //         console.log('events data', data);
-                //         this.setState({ events: data });
-                //     })
-                //     .catch(err => (err));
-
             })
             .catch(err => (err));
     }
