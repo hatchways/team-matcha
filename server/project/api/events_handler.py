@@ -146,6 +146,7 @@ class EventDetail(Resource):
         if current_user.public_id != public_id:
             raise PermissionError
 
+        response = {}
         event = Event.query.get(event_id)
         if event is not None:
             user = event.user
@@ -156,5 +157,29 @@ class EventDetail(Resource):
             event.availability.end = event.availability.end.hour
             event.color = '#' + event.color
             result = marshal(event ,event_input_output, skip_none=True)
+
+            response, code = result, 200
             return result, 200
-        return {"error": "Event not found"}, 404
+        else:
+            response['error'], code = "Event not found", 404
+        return response, code
+
+    @token_required
+    def delete(self, public_id, event_id, current_user=None):
+        if current_user.public_id != public_id:
+            raise PermissionError
+        event = Event.query.get(event_id)
+
+        response = {}
+        if event is not None:
+            user = event.user
+            if user.public_id != current_user.public_id:
+                raise PermissionError
+            db.session.delete(event)
+            db.session.commit()
+            response['message'], code = 'Success', 200
+        else:
+            response, code = "Event not found", 404
+        return response, code
+
+

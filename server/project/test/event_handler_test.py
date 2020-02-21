@@ -6,11 +6,44 @@ from project.models.availability import Availability, create_availability
 from project.models.event import Event, add_event
 from project.models.user import User, add_user
 
+#-------------------------------------------------------------------------------
+# Helper Functions
+#-------------------------------------------------------------------------------
 
-def create_event_json(name='My event', location='', description='', duration=60,
-                      url='myevent', color='#000000', start=8, end=17,
-                      sunday=False, monday=True, tuesday=True, wednesday=True,
-                      thursday=True, friday=True, saturday=False):
+
+def seed_event():
+    result = {}
+    user = add_user()
+    user_id = User.query.first().id
+    availability = create_availability()
+    name = '♪┏(・o･)┛♪┗ ( ･o･) ┓♪'
+    url = 'myCoolParty'
+    location = 'da street!'
+    event = add_event(url=url,
+                      name=name,
+                      location=location,
+                      user_id=user_id,
+                      availability=availability)
+    result['user'] = user
+    result['event'] = event
+    return result
+
+
+def create_event_json(name='My event',
+                      location='',
+                      description='',
+                      duration=60,
+                      url='myevent',
+                      color='#000000',
+                      start=8,
+                      end=17,
+                      sunday=False,
+                      monday=True,
+                      tuesday=True,
+                      wednesday=True,
+                      thursday=True,
+                      friday=True,
+                      saturday=False):
     """
     Creates JSON dump to create an Event.
     :param name: name of the event
@@ -54,6 +87,11 @@ def create_event_json(name='My event', location='', description='', duration=60,
     return json.dumps(data)
 
 
+#-------------------------------------------------------------------------------
+# Tests
+#-------------------------------------------------------------------------------
+
+
 class EventCreateTest(TestBase):
     def test_add_event(self):
         """Tests whether an event can be successfully created."""
@@ -88,8 +126,7 @@ class EventCreateTest(TestBase):
         data = json.loads(response.data.decode())
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(data['message'],
-                         'Input payload validation failed')
+        self.assertEqual(data['message'], 'Input payload validation failed')
         self.assertEqual(data['errors']['url'], f"'' is too short")
 
     def test_blank_name(self):
@@ -106,8 +143,7 @@ class EventCreateTest(TestBase):
         data = json.loads(response.data.decode())
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(data['message'],
-                         'Input payload validation failed')
+        self.assertEqual(data['message'], 'Input payload validation failed')
         self.assertEqual(data['errors']['name'], f"'' is too short")
 
     def test_missing_token(self):
@@ -168,8 +204,7 @@ class EventsGetTest(TestBase):
         availability = create_availability(start=dt.time(start))
         url = 'funnyUrl'
         color = '#7851a9'
-        add_event(user.id, availability, url=url,
-                  color=color.lstrip('#'))
+        add_event(user.id, availability, url=url, color=color.lstrip('#'))
         db.session.commit()
 
         response = self.api.get(f'/users/{user.public_id}/events',
@@ -180,3 +215,77 @@ class EventsGetTest(TestBase):
         self.assertEqual(data[0]['url'], url)
         self.assertEqual(data[0]['availability']['start'], start)
         self.assertEqual(data[0]['color'], color)
+
+
+class EventDetailPut(TestBase):
+    def test_update_event(self):
+        result = seed_event()
+        user = result['user']
+        event = result['event']
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+
+        response = self.api.put(f'/users/{user.public_id}/events/{event.id}',
+                                headers={'x-access-token': auth_token},
+                                data=json.dumps({
+                                    'location': 'New location',
+                                    'badparams': 'blahfdfsdf'
+                                }),
+                                content_type='application/json')
+
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['message'], "Success")
+
+        updated_event = Event.query.get(event.id)
+        self.assertNotEqual(updated_event.location, event.location)
+        self.assertNotEqual(updated_event.location, "New location")
+
+
+class EventDetailGet(TestBase):
+    def test_get_event(self):
+        result = seed_event()
+        user = result['user']
+        event = result['event']
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+
+        response = self.api.get(f'/users/{user.public_id}/events/{event.id}',
+                                headers={'x-access-token': auth_token})
+
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(data['url'], event.url)
+
+class EventDetailDelete(TestBase):
+    def test_delete_event_success(self):
+        result = seed_event()
+        user = result['user']
+        event = result['event']
+        db.session.commit()
+        availability_id = event.availability_id
+        auth_token = user.encode_auth_token(user.id)
+
+        # Before Delete
+        self.assertTrue(Event.query.get(event.id))
+        self.assertTrue(Event.query.get(event.availability_id))
+
+        response = self.api.delete(f'/users/{user.public_id}/events/{event.id}',
+                                headers={'x-access-token': auth_token})
+
+        data = json.loads(response.data.decode())
+
+        # After Delete
+        self.assertEqual(response.status_code, 200)
+
+        # event is deleted
+        self.assertIsNone(Event.query.get(event.id))
+
+        # availability also deleted
+        self.assertIsNone(Event.query.get(event.availability_id))
+
+
+
