@@ -124,7 +124,7 @@ class EventDetail(Resource):
         if current_user.public_id != public_id:
             raise PermissionError
 
-        event = Event.query.get(event_id)
+        event = Event.query.filter_by(url=event_url).first()
         data = marshal(api.payload, event_input_output, skip_none=True)
 
         if 'url' in data and data['url'] == ' ':
