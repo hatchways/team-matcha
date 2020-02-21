@@ -7,14 +7,24 @@ import SubNavigation from '../../components/SubNavigation/SubNavigation';
 import EventsPage from '../EventsPage/EventsPage';
 import SchedulePage from '../SchedulePage/SchedulePage';
 
-const Dashboard = () => (
+const Dashboard = ({token, userId}) => (
     <div
         className="dashboard"
     >
         <Header />
         <SubNavigation /> 
         {/* nested routes */}
-        <Route path="/events" exact component={EventsPage} />
+        <Route
+            path="/events"
+            exact
+            render={props => (
+                <EventsPage
+                    token={token}
+                    userId={userId}
+                    {...props}
+            />
+        )}
+        />
         <Route path="/schedule/upcoming" exact component={SchedulePage} />
     </div>
 );

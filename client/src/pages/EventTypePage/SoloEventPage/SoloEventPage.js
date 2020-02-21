@@ -16,7 +16,6 @@ import EventDaysAvlCheckBox from './EventDaysAvlCheckBox/EventDaysAvlCheckBox';
 import PhoneCallModal from './Modals/PhoneCallModal';
 import LocationModal from './Modals/LocationModal';
 
-
 class SoloEventPage extends Component {
     constructor(props){
         super(props);
@@ -103,8 +102,41 @@ class SoloEventPage extends Component {
                 eventName: this.state.eventName.trim(),
                 eventDaysAvl: this.state.daysAvl
             }
-            console.log('event created!', event);
-            this.props.history.push('/events');
+
+            
+                fetch(`users/${this.props.userId}/events`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-access-token': this.props.token
+                },
+                body: JSON.stringify(	
+                    {
+                    name: this.state.eventColor,
+                    location: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
+                    description: this.state.eventDescription.trim(),
+                    duration: parseInt(this.state.eventDuration),
+                    url: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
+                    color: this.state.eventColor,
+                    availability: {
+                    start: 0,
+                    end: 0,
+                    days: {
+                        ...this.state.daysAvl
+                    }
+                }
+                })
+                })
+                .then(data => data.json())
+                .then((data) => {
+                    console.log('form submission', data);
+                    // console.log('event created!', event);
+                    this.props.history.push('/events');
+                })
+                .catch(err => (err));
+            
+
+            
         }
     }
 
