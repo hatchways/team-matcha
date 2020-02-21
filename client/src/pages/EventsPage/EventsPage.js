@@ -65,8 +65,7 @@ class EventsPage extends Component {
             <Box className="eventPage">
                 <EventPageHeader
                     img={this.props.profileImageUrl}
-                />
-                <EventPageHeader {...this.state.userDetails}/>
+                    {...this.state.userDetails} />
                 <Box className="eventPage__container">
                     {
                         events.length > 0 
