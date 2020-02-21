@@ -1,10 +1,9 @@
 //importing modules
 import React, { Component } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { theme } from "./themes/theme";
-import moment from 'moment';
-import { setToken, setUserId, removeToken } from './Auth/Auth';
+import { setToken, setUserId } from './Auth/Auth';
 // importing components
 import LoginPage from "./pages/LoginPage/LoginPage";
 import IntroPage from "./pages/IntroPage/IntroPage";
@@ -16,7 +15,6 @@ import GroupEventPage from './pages/EventTypePage/GroupEventPage/GroupEventPage'
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
 import PageNotFound from './pages/PageNotFound/PageNotFound';
-import EventsPage from './pages/EventsPage/EventsPage';
 // importing stylesheet
 import "./App.css";
 
@@ -31,18 +29,12 @@ class App extends Component{
     }
   }
 
-  componentWillMount() {
-    // checking if auth token is set
-    const token = localStorage.getItem('token');
-    const expDate = localStorage.getItem('tokenExpires'); 
-    const date = Date.now(); // current date
-    const currentDate = moment(date).format('MMMM Do YYYY, h:mm:ss a'); // current date format
-    const userId = localStorage.getItem('userId');
-    // console.log(token);
-    // console.log(userId);
-    if (token) {
-        this.setState({ isAuth: true, token, userId: userId }, () => console.log(this.state.isAuth));
-
+    componentWillMount(){
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        if (token) {
+            this.setState({ isAuth: true, token, userId: userId });
+        }
     }
     }
 
@@ -51,7 +43,7 @@ class App extends Component{
         isAuth: true,
         token: token,
         userId: userId
-    }), () => console.log(this.state));
+    }));
     setToken(token);
     setUserId(userId);
   }

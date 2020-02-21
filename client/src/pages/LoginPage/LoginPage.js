@@ -2,7 +2,7 @@
 import React from 'react';
 import { Box, Container, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { tokenCreated, tokenExpires, setIsAuth, setToken, removeToken, setUserId } from '../../Auth/Auth';
+import { tokenCreated, tokenExpires, setIsAuth, setToken, setUserId } from '../../Auth/Auth';
 // importing compnents
 import GoogleLogin from 'react-google-login';
 
@@ -32,6 +32,7 @@ class LoginPage extends React.Component {
             setIsAuth();
             setToken(data.auth_token);
             setUserId(data.public_id);
+            // redirect if users logs in successfully
             this.props.history.push(`/intro/${data.auth_token}`);
         })
         .catch(err => (err));
