@@ -104,29 +104,34 @@ class IntroPage extends Component {
 
     // method: handles data submission to the server
     handleDataSubmit = () => {
-        fetch(`/users/${this.props.userId}`, {
+        fetch(`/users/${this.props.userId.trim()}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+                'X-access-token': this.props.token
+            },
+            body: JSON.stringify({
+                public_id: this.state.userUrl
+            })
         })
         .then(data => data.json())
         .then((data) => {
             //data from server
             console.log(data);
 
-            fetch(`/users/${this.state.userUrl}/events`, {
+            fetch(`/users/${this.state.userUrl.trim()}/events`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-access-token': this.props.token
                 },
                 body: JSON.stringify({
-                // set to be sent to server
+                // set to be sent to servers
                     name: "My first event",
                     location: "Office",
                     description: "Second cubicle past the bathroom.",
                     duration: 60,
-                    url: this.state.userUrl,
+                    url: this.state.userUrl.trim(),
                     color: "#3d5afe",
                     availability: {
                         start: this.state.timeAvlFrom,
