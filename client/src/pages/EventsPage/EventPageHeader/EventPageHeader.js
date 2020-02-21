@@ -9,7 +9,7 @@ const EventPageHeader = ({public_id, name, ...props}) => (
             <Box className="eventPageHeader__profile">
                 <img 
                     className="eventPageHeader__profile--img"
-                    src={`https://www.jetphotos.com/assets/img/user.png`} 
+                    src={props.img} 
                     alt="user img" 
                 />
                 <Box className="eventPageHeader__profile--text">

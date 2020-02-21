@@ -115,20 +115,22 @@ class Events(Resource):
         return {'message': 'success'}, 201
 
 
-@api.route('/users/<public_id>/events/<event_id>')
+@api.route('/users/<public_id>/events/<event_url>')
 class EventDetail(Resource):
 
     @token_required
-    def put(self, public_id, event_id, current_user=None):
+    def put(self, public_id, event_url, current_user=None):
 
         if current_user.public_id != public_id:
             raise PermissionError
 
-        if ' ' in api.payload['url']:
+
+        event = Event.query.filter_by(url=event_url).first()
+        data = marshal(api.payload, event_input_output)
+
+        if data['url'] and ' ' in data['url']:
             raise UrlContainsSpace
 
-        event = Event.query.get(event_id)
-        data = marshal(api.payload, event_input_output, skip_none=True)
         if event is not None:
             user = event.user
             if user.public_id != current_user.public_id:
@@ -139,12 +141,13 @@ class EventDetail(Resource):
 
     @token_required
     @api.marshal_with(event_input_output, skip_none=True)
-    def get(self, public_id, event_id, current_user=None):
+    def get(self, public_id, event_url, current_user=None):
 
         if current_user.public_id != public_id:
             raise PermissionError
 
-        event = Event.query.get(event_id)
+        response = {}
+        event = Event.query.filter_by(url=event_url).first()
         if event is not None:
             user = event.user
             if user.public_id != current_user.public_id:
@@ -154,5 +157,29 @@ class EventDetail(Resource):
             event.availability.end = event.availability.end.hour
             event.color = '#' + event.color
             result = marshal(event ,event_input_output, skip_none=True)
+
+            response, code = result, 200
             return result, 200
-        return {"error": "Event not found"}, 404
+        else:
+            response['error'], code = "Event not found", 404
+        return response, code
+
+    @token_required
+    def delete(self, public_id, event_url, current_user=None):
+        if current_user.public_id != public_id:
+            raise PermissionError
+        event = Event.query.filter_by(url=event_url).first()
+
+        response = {}
+        if event is not None:
+            user = event.user
+            if user.public_id != current_user.public_id:
+                raise PermissionError
+            db.session.delete(event)
+            db.session.commit()
+            response['message'], code = 'Success', 200
+        else:
+            response, code = "Event not found", 404
+        return response, code
+
+

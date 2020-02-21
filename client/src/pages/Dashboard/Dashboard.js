@@ -1,25 +1,39 @@
 // importing modules
-import React from 'react';
-import { Route } from 'react-router-dom';
+import React, {useState} from 'react';
+import {Route} from 'react-router-dom';
 // importing components
 import Header from '../../components/Header/Header';
 import SubNavigation from '../../components/SubNavigation/SubNavigation';
 import EventsPage from '../EventsPage/EventsPage';
 import SchedulePage from '../SchedulePage/SchedulePage';
 
-const Dashboard = ({token, userId}) => (
-    <div
+const Dashboard = ({token, userId}) => {
+
+    const [imageUrl, setImageUrl] = useState("https://www.jetphotos.com/assets/img/user.png")
+
+    return (
+        <div
         className="dashboard"
     >
-        <Header />
-        <SubNavigation /> 
+        <Header profileImageUrl={imageUrl} />
+        <SubNavigation />
         {/* nested routes */}
-        <EventsPage 
-            token={token}
-            userId={userId}
+        <Route
+            path="/events"
+            exact
+            render={props => (
+                <EventsPage
+                    setImageUrl={setImageUrl}
+                    profileImageUrl={imageUrl}
+                    token={token}
+                    userId={userId}
+                    {...props}
+            />
+        )}
         />
         <Route path="/schedule/upcoming" exact component={SchedulePage} />
     </div>
-);
+    )
+};
 
 export default Dashboard;

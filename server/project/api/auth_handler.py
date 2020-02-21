@@ -12,6 +12,7 @@ login_blueprint = Blueprint('login', __name__)
 
 login_input = api.model('login', {
     'tokenId': fields.Raw(required=True),
+    'profileObj': fields.String(required=True),
 })
 
 
@@ -22,6 +23,7 @@ class Login(Resource):
         # (Receive token by HTTPS POST)
         data = api.payload
         token = data['tokenId']
+        profileObj = data['profileObj']
         try:
             # Specify the CLIENT_ID of the app that accesses the backend:
             idinfo = id_token.verify_oauth2_token(
@@ -40,6 +42,7 @@ class Login(Resource):
             if not user:
                 user = add_user(idinfo['name'], idinfo['email'])
                 user.google_id = user_id
+                user.img_url = profileObj['imageUrl']
                 db.session.commit()
 
             # Create and send session token

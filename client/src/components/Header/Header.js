@@ -3,7 +3,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Box, Typography } from '@material-ui/core';
 
-const Header = ({ isActive }) => (
+const Header = ({ isActive, profileImageUrl }) => (
     <Box boxShadow={3} className="header">
         <Box className="header__container">
             <Typography 
@@ -35,7 +35,7 @@ const Header = ({ isActive }) => (
                 <Box className="header__nav--profile">
                     <img 
                         className="header__nav--profile--img"
-                        src={`https://www.jetphotos.com/assets/img/user.png`} 
+                        src={profileImageUrl} 
                         alt="user img" 
                     />
                     <Typography 

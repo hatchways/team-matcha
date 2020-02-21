@@ -30,6 +30,8 @@ class EventsPage extends Component {
             .then(data => data.json())
             .then((data) => {
                 console.log('user details', data);
+                // this.setState({profileImage: data.img_url});
+                this.props.setImageUrl(data.img_url);
                 this.setState({ userDetails: {...data} });
 
                 fetch(`/users/${data.public_id}/events`, {
@@ -61,6 +63,9 @@ class EventsPage extends Component {
 
         return (
             <Box className="eventPage">
+                <EventPageHeader
+                    img={this.props.profileImageUrl}
+                />
                 <EventPageHeader {...this.state.userDetails}/>
                 <Box className="eventPage__container">
                     {
