@@ -74,7 +74,7 @@ def handle_jwt_InvalidTokenError(error):
 def handle_url_contains_space(error):
     return {
                'status': 'fail',
-               'message': 'The url parameter contains a space please remove it'
+               'message': 'The url parameter contains a space please remove it '
                           'and resubmit your request.'
            }, 400
 
