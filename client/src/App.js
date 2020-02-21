@@ -31,22 +31,19 @@ class App extends Component{
     }
   }
 
-  componentDidMount() {
-    // checking if auth token is set
-    const token = localStorage.getItem('token');
-    const expDate = localStorage.getItem('tokenExpires'); 
-    const date = Date.now(); // current date
-    const currentDate = moment(date).format('MMMM Do YYYY, h:mm:ss a'); // current date format
-    const userId = localStorage.getItem('userId');
-    // console.log(token);
-    // console.log(userId);
-    if (token) {
-        this.setState({ isAuth: true, token, userId: userId }, () => console.log(this.state.isAuth));
+    componentWillMount(){
+
+        const token = localStorage.getItem('token');
+        const expDate = localStorage.getItem('tokenExpires'); 
+        const date = Date.now(); // current date
+        const currentDate = moment(date).format('MMMM Do YYYY, h:mm:ss a'); // current date format
+        const userId = localStorage.getItem('userId');
+        if (token) {
+            this.setState({ isAuth: true, token, userId: userId }, () => console.log(this.state.isAuth));
+        }
+        console.log("App.js WillMount");
+
     }
-    // if (expDate < currentDate) {
-    //     this.handleAutoLogout();
-    // }
-}
 
   handleLogin = (token, userId) => {
     this.setState(() => ({
