@@ -105,6 +105,8 @@ class App extends Component{
           exact
           render={props => (
             <Dashboard
+              token={this.state.token}
+              userId={this.state.userId}
               {...props}
             />
           )}

@@ -41,6 +41,36 @@ class EventsPage extends Component {
 
     componentDidMount(){
         console.log('fetch event types from the server')
+        this.handleFetchUser();
+    }
+
+    handleFetchUser = () => {
+        fetch(`/users/details`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-access-token': this.props.token
+            }
+            })
+            .then(data => data.json())
+            .then((data) => {
+                console.log('user details', data);
+
+                // fetch('/users/{public_id}/events', {
+                //     method: 'GET',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         'X-access-token': this.props.token
+                //     }
+                //     })
+                //     .then(data => data.json())
+                //     .then((data) => {
+                //         console.log('events data', data);
+                //     })
+                //     .catch(err => (err));
+
+            })
+            .catch(err => (err));
     }
 
     handleRemoveEvent = (id) => {
