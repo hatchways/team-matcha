@@ -44,6 +44,10 @@ class SoloEventPage extends Component {
         }
     }
 
+    componentDidMount(){
+        console.log(this.props.userId);
+    }
+
     validate = () => {
         let isError = false;
         const errors = {
@@ -93,25 +97,24 @@ class SoloEventPage extends Component {
             if(this.state.eventLocation === 'phone call: (Invitee should call me)') {
                 eventDesignatedLocation = `${this.state.eventLocation} ${this.state.phone}`;
             }
-            const event = {
-                eventColor: this.state.eventColor,
-                eventDescription: this.state.eventDescription.trim(),
-                eventDuration: parseInt(this.state.eventDuration),
-                eventLink: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
-                eventLocation: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
-                eventName: this.state.eventName.trim(),
-                eventDaysAvl: this.state.daysAvl
-            }
+            // const event = {
+            //     eventColor: this.state.eventColor,
+            //     eventDescription: this.state.eventDescription.trim(),
+            //     eventDuration: parseInt(this.state.eventDuration),
+            //     eventLink: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
+            //     eventLocation: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
+            //     eventName: this.state.eventName.trim(),
+            //     eventDaysAvl: this.state.daysAvl
+            // }
 
-            
-                fetch(`users/${this.props.userId}/events`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-access-token': this.props.token
-                },
-                body: JSON.stringify(	
-                    {
+                fetch(`/users/${this.props.userId}/events`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-access-token': this.props.token
+                    },
+                    body: JSON.stringify({
+                    // set to be sent to servers
                     name: this.state.eventColor,
                     location: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
                     description: this.state.eventDescription.trim(),
@@ -129,14 +132,12 @@ class SoloEventPage extends Component {
                 })
                 .then(data => data.json())
                 .then((data) => {
-                    console.log('form submission', data);
-                    // console.log('event created!', event);
+                    //data from server
+                    console.log(data);
                     this.props.history.push('/events');
                 })
                 .catch(err => (err));
-            
 
-            
         }
     }
 
