@@ -3,7 +3,8 @@ import React, { Component } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { theme } from "./themes/theme";
-import { setToken, setUserId } from './Auth/Auth';
+import { setToken, setUserId, removeToken } from './Auth/Auth';
+import RouteContext from './Context/Context';
 // importing components
 import LoginPage from "./pages/LoginPage/LoginPage";
 import IntroPage from "./pages/IntroPage/IntroPage";
@@ -48,13 +49,13 @@ class App extends Component{
   }
 
   // method: handles logout
-  // handleLogout = (e) => {
-  //     e.preventDefault();
-  //     this.setState(() => ({
-  //         isAuth: false
-  //     }));
-  //     removeToken();
-  // }
+  handleLogout = (e) => {
+      e.preventDefault();
+      this.setState(() => ({
+          isAuth: false
+      }));
+      removeToken();
+  }
 
   // method : handles Auto logout 
   // handleAutoLogout = () => {
@@ -181,7 +182,16 @@ class App extends Component{
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <div>
+          <RouteContext.Provider
+              value={{ 
+                        userId: this.state.userId,
+                        handleLogout: this.handleLogout,
+                        isAuth: this.state.isAuth,
+                        token: this.state.token
+                    }}
+            >
             {routes}
+            </RouteContext.Provider>
           </div>
         </BrowserRouter>
       </MuiThemeProvider>

@@ -1,9 +1,31 @@
 //importing modules
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Box, Typography } from '@material-ui/core';
+import RouteContext from '../../Context/Context';
 
-const Header = ({ isActive, profileImageUrl }) => (
+const Header = ({ isActive }) => {
+    const { userId, token, isAuth, handleLogout } = useContext(RouteContext);
+    const [user, setUser] = useState({ userDetails: {} });
+
+    React.useEffect(() => {
+        fetch(`/users/details`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-access-token': token
+            }
+            })
+            .then(data => data.json())
+            .then((userData) => {
+                setUser({...userData})
+            })
+            .catch(err => (err));
+    }, []);
+
+    console.log(isAuth);
+
+    return (
     <Box boxShadow={3} className="header">
         <Box className="header__container">
             <Typography 
@@ -35,18 +57,18 @@ const Header = ({ isActive, profileImageUrl }) => (
                 <Box className="header__nav--profile">
                     <img 
                         className="header__nav--profile--img"
-                        src={profileImageUrl} 
-                        alt="user img" 
+                        src={user.img_url} 
                     />
                     <Typography 
                         className="header__nav--profile--name"
                         variant="body1">
-                        John Doe
+                        {user.name}
                     </Typography>
                 </Box>
             </nav>
         </Box>
     </Box>
-);
+    )
+};
 
 export default Header;
