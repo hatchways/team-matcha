@@ -19,6 +19,23 @@ class EventsPage extends Component {
         this.handleFetchUser();
     }
 
+    fetchEvents = (public_id) => {
+        console.log('fetching events for:' + public_id);
+        fetch(`/users/${public_id}/events`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-access-token': this.props.token
+            }
+        })
+            .then(data => data.json())
+            .then((data) => {
+                console.log('events data', data);
+                this.setState({ events: data });
+            })
+            .catch(err => (err));
+    }
+
     handleFetchUser = () => {
         fetch(`/users/details`, {
             method: 'GET',
@@ -32,30 +49,44 @@ class EventsPage extends Component {
                 console.log('user details', data);
                 // this.setState({profileImage: data.img_url});
                 this.props.setImageUrl(data.img_url);
-                this.setState({ userDetails: {...data} });
+                this.setState({ userDetails: data });
 
-                fetch(`/users/${data.public_id}/events`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-access-token': this.props.token
-                    }
-                    })
-                    .then(data => data.json())
-                    .then((data) => {
-                        console.log('events data', data);
-                        this.setState({ events: data });
-                    })
-                    .catch(err => (err));
+                this.fetchEvents(data.public_id);
+
+                // fetch(`/users/${data.public_id}/events`, {
+                //     method: 'GET',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         'X-access-token': this.props.token
+                //     }
+                //     })
+                //     .then(data => data.json())
+                //     .then((data) => {
+                //         console.log('events data', data);
+                //         this.setState({ events: data });
+                //     })
+                //     .catch(err => (err));
 
             })
             .catch(err => (err));
     }
 
-    handleRemoveEvent = (id) => {
-        this.setState((prevState) => ({
-            events: prevState.events.filter((event) => event.eventId !== id)
-        }))
+    handleRemoveEvent = (url) => {
+        // this.setState((prevState) => ({
+        //     events: prevState.events.filter((event) => event.eventId !== id)
+        // }))
+        fetch(`/users/${this.state.userDetails.public_id}/events/${url}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-access-token': this.props.token
+            }
+        })
+            .then(data => data.json())
+            .then((data) => {
+                this.fetchEvents(this.state.userDetails.public_id);
+            })
+            .catch(err => (err));
     };
 
     render(){

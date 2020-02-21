@@ -23,7 +23,7 @@ const EventPageCard = ({ duration, url, name, type, color, eventId, handleRemove
                         <EditIcon className="eventCard__col--settings--dropdown--icon"/>
                         Edit
                     </MenuItem>
-                    <MenuItem onClick={() => handleRemoveEvent(eventId)} className="eventCard__col--settings--dropdown--item">
+                    <MenuItem onClick={() => handleRemoveEvent(url)} className="eventCard__col--settings--dropdown--item">
                         <DeleteIcon className="eventCard__col--settings--dropdown--icon"/>
                         Delete
                     </MenuItem>
