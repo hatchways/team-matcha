@@ -118,7 +118,7 @@ class IntroPage extends Component {
         .then((data) => {
             //data from server
             console.log(data);
-
+            this.props.updateUserId(this.props.token, this.state.userUrl);
             fetch(`/users/${this.state.userUrl.trim()}/events`, {
                 method: 'POST',
                 headers: {
@@ -163,7 +163,6 @@ class IntroPage extends Component {
         //     ...this.state.daysAvl
         // }
         // console.log(data);
-        this.props.history.push('/events');
     };
 
     render(){

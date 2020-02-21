@@ -5,6 +5,8 @@ import { Box } from '@material-ui/core';
 import EventPageHeader from './EventPageHeader/EventPageHeader';
 import EventCard from './EventPageCard/EventsPageCard';
 import EventPageMsg from './EventPageMsg/EventPageMsg';
+import Header from '../../components/Header/Header';
+import SubNavigation from '../../components/SubNavigation/SubNavigation';
 
 class EventsPage extends Component {
     constructor(props){
@@ -35,13 +37,15 @@ class EventsPage extends Component {
                     eventType: 'One-on-One',
                     eventColor: '#ef6c00'
                 }
-            ]
+            ],
+            userDetails: {}
         };
     }
 
     componentDidMount(){
         console.log('fetch event types from the server')
         console.log(this.props.token);
+        console.log(this.props.userId);
         this.handleFetchUser();
     }
 
@@ -58,6 +62,7 @@ class EventsPage extends Component {
                 console.log('user details', data);
                 // this.setState({profileImage: data.img_url});
                 this.props.setImageUrl(data.img_url);
+                this.setState({ userDetails: {...data} });
 
                 fetch(`/users/${data.public_id}/events`, {
                     method: 'GET',
@@ -91,14 +96,15 @@ class EventsPage extends Component {
                 <EventPageHeader
                     img={this.props.profileImageUrl}
                 />
+                <EventPageHeader {...this.state.userDetails}/>
                 <Box className="eventPage__container">
                     {
                         events.length > 0 
-                            ? events.map((event) => 
+                            ? events.map((event, index) => 
                             <EventCard 
                                 handleRemoveEvent={this.handleRemoveEvent}
                                 handleLinkToClipBoard={this.handleLinkToClipBoard}
-                                key={event.eventLink} 
+                                key={index} 
                                 {...event} 
                             />)
                             : <EventPageMsg />

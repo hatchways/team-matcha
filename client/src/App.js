@@ -4,7 +4,7 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { theme } from "./themes/theme";
 import moment from 'moment';
-import { removeToken } from './Auth/Auth';
+import { setToken, setUserId, removeToken } from './Auth/Auth';
 // importing components
 import LoginPage from "./pages/LoginPage/LoginPage";
 import IntroPage from "./pages/IntroPage/IntroPage";
@@ -16,6 +16,7 @@ import GroupEventPage from './pages/EventTypePage/GroupEventPage/GroupEventPage'
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
 import PageNotFound from './pages/PageNotFound/PageNotFound';
+import EventsPage from './pages/EventsPage/EventsPage';
 // importing stylesheet
 import "./App.css";
 
@@ -43,10 +44,7 @@ class App extends Component{
         this.setState({ isAuth: true, token, userId: userId }, () => console.log(this.state.isAuth));
 
     }
-    if (expDate < currentDate) {
-        this.handleAutoLogout();
     }
-}
 
   handleLogin = (token, userId) => {
     this.setState(() => ({
@@ -54,42 +52,30 @@ class App extends Component{
         token: token,
         userId: userId
     }), () => console.log(this.state));
+    setToken(token);
+    setUserId(userId);
   }
 
   // method: handles logout
-  handleLogout = (e) => {
-      e.preventDefault();
-      this.setState(() => ({
-          isAuth: false
-      }));
-      removeToken();
-  }
+  // handleLogout = (e) => {
+  //     e.preventDefault();
+  //     this.setState(() => ({
+  //         isAuth: false
+  //     }));
+  //     removeToken();
+  // }
 
   // method : handles Auto logout 
-  handleAutoLogout = () => {
-      this.setState(() => ({
-          isAuth: false
-      }));
-      removeToken();
-  }
+  // handleAutoLogout = () => {
+  //     this.setState(() => ({
+  //         isAuth: false
+  //     }));
+  //     removeToken();
+  // }
 
   render(){
       let routes = (
-        <Switch>
-        <Route
-        path="/"
-        exact
-        render={props => (
-          <LoginPage
-            handleLogin={this.handleLogin}
-            {...props}
-          />
-        )} 
-        />
-        </Switch>
-      )
-      if (this.state.isAuth) {
-      routes = (
+        
         <Switch>
         <Route
           path="/"
@@ -173,6 +159,8 @@ class App extends Component{
           exact
           render={props => (
             <UpgradePage
+              token={this.state.token}
+              userId={this.state.userId}
               {...props}
             />
           )}
@@ -182,6 +170,7 @@ class App extends Component{
           exact
           render={props => (
             <IntroPage
+              updateUserId={this.handleLogin}
               token={this.state.token}
               userId={this.state.userId}
               {...props}
@@ -197,7 +186,6 @@ class App extends Component{
           />
           </Switch>
       )
-    }
     return (
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
