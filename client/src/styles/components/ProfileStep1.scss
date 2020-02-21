@@ -14,6 +14,7 @@
         width: 80%;
 
         &--input--wrap{
+            
             @include applyFlex(center, flex-start);
             margin-left: 80px;
             margin-bottom: 50px;

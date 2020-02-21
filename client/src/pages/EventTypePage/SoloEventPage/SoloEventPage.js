@@ -16,7 +16,6 @@ import EventDaysAvlCheckBox from './EventDaysAvlCheckBox/EventDaysAvlCheckBox';
 import PhoneCallModal from './Modals/PhoneCallModal';
 import LocationModal from './Modals/LocationModal';
 
-
 class SoloEventPage extends Component {
     constructor(props){
         super(props);
@@ -87,24 +86,38 @@ class SoloEventPage extends Component {
     handleFormSubmit = (e) => {
         e.preventDefault();
         let eventDesignatedLocation = '';
-        // validate user input
-        const err = this.validate();
+        const err = this.validate(); // validate user input
         if(!err) {
-            // send event to the server
             if(this.state.eventLocation === 'phone call: (Invitee should call me)') {
                 eventDesignatedLocation = `${this.state.eventLocation} ${this.state.phone}`;
             }
-            const event = {
-                eventColor: this.state.eventColor,
-                eventDescription: this.state.eventDescription.trim(),
-                eventDuration: parseInt(this.state.eventDuration),
-                eventLink: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
-                eventLocation: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
-                eventName: this.state.eventName.trim(),
-                eventDaysAvl: this.state.daysAvl
+            fetch(`/users/${this.props.userId}/events`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-access-token': this.props.token
+                },
+                body: JSON.stringify({
+                name: this.state.eventName,
+                location: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
+                description: this.state.eventDescription.trim(),
+                duration: parseInt(this.state.eventDuration),
+                url: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
+                color: this.state.eventColor,
+                availability: {
+                start: 0,
+                end: 0,
+                days: {
+                    ...this.state.daysAvl
+                }
             }
-            console.log('event created!', event);
-            this.props.history.push('/events');
+            })
+            })
+            .then(data => data.json())
+            .then((data) => {
+                this.props.history.push('/events');
+            })
+            .catch(err => (err));
         }
     }
 

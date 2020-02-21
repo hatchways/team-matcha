@@ -13,10 +13,14 @@ class Event(db.Model):
     url = db.Column(db.String(32), nullable=False, unique=True)
     color = db.Column(db.String(6), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    availability_id = db.Column(db.Integer, db.ForeignKey('availability.id'),
+    availability_id = db.Column(db.Integer,
+                                db.ForeignKey('availability.id'),
                                 nullable=False)
-    availability = db.relationship('Availability', innerjoin=True,
+    availability = db.relationship('Availability',
+                                   innerjoin=True,
                                    lazy='joined',
+                                   cascade="all, delete-orphan",
+                                   single_parent=True,
                                    backref=db.backref('event', uselist=False))
 
     def __iter__(self):
@@ -29,12 +33,22 @@ class Event(db.Model):
         return dict(self)
 
 
-def add_event(user_id, availability, name='my event', location='my home',
-              description='A cool event', duration=60, url='mycoolevent',
+def add_event(user_id,
+              availability,
+              name='my event',
+              location='my home',
+              description='A cool event',
+              duration=60,
+              url='mycoolevent',
               color='FFC0CB'):
     """Add's a row to the event table as well as the availability table."""
-    event = Event(name=name, location=location, description=description,
-                  duration=duration, url=url, color=color, user_id=user_id,
+    event = Event(name=name,
+                  location=location,
+                  description=description,
+                  duration=duration,
+                  url=url,
+                  color=color,
+                  user_id=user_id,
                   availability=availability)
     db.session.add(event)
     db.session.add(availability)

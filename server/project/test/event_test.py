@@ -7,23 +7,6 @@ from project.test.test_base import TestBase
 import json
 
 
-def seed_event():
-    result = {}
-    user = add_user()
-    user_id = User.query.first().id
-    availability = create_availability()
-    name = '♪┏(・o･)┛♪┗ ( ･o･) ┓♪'
-    url = 'myCoolParty'
-    location = 'da street!'
-    event = add_event(url=url,
-                      name=name,
-                      location=location,
-                      user_id=user_id,
-                      availability=availability)
-    result['user'] = user
-    result['event'] = event
-    return result
-
 
 class EventModelTest(TestBase):
     def test_event_model(self):
@@ -107,45 +90,4 @@ class EventModelTest(TestBase):
         self.assertEqual(len(query1[0].events), 1)
         self.assertEqual(len(query2[0].events), 1)
 
-
-class EventDetailPut(TestBase):
-    def test_update_event(self):
-        result = seed_event()
-        user = result['user']
-        event = result['event']
-        db.session.commit()
-        auth_token = user.encode_auth_token(user.id)
-
-        response = self.api.put(f'/users/{user.public_id}/events/{event.id}',
-                                headers={'x-access-token': auth_token},
-                                data=json.dumps({'location': 'New location',
-                                                 'badparams': 'blahfdfsdf'}),
-                                content_type='application/json')
-
-        data = json.loads(response.data.decode())
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['message'], "Success")
-
-        updated_event = Event.query.get(event.id)
-        self.assertNotEqual(updated_event.location, event.location)
-        self.assertNotEqual(updated_event.location, "New location")
-
-
-class EventDetailGet(TestBase):
-    def test_get_event(self):
-        result = seed_event()
-        user = result['user']
-        event = result['event']
-        db.session.commit()
-        auth_token = user.encode_auth_token(user.id)
-
-        response = self.api.get(f'/users/{user.public_id}/events/{event.id}',
-                                headers={'x-access-token': auth_token})
-
-        data = json.loads(response.data.decode())
-
-        self.assertEqual(response.status_code, 200)
-
-        self.assertEqual(data['url'], event.url)
 

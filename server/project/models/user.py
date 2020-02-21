@@ -21,11 +21,8 @@ class User(db.Model):
     name = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
     events = db.relationship('Event', backref='user')
+    img_url = db.Column(db.String(2048), unique=True)
 
-    # def __init__(self, name, email):
-    #     self.public_id = uuid.uuid4()
-    #     self.name = name
-    #     self.email = email
 
     @staticmethod
     def decode_auth_token(auth_token):
@@ -63,7 +60,7 @@ class User(db.Model):
             payload = {
                 'exp':
                 datetime.datetime.utcnow() +
-                datetime.timedelta(days=0, seconds=120),
+                datetime.timedelta(days=0, seconds=3600),
                 'iat':
                 datetime.datetime.utcnow(),
                 'sub':

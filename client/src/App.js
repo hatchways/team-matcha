@@ -3,6 +3,9 @@ import React, { Component } from "react";
 import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { theme } from "./themes/theme";
+import { setToken, setUserId, removeToken } from './Auth/Auth';
+import RouteContext from './Context/Context';
+
 // importing components
 import LoginPage from "./pages/LoginPage/LoginPage";
 import IntroPage from "./pages/IntroPage/IntroPage";
@@ -14,19 +17,67 @@ import GroupEventPage from './pages/EventTypePage/GroupEventPage/GroupEventPage'
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
 import PageNotFound from './pages/PageNotFound/PageNotFound';
+
 // importing stylesheet
 import "./App.css";
 
 
 class App extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      isAuth: false,
+      token: null,
+      userId: null,
+    }
+  }
+
+    componentWillMount(){
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        if (token) {
+            this.setState({ isAuth: true, token, userId: userId });
+        }
+    }
+
+  handleLogin = (token, userId) => {
+    this.setState(() => ({
+        isAuth: true,
+        token: token,
+        userId: userId
+    }));
+    setToken(token);
+    setUserId(userId);
+  }
+
+  // method: handles logout
+  handleLogout = (e) => {
+      e.preventDefault();
+      this.setState(() => ({
+          isAuth: false
+      }));
+      removeToken();
+      this.props.history.push('/');
+  }
+
+  // method : handles Auto logout 
+  // handleAutoLogout = () => {
+  //     this.setState(() => ({
+  //         isAuth: false
+  //     }));
+  //     removeToken();
+  // }
+
   render(){
       let routes = (
+        
         <Switch>
         <Route
           path="/"
           exact
           render={props => (
             <LoginPage
+              handleLogin={this.handleLogin}
               {...props}
             />
           )} 
@@ -36,6 +87,8 @@ class App extends Component{
           exact
           render={props => (
             <Dashboard
+              token={this.state.token}
+              userId={this.state.userId}
               {...props}
             />
           )}
@@ -54,6 +107,8 @@ class App extends Component{
           exact
           render={props => (
             <SoloEventPage
+            token={this.state.token}
+            userId={this.state.userId}
               {...props}
             />
           )}
@@ -99,6 +154,8 @@ class App extends Component{
           exact
           render={props => (
             <UpgradePage
+              token={this.state.token}
+              userId={this.state.userId}
               {...props}
             />
           )}
@@ -108,6 +165,9 @@ class App extends Component{
           exact
           render={props => (
             <IntroPage
+              updateUserId={this.handleLogin}
+              token={this.state.token}
+              userId={this.state.userId}
               {...props}
             />
           )}
@@ -125,7 +185,16 @@ class App extends Component{
       <MuiThemeProvider theme={theme}>
         <BrowserRouter>
           <div>
+          <RouteContext.Provider
+              value={{ 
+                        userId: this.state.userId,
+                        handleLogout: this.handleLogout,
+                        isAuth: this.state.isAuth,
+                        token: this.state.token
+                    }}
+            >
             {routes}
+            </RouteContext.Provider>
           </div>
         </BrowserRouter>
       </MuiThemeProvider>
