@@ -21,6 +21,7 @@ class LoginPage extends React.Component {
         body: JSON.stringify({
             access_token: res.accessToken,
             tokenId: res.tokenId,
+            profileObj: res.profileObj,
         })
         })
         .then(data => data.json())

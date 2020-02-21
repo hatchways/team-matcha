@@ -38,6 +38,9 @@ availability_input = api.model(
         'days': fields.Nested(days_input)})
 event_input_output = api.model(
     'Event', {
+        'id': fields.String(
+            description='Id of the event',
+        ),
         'name': fields.String(
             description='The name of the event', required=True,
             example='My event', min_length=1, max_length=32),

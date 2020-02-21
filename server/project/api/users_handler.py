@@ -22,12 +22,9 @@ user_model = api.model(
         fields.String(required=True, description="The name of the user"),
         'email':
         fields.String(required=True, description="The unique email"),
-        'image_url':
+        'img_url':
         fields.String(
             description="The image url of the user's Google account"),
-        'user_url':
-        fields.String(
-            description="The unique base url of user for event inviations "),
     })
 
 #-------------------------------------------------------------------------------

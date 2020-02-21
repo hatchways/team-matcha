@@ -30,7 +30,7 @@ class App extends Component{
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     // checking if auth token is set
     const token = localStorage.getItem('token');
     const expDate = localStorage.getItem('tokenExpires'); 
@@ -41,6 +41,7 @@ class App extends Component{
     // console.log(userId);
     if (token) {
         this.setState({ isAuth: true, token, userId: userId }, () => console.log(this.state.isAuth));
+
     }
     if (expDate < currentDate) {
         this.handleAutoLogout();
