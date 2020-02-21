@@ -14,16 +14,9 @@ const Dashboard = ({token, userId}) => (
         <Header />
         <SubNavigation /> 
         {/* nested routes */}
-        <Route
-            path="/events"
-            exact
-            render={props => (
-                <EventsPage
-                    token={token}
-                    userId={userId}
-                    {...props}
-            />
-        )}
+        <EventsPage 
+            token={token}
+            userId={userId}
         />
         <Route path="/schedule/upcoming" exact component={SchedulePage} />
     </div>

@@ -115,7 +115,7 @@ class SoloEventPage extends Component {
                     },
                     body: JSON.stringify({
                     // set to be sent to servers
-                    name: this.state.eventColor,
+                    name: this.state.eventName,
                     location: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
                     description: this.state.eventDescription.trim(),
                     duration: parseInt(this.state.eventDuration),
