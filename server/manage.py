@@ -2,6 +2,7 @@ import csv
 from flask.cli import FlaskGroup
 from project import create_app, db
 from project.models.timezone import Timezone
+from project.models.user import add_user
 import unittest
 import sys
 
@@ -28,6 +29,11 @@ def seed_timezones():
     db.session.commit()
     return
 
+def seed_db():
+    user1 = add_user(name="Brian", email="Brian@email.com", public_id="Brianh")
+    user2 = add_user(name="Gerardo", email="Gerardo@email.com", public_id="Gerardop")
+    user3 = add_user(name="Kenneth", email="kenn@email.com", public_id="kennethc")
+    db.commit()
 
 @cli.command()
 def test():

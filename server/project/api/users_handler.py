@@ -59,7 +59,6 @@ class Users(Resource):
         return user, 200
 
     @token_required
-    @api.expect(user_model)
     @api.marshal_with(user_model, skip_none=True)
     def put(self, public_id, current_user=None):
 
