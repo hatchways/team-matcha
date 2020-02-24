@@ -1,11 +1,16 @@
 //importing modules
 import React, { Component } from "react";
+import { Router, Route, Switch } from "react-router-dom";
 import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { theme } from "./themes/theme";
+// importing stylesheet
+import "./App.css";
+// importing history module
+import { createBrowserHistory } from 'history';
+// local storage functions
 import { setToken, setUserId, removeToken } from './Auth/Auth';
+// react context
 import RouteContext from './Context/Context';
-
 // importing components
 import LoginPage from "./pages/LoginPage/LoginPage";
 import IntroPage from "./pages/IntroPage/IntroPage";
@@ -18,9 +23,8 @@ import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
 import PageNotFound from './pages/PageNotFound/PageNotFound';
 
-// importing stylesheet
-import "./App.css";
-
+// app history initialized
+export const history = createBrowserHistory();
 
 class App extends Component{
   constructor(props){
@@ -57,7 +61,7 @@ class App extends Component{
           isAuth: false
       }));
       removeToken();
-      this.props.history.push('/');
+      history.push('/');
   }
 
   // method : handles Auto logout 
@@ -183,7 +187,7 @@ class App extends Component{
       )
     return (
       <MuiThemeProvider theme={theme}>
-        <BrowserRouter>
+        <Router history={history}>
           <div>
           <RouteContext.Provider
               value={{ 
@@ -196,7 +200,7 @@ class App extends Component{
             {routes}
             </RouteContext.Provider>
           </div>
-        </BrowserRouter>
+        </Router>
       </MuiThemeProvider>
     );
   }

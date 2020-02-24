@@ -63,6 +63,9 @@ const Header = ({ isActive }) => {
                         {user.name}
                     </Typography>
                 </Box>
+                {
+                    isAuth ? <button className="header__nav--logout" onClick={handleLogout}>Logout</button> : null
+                }
             </nav>
         </Box>
     </Box>

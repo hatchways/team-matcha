@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Checkbox,Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { orange } from '@material-ui/core/colors';
+import { allFalse } from '../../../../../Utils/obj-func';
 
 const OrangeCheckbox = withStyles({
     root: {
@@ -89,6 +90,7 @@ const DaysAvailableCheckBox = ({ daysAvl, handleCheckbox }) => (
                 <label className="step3__content--days--label" htmlFor="saturday">Saturdays</label>
             </Box>
         </Box>
+        { allFalse(daysAvl) ? <p className="step3__content--days--error">You must select atleast one day</p> : null }
     </Box>
 );
 
