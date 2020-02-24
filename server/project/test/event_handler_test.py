@@ -217,6 +217,26 @@ class EventCreateTest(TestBase):
                                           ' available. Please select at least '
                                           'one day and resubmit your request.')
 
+    def test_starttime_after_endtime(self):
+        """Tests whether a POST request with a start time after the end time
+        is rejected with a 400 response."""
+        user = add_user()
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+
+        response = self.api.post(f'/users/{user.public_id}/events',
+                                 headers={'x-access-token': auth_token},
+                                 data=create_event_json(start=17, end=8),
+                                 content_type='application/json')
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['status'], 'fail')
+        self.assertEqual(data['message'], 'The start time must be before the '
+                                          'end time. Please resubmit your '
+                                          'request with a valid start and end '
+                                          'time.')
+
 
 class EventsGetTest(TestBase):
     def test_event_marshal(self):
