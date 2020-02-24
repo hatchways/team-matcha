@@ -75,3 +75,19 @@ def handle_user_not_found(error):
         'status': 'fail',
         'message': 'User not Found!'
     }, 400
+
+
+class NoDayAvailable(Exception):
+    """This is a custom error."""
+    pass
+
+
+@api.errorhandler(NoDayAvailable)
+def handle_no_days_available(error):
+    """This is a custom error for Events GET and PUT requests to reject
+    responses that have not selected at least one day to be available for."""
+    return {
+        'status': 'fail',
+        'message': 'At least one day must be selected as available. Please '
+                   'select at least one day and resubmit your request.'
+    }, 400

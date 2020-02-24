@@ -9,6 +9,17 @@ from project.decorators import token_required
 from project.error_handlers import *
 import datetime as dt
 
+
+def verify_at_least_1_day_available(availability: Availability) -> int:
+    """Counts the number of days selected as available and returns the number
+    as an integer."""
+    days_available = 0
+    for day in availability['days'].values():
+        if day:
+            days_available += 1
+    return days_available
+
+
 events_blueprint = Blueprint('events', __name__)
 
 weekday = fields.Boolean(
@@ -87,6 +98,9 @@ class Events(Resource):
             raise PermissionError
 
         payload = api.payload
+
+        if not verify_at_least_1_day_available(payload['availability']):
+            raise NoDayAvailable
 
         if ' ' in payload['url']:
             raise UrlContainsSpace
@@ -180,5 +194,3 @@ class EventDetail(Resource):
         else:
             response, code = "Event not found", 404
         return response, code
-
-

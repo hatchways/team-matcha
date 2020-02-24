@@ -194,6 +194,29 @@ class EventCreateTest(TestBase):
 
         self.assertEqual(response.status_code, 400)
 
+    def test_no_days_available(self):
+        """Tests whether a POST request with no days selected as available
+        returns a 400 response."""
+        user = add_user()
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+        event_json = create_event_json(sunday=False, monday=False,
+                                       tuesday=False, wednesday=False,
+                                       thursday=False, friday=False,
+                                       saturday=False)
+
+        response = self.api.post(f'/users/{user.public_id}/events',
+                                 headers={'x-access-token': auth_token},
+                                 data=event_json,
+                                 content_type='application/json')
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['status'], 'fail')
+        self.assertEqual(data['message'], 'At least one day must be selected as'
+                                          ' available. Please select at least '
+                                          'one day and resubmit your request.')
+
 
 class EventsGetTest(TestBase):
     def test_event_marshal(self):
@@ -263,6 +286,7 @@ class EventDetailGet(TestBase):
 
         self.assertEqual(data['url'], event.url)
 
+
 class EventDetailDelete(TestBase):
     def test_delete_event_success(self):
         result = seed_event()
@@ -289,6 +313,3 @@ class EventDetailDelete(TestBase):
 
         # availability also deleted
         self.assertIsNone(Event.query.get(event.availability_id))
-
-
-
