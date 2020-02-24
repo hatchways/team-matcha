@@ -13,11 +13,7 @@ import datetime as dt
 def verify_at_least_1_day_available(availability: Availability) -> int:
     """Counts the number of days selected as available and returns the number
     as an integer."""
-    days_available = 0
-    for day in availability['days'].values():
-        if day:
-            days_available += 1
-    return days_available
+    return any(availability['days'].values())
 
 
 events_blueprint = Blueprint('events', __name__)
