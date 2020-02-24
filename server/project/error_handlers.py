@@ -60,16 +60,6 @@ def handle_jwt_InvalidTokenError(error):
     }, 401
 
 
-# @api.errorhandler(BadRequest)
-# def handle_url_contains_space(error):
-#     """This is a custom error."""
-#     return {
-#         'status': 'fail',
-#         'message': 'The url parameter contains a space please remove it and '
-#                    'resubmit your request.'
-#     }, 400
-
-
 @api.errorhandler(UrlContainsSpace)
 def handle_url_contains_space(error):
     return {
