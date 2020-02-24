@@ -84,7 +84,7 @@ class NoDayAvailable(Exception):
 
 @api.errorhandler(NoDayAvailable)
 def handle_no_days_available(error):
-    """This is a custom error for Events GET and PUT requests to reject
+    """This is a custom error for Events POST and PUT requests to reject
     responses that have not selected at least one day to be available for."""
     return {
         'status': 'fail',
