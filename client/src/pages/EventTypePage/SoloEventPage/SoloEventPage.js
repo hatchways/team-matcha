@@ -43,7 +43,9 @@ class SoloEventPage extends Component {
                 saturday: false
             },
             daysAvlError: '',
-            userDetails: {}
+            userDetails: {},
+            urlExists: false,
+            urlError: ''
         }
     }
 
@@ -100,6 +102,11 @@ class SoloEventPage extends Component {
             errors.daysAvlError = "You must select atleast one day";
         }
 
+        if(this.state.urlExists) {
+            isError = true;
+            errors.eventLinkError = "Event url already exists, try another.";
+        }
+
         this.setState({ ...this.state, ...errors});
 
         return isError;
@@ -109,6 +116,37 @@ class SoloEventPage extends Component {
     handleUserInput = (e) => {
         const { value, name } = e.target;
         this.setState({ [name]: value });
+    };
+
+    // method: validates if userUrl is unique
+    handleEventUrlCheck = e => {
+    const { value, name } = e.target;
+    this.setState({ [name]: value.replace(/\s+/g, '-').toLowerCase() }, () => console.log(this.state));
+
+    fetch(`/users/${this.props.userId}/events`, {
+            method: "GET",
+            headers: {
+            "Content-Type": "application/json",
+            "X-access-token": this.props.token
+            }
+        })
+        .then(response => {
+        return response.json();
+        })
+        .then(data => {
+        const urlExists = data.find(
+            event => event.url == this.state.eventLink
+        );
+        if (urlExists) {
+            this.setState(prevState => {
+            return {
+                urlExists: !prevState.exists
+            };
+            });
+        } else {
+            this.setState({ urlExists: false });
+        }
+        });
     };
 
     //method: handles solo-event creation/submit
@@ -212,7 +250,7 @@ class SoloEventPage extends Component {
                         />
                         <EventLinkInput 
                             username={this.state.userDetails.public_id}
-                            handleUserInput={this.handleUserInput}
+                            handleUserInput={this.handleEventUrlCheck}
                             eventLinkError={this.state.eventLinkError}
                         />
                         <RadioDurationList 
