@@ -188,9 +188,12 @@ class EventDetail(Resource):
         event = Event.query.filter_by(url=event_url).first()
         data = marshal(api.payload, event_put_input, skip_none=True)
 
-        if data['availability'] and\
-                not verify_at_least_1_day_available(data['availability']):
+        if not verify_at_least_1_day_available(data['availability']):
             raise NoDayAvailable
+
+        if data['availability']['start'] and data['availability']['end']\
+                and starttime_after_endtime(data['availability']):
+            raise StartAfterEnd
 
         if 'url' in data and data['url'] == ' ':
             raise UrlContainsSpace
