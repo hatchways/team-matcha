@@ -13,8 +13,8 @@ import datetime as dt
 def verify_at_least_1_day_available(availability: Availability) -> int:
     """Counts the number of days selected as available and returns the number
     as an integer."""
-
-    return any(availability['days'].values()) and\
+    return any(value not in {False, None} for value in
+               availability['days'].values()) or\
         all(value is None for value in availability['days'].values())
 
 
