@@ -62,4 +62,5 @@ def update_event(event, params):
     for key, value in params.items():
         if key in fields and value is not None and key not in fk:
             setattr(event, key, value)
+    db.session.commit()
     return event
