@@ -1,23 +1,8 @@
-import csv
-from project.models.timezone import Timezone
 import unittest
 from project import create_app, db
-
-# Import this test base if you need to use Timezones db
+from manage import seed_timezones
 
 app = create_app()
-
-
-def seed_timezones():
-    """Creates the timezone table and populates it."""
-    with open('project/db/timezones.csv') as csv_file:
-        csv_reader = csv.reader(csv_file)
-        next(csv_reader)
-        for row in csv_reader:
-            timezone = Timezone(*row)
-            db.session.add(timezone)
-    db.session.commit()
-    return
 
 
 class TimezoneTestBase(unittest.TestCase):
@@ -31,8 +16,8 @@ class TimezoneTestBase(unittest.TestCase):
     def setUp(self):
         self.api = app.test_client()
         db.create_all()
+        seed_timezones('project/db/timezones.csv')
         db.session.commit()
-        seed_timezones()
 
     def tearDown(self):
         db.session.remove()
