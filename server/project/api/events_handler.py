@@ -13,7 +13,9 @@ import datetime as dt
 def verify_at_least_1_day_available(availability: Availability) -> int:
     """Counts the number of days selected as available and returns the number
     as an integer."""
-    return any(availability['days'].values())
+
+    return any(availability['days'].values()) and\
+        all(value is None for value in availability['days'].values())
 
 
 events_blueprint = Blueprint('events', __name__)
@@ -24,7 +26,7 @@ weekday = fields.Boolean(
 weekend = fields.Boolean(
     default=False,
     description='Whether an event should be scheduled on this day')
-days_input = api.model(
+days_input_output = api.model(
     'Days', {
         'sunday': weekend,
         'monday': weekday,
@@ -32,9 +34,8 @@ days_input = api.model(
         'wednesday': weekday,
         'thursday': weekday,
         'friday': weekday,
-        'saturday': weekend
-    })
-availability_input = api.model(
+        'saturday': weekend})
+availability_input_output = api.model(
     'Availability', {
         'start': fields.Integer(
             description='Your earliest availability for the event',
@@ -42,7 +43,7 @@ availability_input = api.model(
         'end': fields.Integer(
             description='Your latest availability for the event',
             default=17),
-        'days': fields.Nested(days_input)})
+        'days': fields.Nested(days_input_output)})
 event_input_output = api.model(
     'Event', {
         'name': fields.String(
@@ -61,9 +62,49 @@ event_input_output = api.model(
             description='The unique url for this event', required=True,
             example='myevent', min_length=1, max_length=32),
         'color': fields.String(
-            description="A hex representation of a colour with the leading '#'",
-            required=True, example='#000000', min_length=7, max_length=7),
-        'availability': fields.Nested(availability_input)})
+            description="A hex representation of a colour with or without the "
+                        "leading '#'", required=True, example='#000000',
+            min_length=7, max_length=7),
+        'availability': fields.Nested(availability_input_output)})
+
+day = fields.Boolean(
+    description='Whether an event should be scheduled on this day')
+days_put_input = api.model(
+    'Days', {
+        'sunday': day,
+        'monday': day,
+        'tuesday': day,
+        'wednesday': day,
+        'thursday': day,
+        'friday': day,
+        'saturday': day})
+availability_put_input = api.model(
+    'Availability', {
+        'start': fields.Integer(
+            description='Your earliest availability for the event'),
+        'end': fields.Integer(
+            description='Your latest availability for the event'),
+        'days': fields.Nested(days_put_input)})
+event_put_input = api.model(
+    'Event', {
+        'name': fields.String(
+            description='The name of the event', example='My event',
+            min_length=1, max_length=32),
+        'location': fields.String(
+            description='The location where the event will take place',
+            example='My office', max_length=256),
+        'description': fields.String(
+            description='A description for the event',
+            example='This is an awesome description.', max_length=1024),
+        'duration': fields.Integer(
+            description='The duration of the event in minutes', example=60),
+        'url': fields.String(
+            description='The unique url for this event', example='myevent',
+            min_length=1, max_length=32),
+        'color': fields.String(
+            description="A hex representation of a colour with or without the "
+            "leading '#'", example='#000000', min_length=7, max_length=7),
+        'availability': fields.Nested(availability_put_input)})
 
 
 @api.route('/users/<public_id>/events')
@@ -135,7 +176,7 @@ class EventDetail(Resource):
             raise PermissionError
 
         event = Event.query.filter_by(url=event_url).first()
-        data = marshal(api.payload, event_input_output, skip_none=True)
+        data = marshal(api.payload, event_put_input, skip_none=True)
 
         if data['availability'] and\
                 not verify_at_least_1_day_available(data['availability']):

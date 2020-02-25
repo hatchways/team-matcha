@@ -318,6 +318,31 @@ class EventDetailPut(TestBase):
                                           ' available. Please select at least '
                                           'one day and resubmit your request.')
 
+    def test_default_override(self):
+        """Tests whether default setting in the marshal are overriding set
+        values."""
+        user = add_user()
+        db.session.commit()
+        url = 'iwontfail'
+        duration = 15
+        event = add_event(user.id, create_availability(), duration=duration,
+                          url=url)
+        auth_token = user.encode_auth_token(user.id)
+        db.session.commit()
+
+        response = self.api.put(f'/users/{user.public_id}/events/{event.url}',
+                                headers={'x-access-token': auth_token},
+                                data=json.dumps({'name': "please don't fail"}),
+                                content_type='application/json')
+
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['message'], 'Success')
+
+        event = Event.query.filter_by(url=url).first()
+        self.assertEqual(event.duration, duration)
+
 
 class EventDetailGet(TestBase):
     def test_get_event(self):
