@@ -12,9 +12,9 @@ const OrangeCheckbox = withStyles({
     checked: {},
 })(props => <Checkbox color="default" {...props} />);
 
-const DaysAvailableCheckBox = ({ daysAvl, handleCheckbox }) => (
+const DaysAvailableCheckBox = ({ daysAvl, handleCheckbox, daysAvlError }) => (
     <Box className="daysChkBox__content--days">
-        <Typography variant="h6" className="daysChkBox__content--days--title">Available Days:</Typography>
+        <Typography variant="h6" className="daysChkBox__content--days--title">Available Days *</Typography>
         <Box className="daysChkBox__content--days--list">
             <Box className="daysChkBox__content--days--item">
                 <OrangeCheckbox
@@ -89,6 +89,7 @@ const DaysAvailableCheckBox = ({ daysAvl, handleCheckbox }) => (
                 <label className="daysChkBox__content--days--label" htmlFor="saturday">Saturdays</label>
             </Box>
         </Box>
+        <p className="soloEvent__error">{daysAvlError}</p>
     </Box>
 );
 

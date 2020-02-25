@@ -23,11 +23,10 @@
 
     &__nav{
         @include applyFlex(center, space-evenly);
-        width: 50%;
+        width: 60%;
 
         &--link{
             color: black;
-            
             padding: 12px 16px;
             position: relative;
             text-decoration: none;
@@ -63,6 +62,21 @@
             }
             &--name{
                 margin-left: 25px !important;
+            }
+        }
+
+        &--logout{
+            background-color: $primary;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+            padding: 12px 16px;
+            text-decoration: none;
+            transition: all .5s ease;
+            &:hover{
+                cursor: pointer;
+                background-color: #e65100;
             }
         }
     }
