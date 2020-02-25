@@ -11,7 +11,7 @@ import datetime as dt
 from typing import Dict
 
 
-def verify_at_least_1_day_available(availability: Availability) -> int:
+def verify_at_least_1_day_available(availability) -> bool:
     """Counts the number of days selected as available and returns the number
     as an integer."""
     return any(value not in {False, None} for value in
@@ -19,7 +19,7 @@ def verify_at_least_1_day_available(availability: Availability) -> int:
         all(value is None for value in availability['days'].values())
 
 
-def starttime_after_endtime(availability: Dict[str, int]) -> bool:
+def starttime_after_endtime(availability) -> bool:
     """Checks whether the start time is before the end time and returns True
     if it is and False if it is not."""
     return availability['start'] > availability['end']
