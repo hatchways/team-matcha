@@ -223,6 +223,8 @@ class EventDetailPut(TestBase):
         user = result['user']
         event = result['event']
         db.session.commit()
+        old_event_id = event.id
+        old_location = event.location
         auth_token = user.encode_auth_token(user.id)
 
         response = self.api.put(f'/users/{user.public_id}/events/{event.url}',
@@ -238,9 +240,10 @@ class EventDetailPut(TestBase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['message'], "Success")
 
-        updated_event = Event.query.get(event.id)
-        self.assertNotEqual(updated_event.location, event.location)
-        self.assertNotEqual(updated_event.location, "New location")
+        updated_event = Event.query.get(old_event_id)
+        self.assertNotEqual(updated_event.location, old_location)
+
+        self.assertEqual(updated_event.location, "New location")
 
 
 class EventDetailGet(TestBase):
