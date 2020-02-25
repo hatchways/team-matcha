@@ -268,6 +268,28 @@ class EventDetailPut(TestBase):
 
         self.assertEqual(updated_event.location, "New location")
 
+    def test_update_availability(self):
+        """Tests whether a PUT request can be made to update Availability
+        parameters."""
+        result = seed_event()
+        user = result['user']
+        event = result['event']
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+
+        response = self.api.put(f'/users/{user.public_id}/events/{event.url}',
+                                headers={'x-access-token': auth_token},
+                                data=json.dumps({
+                                    'availability': {
+                                        'start': 12, 'days': {'sunday': True}}
+                                }),
+                                content_type='application/json')
+
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['message'], 'Success')
+
 
 class EventDetailGet(TestBase):
     def test_get_event(self):
