@@ -290,6 +290,34 @@ class EventDetailPut(TestBase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['message'], 'Success')
 
+    def test_no_days_available(self):
+        """Tests whether attempting to set all days as unavailable returns
+        a 400 error."""
+        result = seed_event()
+        user = result['user']
+        event = result['event']
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+        days = {'sunday': False, 'monday': False, 'tuesday': False,
+                'wednesday': False, 'thursday': False, 'friday': False,
+                'saturday': False}
+
+        response = self.api.put(f'/users/{user.public_id}/events/{event.url}',
+                                headers={'x-access-token': auth_token},
+                                data=json.dumps({
+                                    'availability': {
+                                        'days': days}
+                                }),
+                                content_type='application/json')
+
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['status'], 'fail')
+        self.assertEqual(data['message'], 'At least one day must be selected as'
+                                          ' available. Please select at least '
+                                          'one day and resubmit your request.')
+
 
 class EventDetailGet(TestBase):
     def test_get_event(self):
