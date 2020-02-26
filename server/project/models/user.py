@@ -75,7 +75,13 @@ class User(db.Model):
 #-------------------------------------------------------------------------------
 
 
-def add_user(name='kenny', email='test@email.com', **kwargs):
+def add_user(name='kenny', email='test@email.com', **kwargs) -> User:
+    """
+    Creates a User, adds the created user and returns the created User.
+    :param name: (str) the name of the user
+    :param email: (str) the unique email of the user
+    :return: a User
+    """
     user = User(public_id=uuid.uuid4(), name=name, email=email)
     db.session.add(user)
     return user

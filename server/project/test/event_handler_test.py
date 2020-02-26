@@ -294,14 +294,17 @@ class EventDetailPut(TestBase):
         result = seed_event()
         user = result['user']
         event = result['event']
+        url = event.url
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
+        start = 12
+        sunday = True
 
-        response = self.api.put(f'/users/{user.public_id}/events/{event.url}',
+        response = self.api.put(f'/users/{user.public_id}/events/{url}',
                                 headers={'x-access-token': auth_token},
                                 data=json.dumps({
                                     'availability': {
-                                        'start': 12, 'days': {'sunday': True}}
+                                        'start': start, 'days': {'sunday': sunday}}
                                 }),
                                 content_type='application/json')
 
@@ -309,6 +312,11 @@ class EventDetailPut(TestBase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['message'], 'Success')
+
+        updated_event = Event.query.filter_by(url=url).first()
+
+        self.assertEqual(updated_event.availability.start, dt.time(start))
+        self.assertEqual(updated_event.availability.sunday, sunday)
 
     def test_no_days_available(self):
         """Tests whether attempting to set all days as unavailable returns
