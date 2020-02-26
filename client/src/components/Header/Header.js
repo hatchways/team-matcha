@@ -5,7 +5,7 @@ import { Box, Typography } from '@material-ui/core';
 import RouteContext from '../../Context/Context';
 
 const Header = ({ isActive }) => {
-    const { userId, token, isAuth, handleLogout } = useContext(RouteContext);
+    const { token, isAuth, handleLogout } = useContext(RouteContext);
     const [user, setUser] = useState({ userDetails: {} });
 
     useEffect(() => {
@@ -21,7 +21,7 @@ const Header = ({ isActive }) => {
                 setUser({...userData})
             })
             .catch(err => (err));
-    }, []);
+    });
 
     return (
     <Box boxShadow={3} className="header">
@@ -56,6 +56,7 @@ const Header = ({ isActive }) => {
                     <img 
                         className="header__nav--profile--img"
                         src={user.img_url} 
+                        alt=""
                     />
                     <Typography 
                         className="header__nav--profile--name"

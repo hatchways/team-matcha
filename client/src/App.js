@@ -22,6 +22,7 @@ import GroupEventPage from './pages/EventTypePage/GroupEventPage/GroupEventPage'
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
 import PageNotFound from './pages/PageNotFound/PageNotFound';
+import CalendarPage from './pages/CalendarPage/CalendarPage';
 
 // app history initialized
 export const history = createBrowserHistory();
@@ -172,6 +173,15 @@ class App extends Component{
               updateUserId={this.handleLogin}
               token={this.state.token}
               userId={this.state.userId}
+              {...props}
+            />
+          )}
+          />
+          <Route
+          path="/:username/:eventLink"
+          exact
+          render={props => (
+            <CalendarPage
               {...props}
             />
           )}

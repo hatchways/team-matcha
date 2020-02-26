@@ -12,10 +12,12 @@ import EventLocationDropdown from './EventLocationDropdown/EventLocationDropdown
 import EventTextArea from './EventTextArea/EventTextArea';
 import RadioColorList from './RadioColorList/RadioColorList';
 import RadioDurationList from './RadioDurationList/RadioDurationList';
+import EventAvlTimeDropDown from './EventAvlTimeDropdown/EventAvlTimeDropdown';
 import EventDaysAvlCheckBox from './EventDaysAvlCheckBox/EventDaysAvlCheckBox';
 import PhoneCallModal from './Modals/PhoneCallModal';
 import LocationModal from './Modals/LocationModal';
 import { allFalse } from '../../../Utils/obj-func';
+
 
 class SoloEventPage extends Component {
     constructor(props){
@@ -25,11 +27,11 @@ class SoloEventPage extends Component {
             eventDescription: '',
             eventDuration: "60",
             eventLink: '',
-            eventLinkError: '',
             eventLocation: '',
             eventName: '',
+            eventStart: 10,
+            eventEnd: 17,
             phone: '',
-            eventNameError: '',
             locationDropDownField: 'Add a location',
             showLocationModal: false,
             showPhoneCallModal: false,
@@ -42,9 +44,12 @@ class SoloEventPage extends Component {
                 friday: true,
                 saturday: false
             },
-            daysAvlError: '',
             userDetails: {},
             urlExists: false,
+            eventNameError: '',
+            eventLinkError: '',
+            daysAvlError: '',
+            eventTimeError: '',
             urlError: ''
         }
     }
@@ -74,32 +79,38 @@ class SoloEventPage extends Component {
         const errors = {
             eventNameError: "",
             eventLinkError: "",
-            daysAvlError: ""
+            daysAvlError: "",
+            eventTimeError: ""
         };
 
         if (this.state.eventName.length === 0) {
             isError = true;
-            errors.eventNameError = "Event name cannot be empty";
+            errors.eventNameError = "Event name cannot be empty.";
         }
 
         if(this.state.eventName.length > 0 && this.state.eventName.length < 5) {
             isError = true;
-            errors.eventNameError = "Event name must be atleast 5 characters long";
+            errors.eventNameError = "Event name must be atleast 5 characters long.";
         }
 
         if (this.state.eventLink.length === 0) {
             isError = true;
-            errors.eventLinkError = "Event link cannot be empty ";
+            errors.eventLinkError = "Event link cannot be empty.";
         }
 
         if(this.state.eventLink.length > 0 && this.state.eventLink.length < 5) {
             isError = true;
-            errors.eventLinkError = "Event link must be atleast 5 characters long";
+            errors.eventLinkError = "Event link must be atleast 5 characters long.";
+        }
+
+        if (this.state.eventEnd < this.state.eventStart) {
+            isError = true;
+            errors.eventTimeError = "Event end time is before your start time";
         }
 
         if(allFalse(this.state.daysAvl)) {
             isError = true;
-            errors.daysAvlError = "You must select atleast one day";
+            errors.daysAvlError = "You must select atleast one day.";
         }
 
         if(this.state.urlExists) {
@@ -135,7 +146,7 @@ class SoloEventPage extends Component {
         })
         .then(data => {
         const urlExists = data.find(
-            event => event.url == this.state.eventLink
+            event => event.url === this.state.eventLink
         );
         if (urlExists) {
             this.setState(prevState => {
@@ -172,8 +183,8 @@ class SoloEventPage extends Component {
                 url: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
                 color: this.state.eventColor,
                 availability: {
-                start: 0,
-                end: 0,
+                start: this.state.eventStart,
+                end: this.state.eventEnd,
                 days: {
                     ...this.state.daysAvl
                 }
@@ -256,6 +267,12 @@ class SoloEventPage extends Component {
                         <RadioDurationList 
                             handleUserInput={this.handleUserInput}
                             eventDuration={this.state.eventDuration}
+                        />
+                        <EventAvlTimeDropDown 
+                            eventTimeError={this.state.eventTimeError}
+                            timeAvlStart={this.state.eventStart}
+                            timeAvlEnd={this.state.eventEnd} 
+                            handleUserInput={this.handleUserInput}
                         />
                         <EventDaysAvlCheckBox
                             handleCheckbox={this.handleCheckbox}
