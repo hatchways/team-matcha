@@ -13,12 +13,12 @@ class Calendars():
       - 00:15 from TODAY and so on.
     """
 
-    DAILY_SLOTS = 96 # 15 min is our minimum resolution so tehre is 96 slots in a day
-    MAX_DAY_MASK = (1 << DAILY_SLOTS) - 1 #bit field, every slot for the day is fliped to 1
+    DAILY_SLOTS = 96 # 15 min is our minimum resolution so there is 96 slots in a day
+    MAX_DAY_MASK = (1 << DAILY_SLOTS) - 1 #bit field, every slot for the day is flipped to 1
     SLOT_MINUTES = 30 # minutes of slots we want to return
     MIN_RESOLUTION = 15
 
-    def __init__(self, today=dt.now(), duration=None, next_x_days=60):
+    def __init__(self, today=dt.utcnow(), duration=None, next_x_days=60):
         """
         params:
             today - datetime
