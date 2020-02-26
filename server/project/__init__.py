@@ -40,5 +40,8 @@ def create_app(script_info=None):
     from project.api.events_handler import events_blueprint
     app.register_blueprint(events_blueprint)
 
+    from project.api.timezone_handler import timezones_blueprint
+    app.register_blueprint(timezones_blueprint)
+
     api.init_app(app)
     return app
