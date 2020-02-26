@@ -1,0 +1,102 @@
+.calendarPage{
+    @include applyFlex(center,center);
+    padding-top: 75px;
+    overflow: hidden;
+    width: 100%;
+    &__container{
+        @include applyFlex(flex-start, space-between);
+        background-color: #fff;
+        border-radius: 5px;
+        height: 80vh; // ! substitute for padding later
+        // padding-bottom: 50px;
+        width: 80%;
+    }
+
+    // # event styles
+    &__event{
+        border-right: solid 1px $off-black;
+        height: 100%;
+        padding: 12px 16px;
+        width: 35%;
+        &--btn{
+            background: none;
+            border: none;
+            border-radius: 100px !important;
+            color: $primary !important;
+            outline: none;
+        }
+        &--username{
+            color: $light-gray !important;
+            margin-top: 30px !important;
+            font-weight: 400 !important;
+        }
+        &--eventname{
+            color: $gray;
+            margin-bottom: 10px !important;
+            font-weight: 600 !important;
+        }
+        &--duration{
+            @include applyFlex(center, flex-start);
+            margin-bottom: 10px !important;
+            color: $light-gray !important;
+        }
+        &--location{
+            @include applyFlex(center, flex-start);
+            color: $light-gray !important;
+        }
+    }
+
+    // # datepicker styles and container
+    &__datepicker{
+        @include applyFlex(flex-start, flex-start, column);
+        overflow: hidden;
+        width: 65%;
+        &--header{
+            padding: 12px 16px;
+            width: 100%;
+            &--title{
+                color: $gray;
+                font-weight: 400 !important;
+            }
+        }
+        &--calendar{
+            @include applyFlex(flex-start, space-between);
+            height: 75vh;
+            width: 100%;
+        }
+    }
+
+    // # timeslots item & list styles
+    &__timeslots{
+        height: 100%;
+        overflow-y: scroll;
+        position: relative;
+        padding-right: 75px;
+        
+
+        &--title{
+            background-color: #fff;
+            color: $gray;
+            font-weight: 400 !important;
+            position: fixed;
+            padding: 12px 6px;
+            z-index: 2;
+        }
+        &--list{
+            @include applyFlex(flex-start, flex-start, column);
+            // overflow-y: scroll;
+            padding-top: 60px;
+            padding-bottom: 20px;
+            width: 100%;
+            
+        }
+        &--btn{
+            color: $primary !important;
+            background: none !important;
+            margin-bottom: 10px !important;
+            border: solid 1px $primary !important;
+            padding: 12px 16px !important;
+            width: 200px !important;
+        }
+    }
+}

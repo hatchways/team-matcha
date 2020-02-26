@@ -178,7 +178,7 @@ class App extends Component{
           )}
           />
           <Route
-          path="/:username/:eventLink"
+          path="/:public_id/:eventLink"
           exact
           render={props => (
             <CalendarPage
