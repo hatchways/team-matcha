@@ -91,3 +91,19 @@ def handle_no_days_available(error):
         'message': 'At least one day must be selected as available. Please '
                    'select at least one day and resubmit your request.'
     }, 400
+
+
+class StartAfterEnd(Exception):
+    """This is a custom error."""
+    pass
+
+
+@api.errorhandler(StartAfterEnd)
+def handle_start_before_end(error):
+    """This is a custom error for Events POST and PUT requests that responds
+    with a 400 error when the start time is after the end time."""
+    return {
+        'status': 'fail',
+        'message': 'The start time must be before the end time. Please resubmit'
+                   ' your request with a valid start and end time.'
+    }, 400
