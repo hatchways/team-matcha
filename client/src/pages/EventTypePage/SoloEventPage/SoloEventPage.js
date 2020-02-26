@@ -15,6 +15,7 @@ import RadioDurationList from './RadioDurationList/RadioDurationList';
 import EventDaysAvlCheckBox from './EventDaysAvlCheckBox/EventDaysAvlCheckBox';
 import PhoneCallModal from './Modals/PhoneCallModal';
 import LocationModal from './Modals/LocationModal';
+import { allFalse } from '../../../Utils/obj-func';
 
 class SoloEventPage extends Component {
     constructor(props){
@@ -41,7 +42,31 @@ class SoloEventPage extends Component {
                 friday: true,
                 saturday: false
             },
+            daysAvlError: '',
+            userDetails: {},
+            urlExists: false,
+            urlError: ''
         }
+    }
+
+    componentWillMount(){
+        this.handleFetchUser();
+    }
+
+    handleFetchUser = () => {
+        fetch(`/users/details`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-access-token': this.props.token
+            }
+            })
+            .then(data => data.json())
+            .then((data) => {
+                console.log('user details inside solo', data);
+                this.setState({userDetails: {...data}}, console.log(this.state));
+            })
+            .catch(err => (err));
     }
 
     validate = () => {
@@ -49,6 +74,7 @@ class SoloEventPage extends Component {
         const errors = {
             eventNameError: "",
             eventLinkError: "",
+            daysAvlError: ""
         };
 
         if (this.state.eventName.length === 0) {
@@ -71,6 +97,16 @@ class SoloEventPage extends Component {
             errors.eventLinkError = "Event link must be atleast 5 characters long";
         }
 
+        if(allFalse(this.state.daysAvl)) {
+            isError = true;
+            errors.daysAvlError = "You must select atleast one day";
+        }
+
+        if(this.state.urlExists) {
+            isError = true;
+            errors.eventLinkError = "Event url already exists, try another.";
+        }
+
         this.setState({ ...this.state, ...errors});
 
         return isError;
@@ -80,6 +116,37 @@ class SoloEventPage extends Component {
     handleUserInput = (e) => {
         const { value, name } = e.target;
         this.setState({ [name]: value });
+    };
+
+    // method: validates if userUrl is unique
+    handleEventUrlCheck = e => {
+    const { value, name } = e.target;
+    this.setState({ [name]: value.replace(/\s+/g, '-').toLowerCase() }, () => console.log(this.state));
+
+    fetch(`/users/${this.props.userId}/events`, {
+            method: "GET",
+            headers: {
+            "Content-Type": "application/json",
+            "X-access-token": this.props.token
+            }
+        })
+        .then(response => {
+        return response.json();
+        })
+        .then(data => {
+        const urlExists = data.find(
+            event => event.url == this.state.eventLink
+        );
+        if (urlExists) {
+            this.setState(prevState => {
+            return {
+                urlExists: !prevState.exists
+            };
+            });
+        } else {
+            this.setState({ urlExists: false });
+        }
+        });
     };
 
     //method: handles solo-event creation/submit
@@ -182,7 +249,8 @@ class SoloEventPage extends Component {
                             handleUserInput={this.handleUserInput}
                         />
                         <EventLinkInput 
-                            handleUserInput={this.handleUserInput}
+                            username={this.state.userDetails.public_id}
+                            handleUserInput={this.handleEventUrlCheck}
                             eventLinkError={this.state.eventLinkError}
                         />
                         <RadioDurationList 
@@ -192,6 +260,7 @@ class SoloEventPage extends Component {
                         <EventDaysAvlCheckBox
                             handleCheckbox={this.handleCheckbox}
                             daysAvl={this.state.daysAvl}
+                            daysAvlError={this.state.daysAvlError}
                         />
                         <Box className="soloEvent__form--input soloEvent__form--radio">
                             <RadioColorList 

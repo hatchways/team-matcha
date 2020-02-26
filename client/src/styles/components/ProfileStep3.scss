@@ -30,7 +30,6 @@
                     font-weight: $bold-text;
                     color: black;
                 }
-
             }
 
             &--span{
@@ -38,6 +37,12 @@
                 font-size: 2rem;
                 padding: 12px 24px;
                 font-weight: $bold-text;
+            }
+
+            &--error{
+                color: #ff3d00;
+                font-size: .85rem;
+                width: 100%;
             }
         }
 
@@ -63,7 +68,18 @@
                 flex: 1;
                 border-right: solid 1px $off-white;
             }
+
+            &--error{
+                color: #ff3d00;
+                font-size: .85rem;
+                width: 100%;
+            }
         }
+    }
+
+    &__error{
+
+        color: #ff3d00;
     }
 }
 

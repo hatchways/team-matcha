@@ -16,8 +16,8 @@ class IntroPage extends Component {
       step: 1,
       userUrl: "",
       timezoneName: momentTZ.tz.guess(true),
-      timeAvlFrom: "",
-      timeAvlUntil: "",
+      timeAvlStart: 10,
+      timeAvlEnd: 17,
       daysAvl: {
         sunday: false,
         monday: true,
@@ -28,13 +28,7 @@ class IntroPage extends Component {
         saturday: false
       },
       exists: false,
-      users: [
-        // test user data
-        { userUrl: "john-doe" },
-        { userUrl: "jane-doe" },
-        { userUrl: "johnny-doe" },
-        { userUrl: "janey-doe" }
-      ],
+      users: [],
       timezonesArr: momentTZ.tz.names()
     };
   }
@@ -126,8 +120,8 @@ class IntroPage extends Component {
             url: "MyFirstEvent", // this.state.userUrl.trim(),
             color: "#3d5afe",
             availability: {
-              start: this.state.timeAvlFrom,
-              end: this.state.timeAvlUntil,
+              start: this.state.timeAvlStart,
+              end: this.state.timeAvlEnd,
               days: {
                 ...this.state.daysAvl
               }
@@ -147,8 +141,8 @@ class IntroPage extends Component {
     const {
       step,
       timezoneName,
-      timeAvlFrom,
-      timeAvlUntil,
+      timeAvlStart,
+      timeAvlEnd,
       daysAvl,
       exists,
       userUrl
@@ -184,8 +178,8 @@ class IntroPage extends Component {
           <IntroStep3
             daysAvl={daysAvl}
             step={step}
-            timeAvlFrom={timeAvlFrom}
-            timeAvlUntil={timeAvlUntil}
+            timeAvlStart={timeAvlStart}
+            timeAvlEnd={timeAvlEnd}
             handleUserInput={this.handleUserInput}
             handleNextStep={this.handleNextStep}
             handleDataSubmit={this.handleDataSubmit}
