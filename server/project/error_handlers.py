@@ -60,16 +60,6 @@ def handle_jwt_InvalidTokenError(error):
     }, 401
 
 
-# @api.errorhandler(BadRequest)
-# def handle_url_contains_space(error):
-#     """This is a custom error."""
-#     return {
-#         'status': 'fail',
-#         'message': 'The url parameter contains a space please remove it and '
-#                    'resubmit your request.'
-#     }, 400
-
-
 @api.errorhandler(UrlContainsSpace)
 def handle_url_contains_space(error):
     return {
@@ -84,4 +74,20 @@ def handle_user_not_found(error):
     return {
         'status': 'fail',
         'message': 'User not Found!'
+    }, 400
+
+
+class NoDayAvailable(Exception):
+    """This is a custom error."""
+    pass
+
+
+@api.errorhandler(NoDayAvailable)
+def handle_no_days_available(error):
+    """This is a custom error for Events POST and PUT requests to reject
+    responses that have not selected at least one day to be available for."""
+    return {
+        'status': 'fail',
+        'message': 'At least one day must be selected as available. Please '
+                   'select at least one day and resubmit your request.'
     }, 400

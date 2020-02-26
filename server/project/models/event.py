@@ -1,6 +1,8 @@
 from project import db
 from sqlalchemy import inspect
 from project.models.availability import Availability
+import datetime as dt
+
 
 
 class Event(db.Model):
@@ -58,10 +60,20 @@ def add_event(user_id: int, availability: Availability, name='My event',
 
 
 def update_event(event, params):
-    fields = inspect(Event).columns.keys()
-    fk = ['availability']
+    event_fields = inspect(Event).columns.keys()
     for key, value in params.items():
-        if key in fields and value is not None and key not in fk:
+        if key in event_fields and value is not None and\
+                key is not 'availability':
             setattr(event, key, value)
+    if 'availability' in params:
+        availability_fields = inspect(Availability).columns.keys()
+        for key, value in params['availability'].items():
+            if key in availability_fields and value is not None and\
+                    key != 'days':
+                setattr(event.availability, key, dt.time(value))
+        if 'days' in params['availability']:
+            for key, value in params['availability']['days'].items():
+                if key in availability_fields and value is not None:
+                    setattr(event.availability, key, value)
     db.session.commit()
     return event

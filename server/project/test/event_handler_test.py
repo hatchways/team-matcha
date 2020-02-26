@@ -194,6 +194,29 @@ class EventCreateTest(TestBase):
 
         self.assertEqual(response.status_code, 400)
 
+    def test_no_days_available(self):
+        """Tests whether a POST request with no days selected as available
+        returns a 400 response."""
+        user = add_user()
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+        event_json = create_event_json(sunday=False, monday=False,
+                                       tuesday=False, wednesday=False,
+                                       thursday=False, friday=False,
+                                       saturday=False)
+
+        response = self.api.post(f'/users/{user.public_id}/events',
+                                 headers={'x-access-token': auth_token},
+                                 data=event_json,
+                                 content_type='application/json')
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['status'], 'fail')
+        self.assertEqual(data['message'], 'At least one day must be selected as'
+                                          ' available. Please select at least '
+                                          'one day and resubmit your request.')
+
 
 class EventsGetTest(TestBase):
     def test_event_marshal(self):
@@ -245,6 +268,81 @@ class EventDetailPut(TestBase):
 
         self.assertEqual(updated_event.location, "New location")
 
+    def test_update_availability(self):
+        """Tests whether a PUT request can be made to update Availability
+        parameters."""
+        result = seed_event()
+        user = result['user']
+        event = result['event']
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+
+        response = self.api.put(f'/users/{user.public_id}/events/{event.url}',
+                                headers={'x-access-token': auth_token},
+                                data=json.dumps({
+                                    'availability': {
+                                        'start': 12, 'days': {'sunday': True}}
+                                }),
+                                content_type='application/json')
+
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['message'], 'Success')
+
+    def test_no_days_available(self):
+        """Tests whether attempting to set all days as unavailable returns
+        a 400 error."""
+        result = seed_event()
+        user = result['user']
+        event = result['event']
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+        days = {'sunday': False, 'monday': False, 'tuesday': False,
+                'wednesday': False, 'thursday': False, 'friday': False,
+                'saturday': False}
+
+        response = self.api.put(f'/users/{user.public_id}/events/{event.url}',
+                                headers={'x-access-token': auth_token},
+                                data=json.dumps({
+                                    'availability': {
+                                        'days': days}
+                                }),
+                                content_type='application/json')
+
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['status'], 'fail')
+        self.assertEqual(data['message'], 'At least one day must be selected as'
+                                          ' available. Please select at least '
+                                          'one day and resubmit your request.')
+
+    def test_default_override(self):
+        """Tests whether default setting in the marshal are overriding set
+        values."""
+        user = add_user()
+        db.session.commit()
+        url = 'iwontfail'
+        duration = 15
+        event = add_event(user.id, create_availability(), duration=duration,
+                          url=url)
+        auth_token = user.encode_auth_token(user.id)
+        db.session.commit()
+
+        response = self.api.put(f'/users/{user.public_id}/events/{event.url}',
+                                headers={'x-access-token': auth_token},
+                                data=json.dumps({'name': "please don't fail"}),
+                                content_type='application/json')
+
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['message'], 'Success')
+
+        event = Event.query.filter_by(url=url).first()
+        self.assertEqual(event.duration, duration)
+
 
 class EventDetailGet(TestBase):
     def test_get_event(self):
@@ -262,6 +360,7 @@ class EventDetailGet(TestBase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(data['url'], event.url)
+
 
 class EventDetailDelete(TestBase):
     def test_delete_event_success(self):
@@ -289,6 +388,3 @@ class EventDetailDelete(TestBase):
 
         # availability also deleted
         self.assertIsNone(Event.query.get(event.availability_id))
-
-
-
