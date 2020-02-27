@@ -1,0 +1,74 @@
+.apptConfirmed{
+    @include applyFlex(center,center);
+    padding-top: 75px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    &__container{
+        @include applyFlex(center, flex-start, column);
+        background-color: #fff;
+        border-radius: 5px;
+        height: 70vh; // ! substitute for padding later
+        padding-top: 75px;
+        position: relative;
+        width: 80%;
+    }
+
+    &__header{
+        padding-bottom: 10px;
+        text-align: center;
+        width: 100%;
+        &--title{
+            color: $gray;
+            margin-bottom: 5px !important;
+            font-weight: 600 !important;
+        }
+        &--text{
+            border-bottom: solid 1px $off-black;
+            color: $light-gray !important;
+            display: inline-block;
+            padding-bottom: 10px;
+            width: 45%;
+        }
+    }
+
+    &__footer{
+        padding-bottom: 10px;
+        text-align: center;
+        width: 100%;
+        &--text{
+            border-bottom: solid 1px $off-black;
+            color: $gray !important;
+            display: inline-block;
+            font-weight: 500 !important;
+            margin-top: 10px !important;
+            padding-bottom: 10px;
+            width: 45%;
+        }
+    }
+
+    &__content{
+        @include applyFlex(center, flex-start);
+        margin-bottom: 5px !important;
+        &--icon{
+            font-size: 2rem !important;
+            &--light{
+                color: $light-gray !important;
+            }
+        }
+        &--duration{
+            color: $light-gray !important;
+        }
+        &--location{
+            @include applyFlex(center, flex-start);
+            color: $light-gray !important;
+        }
+        &--timezone{
+            color: $light-gray !important;
+        }
+        &--date{
+            color: $primary !important;
+            font-weight: 500 !important;
+        }
+    }
+}

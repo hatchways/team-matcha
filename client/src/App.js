@@ -25,6 +25,7 @@ import UpgradePage from "./pages/UpgradePage/UpgradePage";
 import PageNotFound from './pages/PageNotFound/PageNotFound';
 import CalendarPage from './pages/CalendarPage/CalendarPage';
 import ConfirmationPage from './pages/ConfirmationPage/ConfirmationPage';
+import ApptConfirmedPage from "./pages/ApptConfirmedPage/ApptConfirmedPage";
 
 // app history initialized
 export const history = createBrowserHistory();
@@ -204,6 +205,15 @@ class App extends Component{
           exact
           render={props => (
             <ConfirmationPage
+              {...props}
+            />
+          )}
+          />
+          <Route
+          path="/:public_id/:eventLink/invitees/:appointmentId"
+          exact
+          render={props => (
+            <ApptConfirmedPage
               {...props}
             />
           )}

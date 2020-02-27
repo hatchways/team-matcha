@@ -53,6 +53,7 @@ class ConfirmationPage extends Component {
 
     //method: handles solo-event creation/submit
     handleFormSubmit = (e) => {
+
         e.preventDefault();
         const err = this.validate(); // validate user input
         if(!err) {
@@ -71,7 +72,9 @@ class ConfirmationPage extends Component {
                 
             // })
             // .catch(err => (err));
-
+            const { public_id, eventLink } = this.props.match.params; // get params from url
+            const appointmentId = 'a89s7f8as7fxzwrxw'; // should get back from sucess
+            this.props.history.push(`/${public_id}/${eventLink}/invitees/${appointmentId}`)
         }
     }
 
