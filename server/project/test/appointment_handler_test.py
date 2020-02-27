@@ -9,6 +9,25 @@ from project.models.appointment import Appointment, add_appointment
 from project.models.participant import Participant, create_participant
 
 
+def create_appointment_json(start='2020-02-20T08:30:00',
+                            comments='Look forward to seeing you!',
+                            name='Little Timmy',
+                            email='timmy@mail.com') -> str:
+    """
+    Creates and returns a JSON dump to POST an Appointment.
+    :param start: start time of the event in ISO 8601
+    :param comments: comments from the participant to the event creator
+    :param name: the participant's name
+    :param email: the participant's email
+    :return: JSON dump
+    """
+    request = {'start': start,
+               'comments': comments,
+               'participant': {'name': name,
+                               'email': email}}
+    return json.dumps(request)
+
+
 class AppointmentGetTest(TestBase):
     def test_get_appointments(self):
         """Tests whether appointments can be successfully requested."""
@@ -83,3 +102,45 @@ class AppointmentGetTest(TestBase):
 
         self.assertEqual(response.status_code, 401)
         self.assertEqual(data['message'], 'Token is missing!')
+
+
+class AppointmentPostTest(TestBase):
+    def test_post_appointments(self):
+        """Tests whether an appointment can be successfully created and the
+        appointment's attributes match what was supplied."""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+        start = '2020-03-20T08:30:00'
+        comments = "I don't know about this appointment man..."
+        name = 'Little Timmy'
+        email = 'little@timmy.com'
+
+        route = f'/users/{user_public_id}/events/{event_url}/appointments'
+        request = create_appointment_json(start=start,
+                                          comments=comments,
+                                          name=name,
+                                          email=email)
+        response = self.api.post(route,
+                                 data=request,
+                                 content_type='application/json')
+
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(data['message'], 'success')
+
+        appointment = db.session.query(Appointment).\
+            filter(User.public_id == user_public_id,
+                   Event.url == event_url,
+                   Appointment.start == start).\
+            first()
+        self.assertEqual(appointment.comments, comments)
+
+        participant = appointment.participants[0]
+        self.assertEqual(participant.name, name)
+        self.assertEqual(participant.email, email)
