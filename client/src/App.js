@@ -23,6 +23,7 @@ import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
 import PageNotFound from './pages/PageNotFound/PageNotFound';
 import CalendarPage from './pages/CalendarPage/CalendarPage';
+import ConfirmationPage from './pages/ConfirmationPage/ConfirmationPage';
 
 // app history initialized
 export const history = createBrowserHistory();
@@ -182,6 +183,15 @@ class App extends Component{
           exact
           render={props => (
             <CalendarPage
+              {...props}
+            />
+          )}
+          />
+          <Route
+          path="/:public_id/:eventLink/:date"
+          exact
+          render={props => (
+            <ConfirmationPage
               {...props}
             />
           )}
