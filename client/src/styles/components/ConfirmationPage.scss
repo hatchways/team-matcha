@@ -1,0 +1,107 @@
+.confirmationPage{
+    @include applyFlex(center,center);
+    padding-top: 75px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    
+    &__container{
+        @include applyFlex(flex-start, flex-start);
+        background-color: #fff;
+        border-radius: 5px;
+        height: 80vh; // ! substitute for padding later
+        // padding-bottom: 50px;
+        position: relative;
+        width: 80%;
+    }
+
+    &__error{
+        padding: 0;
+        margin: 0;
+        margin-top: 10px;
+        font-size: .85rem;
+        color: #ff3d00;
+    }
+
+    // # event styles
+    &__event{
+        border-right: solid 1px $off-black;
+        height: 100%;
+        padding: 12px 16px;
+        width: 35%;
+        &--btn{
+            background: none;
+            border: none;
+            border-radius: 100px !important;
+            color: $primary !important;
+            outline: none;
+        }
+        &--username{
+            color: $light-gray !important;
+            margin-top: 30px !important;
+            font-weight: 400 !important;
+        }
+        &--eventname{
+            color: $gray;
+            font-weight: 600 !important;
+            margin-bottom: 10px !important;
+        }
+        &--duration{
+            @include applyFlex(center, flex-start);
+            color: $light-gray !important;
+            margin-bottom: 10px !important;
+        }
+        &--location{
+            @include applyFlex(center, flex-start);
+            color: $light-gray !important;
+            margin-bottom: 10px !important;
+        }
+        &--date{
+            @include applyFlex(center, flex-start);
+            color: $primary !important;
+        }
+    }
+
+    &__form{
+        height: 100%;
+        padding-left: 35px;
+        padding-top: 35px;
+        width: 65%;
+        &--input{
+            width: 100%;
+            margin-bottom: 25px;
+            &--label{
+                font-size: .85rem !important;
+                margin-top: 10px !important;
+                margin-bottom: 10px !important;
+                &--link{
+                    color: $gray;
+                    font-size: .85rem !important;
+                    width: 50%;
+                }
+            }
+            &--name,
+            &--location,
+            &--textarea,
+            &--link{
+                background: none;
+                border: none;
+                border: solid 1px $off-black;
+                outline: none;
+                padding: 16px 16px;
+                width: 60%;
+            }
+            &--link{
+                &--wrap{
+                    @include applyFlex(flex-start, flex-start, column);
+                    width: 100%;
+                }
+            }
+        }
+        &--submit{
+            background-color: $primary !important;
+            color: whitesmoke !important;
+            padding: 12px 16px !important;
+        }
+    }
+}

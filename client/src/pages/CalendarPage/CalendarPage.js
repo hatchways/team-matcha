@@ -51,8 +51,21 @@ class CalendarPage extends Component {
         console.log('parsed date', moment('2020-02-28T16:30').format('hh:mma dddd MMMM Do YYYY')); // parsed data for confirmation zz for time zone
     }
 
-    handleFetch = () => {
+    handleFetchEvent = () => {
         // /users/{public_id}/events/{event_url}
+        const { public_id, eventLink } = this.props.match.params; // get params from url
+        fetch(`/users/${public_id}/events/${eventLink}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'X-access-token': token
+            }
+            })
+            .then(data => data.json())
+            .then((eventData) => {
+                console.log(eventData);
+            })
+            .catch(err => (err));
     }
 
     // method: handles date change and time-slots to render
