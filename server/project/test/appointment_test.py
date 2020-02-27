@@ -15,7 +15,9 @@ class AppointmentModelTest(TestBase):
         db.session.commit()
         user = User.query.first()
         availability = create_availability()
-        event = add_event(user_id=user.id, availability=availability)
+        add_event(user_id=user.id, availability=availability)
+        db.session.commit()
+        event = Event.query.first()
         participant = create_participant()
         start = dt.datetime(year=2020, month=3, day=1, hour=8)
         end = start + dt.timedelta(hours=1)
@@ -34,7 +36,9 @@ class AppointmentModelTest(TestBase):
         db.session.commit()
         user = User.query.first()
         availability = create_availability()
-        event = add_event(user_id=user.id, availability=availability)
+        add_event(user_id=user.id, availability=availability)
+        db.session.commit()
+        event = Event.query.first()
         names = ['Rex', 'Fives', 'Echo', 'Dogma', 'Wolffe']
         emails = [f'{name}@trooper.com' for name in names]
         participants = [create_participant(name=names[i], email=emails[i])

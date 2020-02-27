@@ -15,7 +15,9 @@ class ParticipantModelTest(TestBase):
         db.session.commit()
         user = User.query.first()
         availability = create_availability()
-        event = add_event(user_id=user.id, availability=availability)
+        add_event(user_id=user.id, availability=availability)
+        db.session.commit()
+        event = Event.query.first()
         name = 'User Jeff'
         email = 'jeff@email.com'
         add_appointment(event_id=event.id,
