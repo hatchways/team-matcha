@@ -8,8 +8,26 @@ from project.models.user import User
 from project.decorators import token_required
 from project.error_handlers import *
 import datetime as dt
+# from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
+
+
+NEXT_X_DAYS = 90  # TODO remove placeholder after calendar PR is implemented
 
 appointment_blueprint = Blueprint('appointments', __name__)
+
+
+def start_within_next_x_days(start: str, next_x_days=NEXT_X_DAYS) -> bool:
+    """
+    Checks whether the appointment is scheduled within the NEXT_X_DAYS returns
+    a boolean.
+    :param start: when the appointment is scheduled in ISO 8601
+    :param next_x_days: NEXT_X_DAYS the amount of days that the calendar is
+    generated for
+    :return: Whether the appointment is within the NEXT_X_DAYS
+    """
+    return dt.datetime.fromisoformat(start) <=\
+        dt.datetime.utcnow() + dt.timedelta(days=next_x_days)
+
 
 participant_input = api.model(
     'Participants', {
@@ -76,6 +94,10 @@ class Appointments(Resource):
     def post(self, public_id, event_url):
         """Creates an appointment for the specified event."""
         payload = api.payload
+
+        if not start_within_next_x_days(payload['start']):
+            raise AppointmentAfterNext_X_DaysError(NEXT_X_DAYS)
+
         event = db.session.query(Event). \
             filter(Event.url == event_url, User.public_id == public_id). \
             first()
@@ -83,7 +105,7 @@ class Appointments(Resource):
                                          payload['participant']['email'])
         add_appointment(
             event_id=event.id,
-            participants=participant,
+            participants=[participant],
             start=payload['start'],
             end=dt.datetime.fromisoformat(payload['start']) +
             dt.timedelta(minutes=event.duration),

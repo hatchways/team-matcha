@@ -7,6 +7,11 @@ from project.models.event import Event, add_event
 from project.models.user import User, add_user
 from project.models.appointment import Appointment, add_appointment
 from project.models.participant import Participant, create_participant
+# from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
+
+
+NEXT_X_DAYS = 90  # TODO this should be the exact same value as in
+# TODO appointment_handler.py
 
 
 def create_appointment_json(start='2020-02-20T08:30:00',
@@ -40,7 +45,7 @@ class AppointmentGetTest(TestBase):
         name = 'Jimmy Joe'
         comments = "OMG I haven't seen you in forever Jimmy how has it been?"
         add_appointment(event_id=event.id,
-                        participants=create_participant(name=name),
+                        participants=[create_participant(name=name)],
                         comments=comments)
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
@@ -69,7 +74,7 @@ class AppointmentGetTest(TestBase):
         add_event(user1.id, create_availability())
         db.session.commit()
         event1 = Event.query.filter_by(user_id=user1.id).first()
-        add_appointment(event_id=event1.id, participants=create_participant())
+        add_appointment(event_id=event1.id, participants=[create_participant()])
         db.session.commit()
 
         auth_token2 = user2.encode_auth_token(user2.id)
@@ -92,7 +97,7 @@ class AppointmentGetTest(TestBase):
         add_event(user.id, create_availability())
         db.session.commit()
         event = Event.query.first()
-        add_appointment(event_id=event.id, participants=create_participant())
+        add_appointment(event_id=event.id, participants=[create_participant()])
         db.session.commit()
 
         route = f'/users/{user.public_id}/events/{event.url}/appointments'
@@ -144,3 +149,29 @@ class AppointmentPostTest(TestBase):
         participant = appointment.participants[0]
         self.assertEqual(participant.name, name)
         self.assertEqual(participant.email, email)
+
+    def test_start_after_next_x_days(self):
+        """Tests whether a request made with a start time that is more than
+        NEXT_X_DAYS is rejected with a 400 response."""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+
+        start = (dt.datetime.utcnow() + dt.timedelta(days=91))
+        route = f'/users/{user_public_id}/events/{event_url}/appointments'
+        response = self.api.post(
+            route,
+            data=create_appointment_json(start=start.isoformat()),
+            content_type='application/json')
+
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['status'], 'fail')
+        self.assertEqual(data['message'], f"You may only schedule an "
+                                          f"appointment within the next "
+                                          f"{NEXT_X_DAYS} days in the future.")
