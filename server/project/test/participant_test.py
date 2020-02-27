@@ -21,7 +21,8 @@ class ParticipantModelTest(TestBase):
         name = 'User Jeff'
         email = 'jeff@email.com'
         add_appointment(event_id=event.id,
-                        participants=create_participant(name=name, email=email))
+                        participants=[create_participant(name=name,
+                                                         email=email)])
         db.session.commit()
         participant = Participant.query.filter_by(name=name).first()
 

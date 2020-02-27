@@ -37,19 +37,12 @@ def add_appointment(event_id: int, participants: List[Participant],
     :param comments: The message to send to the event creator
     :return: An Appointment object
     """
-    if type(participants) == Participant:
-        db.session.add(participants)
-        appointment = Appointment(start=start, end=end, created=created,
-                                  status=status, comments=comments,
-                                  event_id=event_id,
-                                  participants=[participants])
-    else:
-        for participant in participants:
-            db.session.add(participant)
-        appointment = Appointment(start=start, end=end, created=created,
-                                  status=status, comments=comments,
-                                  event_id=event_id,
-                                  participants=participants)
+    for participant in participants:
+        db.session.add(participant)
+    appointment = Appointment(start=start, end=end, created=created,
+                              status=status, comments=comments,
+                              event_id=event_id,
+                              participants=participants)
 
     db.session.add(appointment)
     return appointment
