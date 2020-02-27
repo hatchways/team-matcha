@@ -1,10 +1,10 @@
 from flask import Blueprint
 from flask_restx import Resource
-from project import api
+from project.api import api
 from project.calendars import Calendars
 from project.models.event import Event
 from project.models.user import User
-from project.services import google_calendar
+from project.services.google_calendar import fetch_free_busy
 
 calendar_blueprint = Blueprint('calendar', __name__)
 
@@ -18,7 +18,7 @@ class Calendar(Resource):
 
         if event and user:
             access_token = user.cred.access_token
-            busy = google_calendar.fetch_free_busy(access_token, user.email)
+            busy = fetch_free_busy(access_token, user.email)
             avail = event.availability
             c = Calendars(duration=event.duration)
             c.block_unavail_days(avail)

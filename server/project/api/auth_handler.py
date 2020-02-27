@@ -3,7 +3,8 @@ from flask import Blueprint, current_app, request
 from flask_restx import Resource, fields
 from google.auth.transport import requests
 from google.oauth2 import id_token
-from project import api, db
+from project import db
+from project.api import api
 from project.models.blacklist_token import BlacklistToken
 from project.models.user import User, add_user
 from project.models.creds import add_cred

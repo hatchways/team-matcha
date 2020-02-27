@@ -38,7 +38,7 @@ class CalendarTestCase(TestBase):
         ]
         with patch('project.api.calendar_handler.fetch_free_busy'
                    ) as mock_method:
-            mock_method.return_value = []
+            mock_method.return_value = mock_response
             result = seed_event()
             user = result['user']
             event = result['event']
@@ -49,6 +49,4 @@ class CalendarTestCase(TestBase):
 
             data = json.loads(response.data.decode())
 
-            mocked_method.assert_called_with()
-            
             self.assertEqual(response.status_code, 200)

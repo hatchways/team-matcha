@@ -1,4 +1,4 @@
-from project import api
+from project.api import api
 from flask import Blueprint
 import jwt
 from werkzeug.exceptions import BadRequest
