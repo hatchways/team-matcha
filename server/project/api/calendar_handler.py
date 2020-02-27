@@ -8,6 +8,8 @@ from project.services.google_calendar import fetch_free_busy
 
 calendar_blueprint = Blueprint('calendar', __name__)
 
+NEXT_X_DAYS = 90
+
 @api.route('/users/<public_id>/events/<event_url>/calendar')
 class Calendar(Resource):
     def get(self, public_id, event_url):
@@ -20,7 +22,7 @@ class Calendar(Resource):
             access_token = user.cred.access_token
             busy = fetch_free_busy(access_token, user.email)
             avail = event.availability
-            c = Calendars(duration=event.duration)
+            c = Calendars(duration=event.duration, next_x_days=NEXT_X_DAYS)
             c.block_unavail_days(avail)
             c.block_events(busy)
             response, code = c.all_avail_time_slots(), 200
