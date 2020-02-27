@@ -9,14 +9,21 @@ from typing import Tuple
 from project.decorators import token_required
 from project.error_handlers import *
 import datetime as dt
+from typing import Dict
 
 
-def verify_at_least_1_day_available(availability: Availability) -> int:
+def verify_at_least_1_day_available(availability) -> bool:
     """Counts the number of days selected as available and returns the number
     as an integer."""
     return any(value not in {False, None} for value in
                availability['days'].values()) or\
         all(value is None for value in availability['days'].values())
+
+
+def starttime_after_endtime(availability) -> bool:
+    """Checks whether the start time is before the end time and returns True
+    if it is and False if it is not."""
+    return availability['start'] > availability['end']
 
 
 events_blueprint = Blueprint('events', __name__)
@@ -140,6 +147,9 @@ class Events(Resource):
         if not verify_at_least_1_day_available(payload['availability']):
             raise NoDayAvailable
 
+        if starttime_after_endtime(payload['availability']):
+            raise StartAfterEnd
+
         if ' ' in payload['url']:
             raise UrlContainsSpace
 
@@ -179,9 +189,12 @@ class EventDetail(Resource):
         event = Event.query.filter_by(url=event_url).first()
         data = marshal(api.payload, event_put_input, skip_none=True)
 
-        if data['availability'] and\
-                not verify_at_least_1_day_available(data['availability']):
+        if not verify_at_least_1_day_available(data['availability']):
             raise NoDayAvailable
+
+        if data['availability']['start'] and data['availability']['end']\
+                and starttime_after_endtime(data['availability']):
+            raise StartAfterEnd
 
         if 'url' in data and data['url'] == ' ':
             raise UrlContainsSpace
