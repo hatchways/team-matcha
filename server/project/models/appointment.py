@@ -13,6 +13,7 @@ class Appointment(db.Model):
     created = db.Column(db.DateTime(), nullable=False)
     status = db.Column(db.Boolean(), nullable=False)  # True active False
                                                       # canceled
+    comments = db.Column(db.String(1024))
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
     event = db.relationship('Event', backref='appointments', innerjoin=True,
                             cascade='all, delete-orphan', single_parent=True,
@@ -22,7 +23,8 @@ class Appointment(db.Model):
 def add_appointment(event_id: int, participants: List[Participant],
                     start=dt.datetime.utcnow() + dt.timedelta(days=1),
                     end=dt.datetime.utcnow() + dt.timedelta(days=1, hours=1),
-                    created=dt.datetime.utcnow(), status=True) -> Appointment:
+                    created=dt.datetime.utcnow(), status=True, comments='') ->\
+        Appointment:
     """
     Creates an appointment, adds both the appointment and the participants and
     returns the created appointment.
@@ -32,18 +34,21 @@ def add_appointment(event_id: int, participants: List[Participant],
     :param end: When the appointment ends in datetime
     :param created: When the appointment was created in datetime
     :param status: True: the event is active, False: the event is canceled
+    :param comments: The message to send to the event creator
     :return: An Appointment object
     """
     if type(participants) == Participant:
         db.session.add(participants)
         appointment = Appointment(start=start, end=end, created=created,
-                                  status=status, event_id=event_id,
+                                  status=status, comments=comments,
+                                  event_id=event_id,
                                   participants=[participants])
     else:
         for participant in participants:
             db.session.add(participant)
         appointment = Appointment(start=start, end=end, created=created,
-                                  status=status, event_id=event_id,
+                                  status=status, comments=comments,
+                                  event_id=event_id,
                                   participants=participants)
 
     db.session.add(appointment)
