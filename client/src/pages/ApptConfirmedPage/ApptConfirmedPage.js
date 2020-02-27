@@ -1,6 +1,6 @@
 import React from 'react';
 // import moment from 'moment';
-import { Box, Button, Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import PublicIcon from '@material-ui/icons/Public';

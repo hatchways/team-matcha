@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import moment from 'moment';
-import { Box, Button, Typography } from '@material-ui/core';
+import momentTZ from "moment-timezone";
+import { Box, Button, Typography, MenuItem, Select, } from '@material-ui/core';
 import { disableDays } from '../../Utils/dates-func';
 import { DatePicker } from "@material-ui/pickers";
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import PublicIcon from '@material-ui/icons/Public';
 // importing components
 import ConfirmModal from './ConfirmModal/ConfirmModal';
 import TimeSlotItem from './TimeSlotItem/TimeSlotItem';
@@ -20,7 +21,9 @@ class CalendarPage extends Component {
             timeslots: [],
             showConfirmModal: false,
             timeSlotSelected: '',
-            timeSlotSelected24hr: ''
+            timeSlotSelected24hr: '',
+            timezoneName: momentTZ.tz.guess(true),
+            timezonesArr: momentTZ.tz.names()
         }
     }
 
@@ -48,7 +51,7 @@ class CalendarPage extends Component {
         this.setState({ availability });
         // console.log('this.props.location', this.props.location);
         // console.log('dynamic url params', this.props.match.params);
-        console.log('parsed date', moment('2020-02-28T16:30').format('hh:mma dddd MMMM Do YYYY')); // parsed data for confirmation zz for time zone
+        console.log('parsed date', momentTZ('2020-02-28T16:30').format('hh:mma dddd MMMM Do YYYY')); // parsed data for confirmation zz for time zone
     }
 
     handleFetchEvent = () => {
@@ -102,10 +105,17 @@ class CalendarPage extends Component {
 
     handleConfirmation = () => {
         const { public_id, eventLink } = this.props.match.params;
-        const dateSelectedParam = `${this.state.date.format('YYYY-MM-DD')}T${this.state.timeSlotSelected24hr}`;
+        const dateSelected = `${this.state.date.format('YYYY-MM-DD')}T${this.state.timeSlotSelected24hr}`;
         const monthQuery = this.state.date.format('YYYY-MM'); // set month query url-param
         const dateQuery = this.state.date.format('YYYY-MM-DD'); // set date query url-param
+        const dateSelectedParam = momentTZ.tz(dateSelected, this.state.timezoneName).format();
         this.props.history.push(`/${public_id}/${eventLink}/${dateSelectedParam}?month=${monthQuery}&date=${dateQuery}`); // redirect to confirmation page
+    };
+
+    // method: gets the users text-input & dropwDown selection values
+    handleUserInput = e => {
+        const { value, name } = e.target;
+        this.setState({ [name]: value }, () => console.log(this.state));
     };
     
     render(){
@@ -119,6 +129,31 @@ class CalendarPage extends Component {
                         <Typography variant="h5" className="calendarPage__event--eventname">15min Meeting</Typography>
                         <Typography variant="body2" className="calendarPage__event--duration"><ScheduleIcon />&nbsp;15min</Typography>
                         <Typography variant="body2" className="calendarPage__event--location"><LocationOnIcon />&nbsp;Los Angeles</Typography>
+                        <Box className="calendarPage__select--wrap">
+                            <PublicIcon className="calendarPage__event--location"/>&nbsp;
+                            <Box className="calendarPage__select">
+                                <Select
+                                disableUnderline
+                                name="timezoneName"
+                                variant="outlined"
+                                value={this.state.timezoneName}
+                                onChange={this.handleUserInput}
+                                >
+                                    {
+                                        this.state.timezonesArr.length > 0 
+                                            ? this.state.timezonesArr.map((timezoneVal) => { 
+                                            return (
+                                                <MenuItem key={timezoneVal} value={timezoneVal}> 
+                                                    <p className="calendarPage__select--text">
+                                                        {timezoneVal}
+                                                    </p>
+                                                </MenuItem> )
+                                            }) 
+                                            : null
+                                    }
+                                </Select>
+                            </Box>
+                        </Box>
                     </Box>
                     <Box className="calendarPage__datepicker">
                         <Box className="calendarPage__datepicker--header">
@@ -138,11 +173,17 @@ class CalendarPage extends Component {
                             
                         />
                             <Box className="calendarPage__timeslots">
-                                <Typography variant="h6" className="calendarPage__timeslots--title">{moment(this.state.date).format('dddd, MMMM Do')}</Typography>
+                                <Typography variant="h6" className="calendarPage__timeslots--title">{momentTZ(this.state.date).format('dddd, MMMM Do')}</Typography>
                                 <Box className="calendarPage__timeslots--list">
                                     {
                                         this.state.timeslots.length > 0 
-                                        ? this.state.timeslots.map((timeslot, index) => (<TimeSlotItem handleTimeSlotSelected={this.handleTimeSlotSelected} handleConfirmModal={this.handleConfirmModal} key={index} {...timeslot}/>))
+                                        ? this.state.timeslots.map((timeslot, index) => 
+                                            (<TimeSlotItem 
+                                                handleTimeSlotSelected={this.handleTimeSlotSelected} 
+                                                handleConfirmModal={this.handleConfirmModal} 
+                                                key={index} 
+                                                {...timeslot}
+                                            />))
                                         : <p className="calendarPage__timeslots--msg">Select a day to get started</p>
                                     }
                                 </Box>
