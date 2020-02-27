@@ -56,6 +56,8 @@ class LoginPage extends React.Component {
                     buttonText="LOGIN WITH GOOGLE"
                     onSuccess={this.handleGoogleAuth}
                     onFailure={this.handleGoogleAuth}
+                    accessType='offline'
+                    scope='https://www.googleapis.com/auth/calendar'
                     className="login__btn"
                     />
                     <Box className="login__container--footer">

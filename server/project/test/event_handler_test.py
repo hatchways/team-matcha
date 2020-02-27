@@ -4,6 +4,7 @@ from project import db
 from project.test.test_base import TestBase
 from project.models.availability import Availability, create_availability
 from project.models.event import Event, add_event
+from project.models.creds import add_cred
 from project.models.user import User, add_user
 
 #-------------------------------------------------------------------------------
@@ -14,6 +15,8 @@ from project.models.user import User, add_user
 def seed_event():
     result = {}
     user = add_user()
+    cred = add_cred()
+    user.cred = cred
     user_id = User.query.first().id
     availability = create_availability()
     name = '♪┏(・o･)┛♪┗ ( ･o･) ┓♪'

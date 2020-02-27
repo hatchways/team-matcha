@@ -6,13 +6,16 @@ from google.oauth2 import id_token
 from project import api, db
 from project.models.blacklist_token import BlacklistToken
 from project.models.user import User, add_user
+from project.models.creds import add_cred
 from project.decorators import token_required
+from  project.services.google_calendar import fetch_free_busy
 
 login_blueprint = Blueprint('login', __name__)
 
 login_input = api.model('login', {
     'tokenId': fields.Raw(required=True),
     'profileObj': fields.String(required=True),
+    'access_token': fields.String(required=True),
 })
 
 
@@ -24,6 +27,7 @@ class Login(Resource):
         data = api.payload
         token = data['tokenId']
         profileObj = data['profileObj']
+        access_token = data['access_token']
         try:
             # Specify the CLIENT_ID of the app that accesses the backend:
             idinfo = id_token.verify_oauth2_token(
@@ -43,6 +47,8 @@ class Login(Resource):
                 user = add_user(idinfo['name'], idinfo['email'])
                 user.google_id = user_id
                 user.img_url = profileObj['imageUrl']
+                cred = add_cred(access_token=access_token)
+                user.cred = (cred)
                 db.session.commit()
 
             # Create and send session token
