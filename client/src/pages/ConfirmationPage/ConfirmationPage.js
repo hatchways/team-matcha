@@ -54,7 +54,6 @@ class ConfirmationPage extends Component {
     //method: handles solo-event creation/submit
     handleFormSubmit = (e) => {
         e.preventDefault();
-        console.log('form submitted');
         const err = this.validate(); // validate user input
         if(!err) {
             // fetch(``, {
@@ -72,7 +71,7 @@ class ConfirmationPage extends Component {
                 
             // })
             // .catch(err => (err));
-            
+
         }
     }
 

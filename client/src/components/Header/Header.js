@@ -21,7 +21,7 @@ const Header = ({ isActive }) => {
                 setUser({...userData})
             })
             .catch(err => (err));
-    });
+    }, []);
 
     return (
     <Box boxShadow={3} className="header">

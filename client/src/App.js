@@ -18,6 +18,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import SchedulePage from './pages/SchedulePage/SchedulePage';
 import EventTypePage from './pages/EventTypePage/EventTypePage';
 import SoloEventPage from './pages/EventTypePage/SoloEventPage/SoloEventPage';
+import SoloEventEditPage from './pages/EventTypePage/SoloEventPage/SoloEventEditPage/SoloEventEditPage';
 import GroupEventPage from './pages/EventTypePage/GroupEventPage/GroupEventPage';
 import IntegrationPage from './pages/IntegrationsPage/IntegrationsPage';
 import UpgradePage from "./pages/UpgradePage/UpgradePage";
@@ -174,6 +175,17 @@ class App extends Component{
               updateUserId={this.handleLogin}
               token={this.state.token}
               userId={this.state.userId}
+              {...props}
+            />
+          )}
+          />
+          <Route
+          path="/events/edit/:public_id/:eventLink/"
+          exact
+          render={props => (
+            <SoloEventEditPage
+            token={this.state.token}
+            userId={this.state.userId}
               {...props}
             />
           )}
