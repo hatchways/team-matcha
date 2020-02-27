@@ -11,7 +11,8 @@ class Appointment(db.Model):
     start = db.Column(db.DateTime(), nullable=False)
     end = db.Column(db.DateTime(), nullable=False)
     created = db.Column(db.DateTime(), nullable=False)
-    status = db.Column(db.Boolean(), nullable=False)  # True active 0 canceled
+    status = db.Column(db.Boolean(), nullable=False)  # True active False
+                                                      # canceled
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
     event = db.relationship('Event', backref='appointments', innerjoin=True,
                             cascade='all, delete-orphan', single_parent=True,
