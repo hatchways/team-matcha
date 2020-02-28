@@ -12,7 +12,7 @@ Appointments_Participants = db.Table('appointments_participants',
                                                primary_key=True))
 
 
-class Participants(db.Model):
+class Participant(db.Model):
     __tablename__ = 'participants'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -25,12 +25,12 @@ class Participants(db.Model):
 
 
 def create_participant(name='Not Brian', email='test@email.com') ->\
-        Participants:
+        Participant:
     """
     Creates a participant and returns the created participant.
     :param name: Name of the participant
     :param email: Email of the participant
     :return: A participant object
     """
-    participant = Participants(name=name, email=email)
+    participant = Participant(name=name, email=email)
     return participant
