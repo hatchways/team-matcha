@@ -2,7 +2,7 @@ import os
 
 from flask import Blueprint
 from flask_restx import Resource
-from project import api
+from project.api import api
 
 ping_handler = Blueprint('ping_handler', __name__)
 

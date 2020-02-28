@@ -22,7 +22,10 @@ class User(db.Model):
     email = db.Column(db.String(128), unique=True, nullable=False)
     events = db.relationship('Event', backref='user')
     img_url = db.Column(db.String(2048), unique=True)
-
+    cred = db.relationship('Credential',
+                            backref='user',
+                            cascade="all, delete-orphan",
+                            uselist=False)
 
     @staticmethod
     def decode_auth_token(auth_token):
@@ -69,6 +72,7 @@ class User(db.Model):
             return jwt.encode(payload, current_app.config.get('SECRET_KEY'))
         except Exception as e:
             return e
+
 
 #-------------------------------------------------------------------------------
 # Database Functions

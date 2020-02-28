@@ -1,6 +1,7 @@
 from flask import Blueprint, abort
 from flask_restx import Resource, fields, marshal
-from project import db, api
+from project import db
+from project.api import api
 from project.models.availability import Availability, create_availability
 from project.models.user import User, add_user
 from project.models.event import Event, add_event, update_event

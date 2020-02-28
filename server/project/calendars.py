@@ -18,7 +18,7 @@ class Calendars():
     SLOT_MINUTES = 30 # minutes of slots we want to return
     MIN_RESOLUTION = 15
 
-    def __init__(self, today=dt.utcnow(), duration=None, next_x_days=60):
+    def __init__(self, today=dt.utcnow(), duration=None, next_x_days=90):
         """
         params:
             today - datetime

@@ -2,7 +2,8 @@ import uuid
 
 from flask import Blueprint, abort
 from flask_restx import Resource, fields, marshal, reqparse
-from project import api, db
+from project import  db
+from  project.api import api
 from project.decorators import token_required
 from project.error_handlers import *
 from project.models.user import User, add_user, update_user

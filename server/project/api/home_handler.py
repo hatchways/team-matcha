@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask_restx import Resource
-from project import api
+from project.api import api
 
 home_handler = Blueprint('home_handler', __name__)
 

@@ -3,7 +3,6 @@ import os
 from flask import Flask
 from flask_restx import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
-from project.api import api
 
 # instantiate the db
 db = SQLAlchemy()
@@ -49,5 +48,6 @@ def create_app(script_info=None):
     from project.api.appointment_handler import appointment_blueprint
     app.register_blueprint(appointment_blueprint)
 
+    from project.api import api
     api.init_app(app)
     return app

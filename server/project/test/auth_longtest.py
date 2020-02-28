@@ -26,6 +26,7 @@ def register_user(self, name, email):
         response = self.api.post('/login',
                                  data=json.dumps({
                                      'tokenId': "SOME_AUTH_TOKEN",
+                                     'access_token': "SOME_ACCESS_TOKEN",
                                      'profileObj': {
                                          "imageUrl": "SOME_IMAGE"
                                      },
@@ -62,6 +63,7 @@ class LoginTest(TestBase):
             response = self.api.post('/login',
                                      data=json.dumps({
                                          'tokenId': "SOME_INVALID_ID_TOKEN",
+                                         'access_token': "SOME_ACCESS_TOKEN",
                                          'profileObj': {
                                              "imageUrl": "SOME_IMAGE"
                                          },

@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask_restx import Resource, fields
-from project import api, db
+from project import db
+from project.api import api
 from project.models.timezone import Timezone, hours_minutes
 
 timezones_blueprint = Blueprint('timezone', __name__)
