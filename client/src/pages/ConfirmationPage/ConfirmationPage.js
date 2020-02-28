@@ -86,7 +86,7 @@ class ConfirmationPage extends Component {
 
     render(){
         const userEventScheduleFor = momentTZ(`${this.props.match.params.date}`).utcOffset(this.props.match.params.date).format('hh:mma dddd MMMM Do YYYY Z'); // formats invitee meeting (local-time)
-        const eventScheduledFor = momentTZ(this.props.match.params.date).format('hh:mma dddd MMMM Do YYYY Z'); // formats owner-original meeting (local-time)
+        // const eventScheduledFor = momentTZ(this.props.match.params.date).format('hh:mma dddd MMMM Do YYYY Z'); // formats owner-original meeting (local-time)
         // console.log(eventScheduledFor);
         // console.log(userEventScheduleFor);
         return (

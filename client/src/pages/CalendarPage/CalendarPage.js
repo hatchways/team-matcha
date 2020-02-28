@@ -3,10 +3,8 @@ import momentTZ from "moment-timezone";
 import { Box, Button, Typography, MenuItem, Select, } from '@material-ui/core';
 import { disableDays } from '../../Utils/dates-func';
 import { DatePicker } from "@material-ui/pickers";
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import PublicIcon from '@material-ui/icons/Public';
+import CalendarEventMobile from './CalendarEvent/CalendarEventMobile';
+import CalendarEvent from './CalendarEvent/CalendarEvent';
 // importing components
 import ConfirmModal from './ConfirmModal/ConfirmModal';
 import TimeSlotItem from './TimeSlotItem/TimeSlotItem';
@@ -78,13 +76,6 @@ class CalendarPage extends Component {
             timeslots: this.state.availability[date.format('YYYY-MM-DD')]
             }, () => console.log(this.state)
         );
-        this.setState((prevState) => {
-            return {
-                date: date, 
-                timeslots: this.state.availability[date.format('YYYY-MM-DD')],
-                showTimeSlotSlider: !prevState.showTimeSlotSlider
-            }
-        }, () => console.log(this.state));
         const { public_id, eventLink } = this.props.match.params; // get params from url
         const monthQuery = date.format('YYYY-MM'); // set month query url-param
         const dateQuery = date.format('YYYY-MM-DD'); // set date query url-param
@@ -131,7 +122,6 @@ class CalendarPage extends Component {
         const monthQuery = momentTZ(this.state.dateSelectedFormatted).format('YYYY-MM'); // set month query url-param
         const dateQuery = momentTZ(this.state.dateSelectedFormatted).format('YYYY-MM-DD'); // set date query url-param
         this.props.history.push(`/${public_id}/${eventLink}/${this.state.dateSelectedFormatted}?month=${monthQuery}&date=${dateQuery}`); // redirect to confirmation page
-
     };
 
     // method: gets the users text-input & dropwDown selection values
@@ -139,6 +129,8 @@ class CalendarPage extends Component {
         const { value, name } = e.target;
         this.setState({ [name]: value }, () => console.log(this.state));
     };
+
+    handleCloseSlider = () => (this.setState({ showTimeSlotSlider: false }));
     
     render(){
         return (
@@ -147,38 +139,12 @@ class CalendarPage extends Component {
                 {/*slider start*/}
                 { this.state.showTimeSlotSlider ?
                     <Box className="calendarPage__slider">
-                    <Box className="calendarPage__event">
-                        <Button onClick={() => this.setState({ showTimeSlotSlider: false })} className="calendarPage__slider--btn"><ArrowBackIcon /></Button>
-                        <Typography variant="body1" className="calendarPage__event--username">Gerardo P.</Typography>
-                        <Typography variant="h5" className="calendarPage__event--eventname">15min Meeting</Typography>
-                        <Typography variant="body2" className="calendarPage__event--duration"><ScheduleIcon />&nbsp;15min</Typography>
-                        <Typography variant="body2" className="calendarPage__event--location"><LocationOnIcon />&nbsp;Los Angeles</Typography>
-                        <Box className="calendarPage__select--wrap">
-                            <PublicIcon className="calendarPage__event--location"/>&nbsp;
-                            <Box className="calendarPage__select">
-                                <Select
-                                disableUnderline
-                                name="timezoneName"
-                                variant="outlined"
-                                value={this.state.timezoneName}
-                                onChange={this.handleUserInput}
-                                >
-                                    {
-                                        this.state.timezonesArr.length > 0 
-                                            ? this.state.timezonesArr.map((timezoneVal) => { 
-                                            return (
-                                                <MenuItem  key={timezoneVal} value={timezoneVal}> 
-                                                    <p className="calendarPage__select--text">
-                                                        {timezoneVal}
-                                                    </p>
-                                                </MenuItem> )
-                                            }) 
-                                            : null
-                                    }
-                                </Select>
-                            </Box>
-                        </Box>
-                    </Box>
+                    <CalendarEventMobile 
+                        timezoneName={this.state.timezoneName}
+                        timezonesArr={this.state.timezonesArr}
+                        handleUserInput={this.handleUserInput}
+                        handleCloseSlider={this.handleCloseSlider}
+                    />
                     <Box className="calendarPage__timeslots--mobile">
                         <Typography variant="h6" className="calendarPage__timeslots--mobile--title">{momentTZ(this.state.date).format('dddd, MMMM Do')}</Typography>
                         <Box className="calendarPage__timeslots--mobile--list">
@@ -201,38 +167,11 @@ class CalendarPage extends Component {
                 }
                 {/*slider end*/}
                 <div className="ribbon ribbon-top-right"><span>Powered By<br/>CalendApp</span></div>
-                    <Box className="calendarPage__event">
-                        <Button className="calendarPage__event--btn"><ArrowBackIcon /></Button>
-                        <Typography variant="body1" className="calendarPage__event--username">Gerardo P.</Typography>
-                        <Typography variant="h5" className="calendarPage__event--eventname">15min Meeting</Typography>
-                        <Typography variant="body2" className="calendarPage__event--duration"><ScheduleIcon />&nbsp;15min</Typography>
-                        <Typography variant="body2" className="calendarPage__event--location"><LocationOnIcon />&nbsp;Los Angeles</Typography>
-                        <Box className="calendarPage__select--wrap">
-                            <PublicIcon className="calendarPage__event--location"/>&nbsp;
-                            <Box className="calendarPage__select">
-                                <Select
-                                disableUnderline
-                                name="timezoneName"
-                                variant="outlined"
-                                value={this.state.timezoneName}
-                                onChange={this.handleUserInput}
-                                >
-                                    {
-                                        this.state.timezonesArr.length > 0 
-                                            ? this.state.timezonesArr.map((timezoneVal) => { 
-                                            return (
-                                                <MenuItem  key={timezoneVal} value={timezoneVal}> 
-                                                    <p className="calendarPage__select--text">
-                                                        {timezoneVal}
-                                                    </p>
-                                                </MenuItem> )
-                                            }) 
-                                            : null
-                                    }
-                                </Select>
-                            </Box>
-                        </Box>
-                    </Box>
+                    <CalendarEvent
+                        timezoneName={this.state.timezoneName}
+                        timezonesArr={this.state.timezonesArr}
+                        handleUserInput={this.handleUserInput}
+                    />
                     <Box className="calendarPage__datepicker">
                         <Box className="calendarPage__datepicker--header">
                             <Typography className="calendarPage__datepicker--header--title" variant="h6">Select a Date & Time</Typography>
