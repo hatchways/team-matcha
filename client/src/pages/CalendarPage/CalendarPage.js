@@ -26,33 +26,32 @@ class CalendarPage extends Component {
             timeSlotSelected: '',
             timeSlotSelected24hr: '',
             showConfirmModal: false,
+            showTimeSlotSlider: false
         }
     }
 
     componentDidMount(){
         const availability = {
             "2020-02-26": [],
-            "2020-02-27": [{"hour": 12, "minute": 0},
-                        {"hour": 12, "minute": 30},
-                        {"hour": 13, "minute": 0},
-                        {"hour": 13, "minute": 30},
-                        {"hour": 14, "minute": 0},
-                        {"hour": 14, "minute": 30},
-                        {"hour": 15, "minute": 0},
-                        {"hour": 15, "minute": 30},
-                        {"hour": 16, "minute": 0},
-                        {"hour": 16, "minute": 30},
-                        {"hour": 17, "minute": 0},
-                        {"hour": 17, "minute": 30}],
-            "2020-02-28": [],
-            "2020-02-29": [{"hour": 0, "minute": 0},
-            {"hour": 0, "minute": 30},
-            {"hour": 1, "minute": 0},
-            {"hour": 1, "minute": 30},
-            {"hour": 3, "minute": 0}],
+            "2020-02-29": [{"hour": 12, "minute": 0},
+            {"hour": 12, "minute": 30},
+            {"hour": 13, "minute": 0},
+            {"hour": 13, "minute": 30},
+            {"hour": 14, "minute": 0},
+            {"hour": 14, "minute": 30},
+            {"hour": 15, "minute": 0},
+            {"hour": 15, "minute": 30},
+            {"hour": 16, "minute": 0},
+            {"hour": 16, "minute": 30},
+            {"hour": 17, "minute": 0},
+            {"hour": 17, "minute": 30},
+            {"hour": 18, "minute": 0},
+            {"hour": 18, "minute": 30},
+            {"hour": 19, "minute": 0},
+            {"hour": 19, "minute": 30}],
         }
         // fetch event availability days and timeslots from server
-        this.setState({ availability, timeslots: availability['2020-02-27']  }); // set initial time slots if available
+        this.setState({ availability, timeslots: availability['2020-02-29']  }); // set initial time slots if available
     }
 
     handleFetchEvent = () => {
@@ -76,9 +75,31 @@ class CalendarPage extends Component {
     handleDateChange = (date) => {
         this.setState({   
             date: date, 
-            timeslots: this.state.availability[date.format('YYYY-MM-DD')] 
+            timeslots: this.state.availability[date.format('YYYY-MM-DD')]
             }, () => console.log(this.state)
         );
+        this.setState((prevState) => {
+            return {
+                date: date, 
+                timeslots: this.state.availability[date.format('YYYY-MM-DD')],
+                showTimeSlotSlider: !prevState.showTimeSlotSlider
+            }
+        }, () => console.log(this.state));
+        const { public_id, eventLink } = this.props.match.params; // get params from url
+        const monthQuery = date.format('YYYY-MM'); // set month query url-param
+        const dateQuery = date.format('YYYY-MM-DD'); // set date query url-param
+        this.props.history.push(`/${public_id}/${eventLink}?month=${monthQuery}&date=${dateQuery}`); // onChange set url
+    };
+
+    // method: handles date change and time-slots to render
+    handleMobileDateChange = (date) => {
+        this.setState((prevState) => {
+            return {
+                date: date, 
+                timeslots: this.state.availability[date.format('YYYY-MM-DD')],
+                showTimeSlotSlider: !prevState.showTimeSlotSlider
+            }
+        }, () => console.log(this.state));
         const { public_id, eventLink } = this.props.match.params; // get params from url
         const monthQuery = date.format('YYYY-MM'); // set month query url-param
         const dateQuery = date.format('YYYY-MM-DD'); // set date query url-param
@@ -123,6 +144,62 @@ class CalendarPage extends Component {
         return (
             <Box className="calendarPage">
                 <Box boxShadow={3} className="calendarPage__container">
+                {/*slider start*/}
+                { this.state.showTimeSlotSlider ?
+                    <Box className="calendarPage__slider">
+                    <Box className="calendarPage__event">
+                        <Button className="calendarPage__event--btn"><ArrowBackIcon /></Button>
+                        <Typography variant="body1" className="calendarPage__event--username">Gerardo P.</Typography>
+                        <Typography variant="h5" className="calendarPage__event--eventname">15min Meeting</Typography>
+                        <Typography variant="body2" className="calendarPage__event--duration"><ScheduleIcon />&nbsp;15min</Typography>
+                        <Typography variant="body2" className="calendarPage__event--location"><LocationOnIcon />&nbsp;Los Angeles</Typography>
+                        <Box className="calendarPage__select--wrap">
+                            <PublicIcon className="calendarPage__event--location"/>&nbsp;
+                            <Box className="calendarPage__select">
+                                <Select
+                                disableUnderline
+                                name="timezoneName"
+                                variant="outlined"
+                                value={this.state.timezoneName}
+                                onChange={this.handleUserInput}
+                                >
+                                    {
+                                        this.state.timezonesArr.length > 0 
+                                            ? this.state.timezonesArr.map((timezoneVal) => { 
+                                            return (
+                                                <MenuItem  key={timezoneVal} value={timezoneVal}> 
+                                                    <p className="calendarPage__select--text">
+                                                        {timezoneVal}
+                                                    </p>
+                                                </MenuItem> )
+                                            }) 
+                                            : null
+                                    }
+                                </Select>
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box className="calendarPage__timeslots--mobile">
+                        <Typography variant="h6" className="calendarPage__timeslots--mobile--title">{momentTZ(this.state.date).format('dddd, MMMM Do')}</Typography>
+                        <Box className="calendarPage__timeslots--mobile--list">
+                            {
+                                this.state.timeslots.length > 0 
+                                ? this.state.timeslots.map((timeslot, index) => 
+                                    (<TimeSlotItem 
+                                        daySelected={momentTZ(this.state.date).format('YYYY-MM-DD')}
+                                        timezoneName={this.state.timezoneName}
+                                        handleTimeSlotSelected={this.handleTimeSlotSelected} 
+                                        handleConfirmModal={this.handleConfirmModal} 
+                                        key={index} 
+                                        {...timeslot}
+                                    />))
+                                : <p className="calendarPage__timeslots--mobile--msg">Select a day to get started</p>
+                            }
+                        </Box>
+                    </Box>
+                </Box> : null
+                }
+                {/*slider end*/}
                 <div className="ribbon ribbon-top-right"><span>Powered By<br/>CalendApp</span></div>
                     <Box className="calendarPage__event">
                         <Button className="calendarPage__event--btn"><ArrowBackIcon /></Button>
@@ -161,19 +238,34 @@ class CalendarPage extends Component {
                             <Typography className="calendarPage__datepicker--header--title" variant="h6">Select a Date & Time</Typography>
                         </Box>
                         <Box className="calendarPage__datepicker--calendar">
-                        <DatePicker
-                            autoOk
-                            disableToolbar
-                            variant="static"
-                            openTo="date"
-                            value={this.state.date}
-                            onChange={this.handleDateChange}
-                            orientation="landscape"
-                            disablePast
-                            maxDate={this.state.maxdate}
-                            shouldDisableDate={this.handleDisableDates}
-                            
-                        />
+                        <div className="calendarPage__picker--desktop">
+                            <DatePicker
+                                autoOk
+                                disableToolbar
+                                variant="static"
+                                openTo="date"
+                                value={this.state.date}
+                                onChange={this.handleDateChange}
+                                orientation="landscape"
+                                disablePast
+                                maxDate={this.state.maxdate}
+                                shouldDisableDate={this.handleDisableDates}
+                            />
+                        </div>
+                        <div className="calendarPage__picker--mobile">
+                            <DatePicker
+                                autoOk
+                                disableToolbar
+                                variant="static"
+                                openTo="date"
+                                value={this.state.date}
+                                onChange={this.handleMobileDateChange}
+                                orientation="landscape"
+                                disablePast
+                                maxDate={this.state.maxdate}
+                                shouldDisableDate={this.handleDisableDates}
+                            />
+                        </div>
                             <Box className="calendarPage__timeslots">
                                 <Typography variant="h6" className="calendarPage__timeslots--title">{momentTZ(this.state.date).format('dddd, MMMM Do')}</Typography>
                                 <Box className="calendarPage__timeslots--list">

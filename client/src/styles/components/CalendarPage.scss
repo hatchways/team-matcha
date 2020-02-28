@@ -75,8 +75,6 @@
         overflow-y: scroll;
         position: relative;
         padding-right: 75px;
-        
-
         &--title{
             background-color: #fff;
             color: $gray;
@@ -129,6 +127,266 @@
             font-weight: $bold-text;
             padding: 0 !important;
             margin: 0 !important;
+        }
+    }
+
+    &__picker{
+        &--mobile{
+            display: none;
+        }
+    }
+
+    &__slider{
+        display: none;
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) and (orientation: landscape) {
+
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .calendarPage{
+        height: 120vh;
+        padding-top: 0;
+        padding-bottom: 0;
+        &__container{
+            @include applyFlex(flex-start, flex-start,column);
+            height: 100%;
+            overflow-x: hidden;
+            width: 100%;
+        }
+        &__event{
+            @include applyFlex(center, center, column);
+            padding: 0;
+            padding-bottom: 40px;
+            padding-top: 40px;
+            height: 30vh;
+            border-bottom: solid 1px $off-black;
+            width: 100%;
+            &--username{
+                margin-top: 10px !important;
+            }
+            &--btn{
+                display: none !important;
+            }
+        }
+        &__datepicker{
+            width: 100%;
+            &--header{
+                padding: 0;
+                padding-top: 20px;
+                padding-bottom: 10px;
+                text-align: center;
+            }
+            &--calendar{
+                @include applyFlex(flex-start, center);
+                height: 75vh;
+                width: 100%;
+            }
+        }
+
+        &__timeslots{
+            display: none; // remove timeslots
+        }
+        &__timeslots{
+            &--mobile{
+                height: 60%;
+                overflow-y: scroll;
+                position: relative;
+                width: 100%;
+                &--title{
+                    position: absolute;
+                    text-align: center;
+                    padding-top: 10px;
+                    width: 100%;
+                }
+                &--list{
+                    @include applyFlex(center, center, column);
+                    overflow-y: scroll;
+                    padding-top: 60px;
+                    padding-bottom: 20px;
+                    width: 100%;
+                }
+                &--btn{
+                    color: $primary !important;
+                    background: none !important;
+                    margin-bottom: 10px !important;
+                    border: solid 1px $primary !important;
+                    padding: 12px 16px !important;
+                    width: 300px !important;
+                }
+            }
+        }
+
+        &__select{
+            @include solid1pxBorder;
+            border-radius: 100px;
+            width: 100%;
+        }
+        &__picker{
+            &--desktop{
+                display: none;
+            }
+            &--mobile{
+                display: block;
+            }
+        }
+        &__slider{
+            display: block;
+            background-color: #fff;
+            height: 120vh;
+            position: absolute;
+            width: 100%;
+            z-index: 3;
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .calendarPage{
+        padding-top: 25px;
+        padding-bottom: 25px;
+        &__container{
+            @include applyFlex(flex-start, flex-start,column);
+            height: 150vh;
+            overflow-x: hidden;
+            width: 95%;
+        }
+        &__event{
+            @include applyFlex(center, center, column);
+            padding: 0;
+            padding-bottom: 40px;
+            padding-top: 40px;
+            height: 30vh;
+            border-bottom: solid 1px $off-black;
+            width: 100%;
+            &--username{
+                margin-top: 10px !important;
+            }
+            &--btn{
+                display: none !important;
+            }
+        }
+        &__datepicker{
+            width: 100%;
+            &--header{
+                padding: 0;
+                padding-top: 20px;
+                padding-bottom: 10px;
+                text-align: center;
+            }
+            &--calendar{
+                @include applyFlex(flex-start, center);
+                height: 75vh;
+                width: 100%;
+            }
+        }
+
+        &__timeslots{
+            display: none; // remove timeslots
+            height: 100%;
+            overflow-y: scroll;
+            position: relative;
+            padding-right: 75px;
+            &--title{
+                position: absolute;
+            }
+            &--list{
+                @include applyFlex(flex-start, flex-start, column);
+                overflow-y: scroll;
+                padding-top: 60px;
+                padding-bottom: 20px;
+                height: 68%;
+                width: 100%;
+            }
+        }
+
+        &__select{
+            @include solid1pxBorder;
+            border-radius: 100px;
+            width: 100%;
+        }
+    }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .calendarPage{
+        padding-top: 25px;
+        padding-bottom: 25px;
+        &__container{
+            @include applyFlex(flex-start, flex-start,column);
+            height: 150vh;
+            overflow-x: hidden;
+            width: 90%;
+        }
+        &__event{
+            @include applyFlex(center, center, column);
+            padding: 0;
+            padding-bottom: 40px;
+            padding-top: 40px;
+            height: 30vh;
+            border-bottom: solid 1px $off-black;
+            width: 100%;
+            &--username{
+                margin-top: 10px !important;
+            }
+            &--btn{
+                display: none !important;
+            }
+        }
+        &__datepicker{
+            width: 100%;
+            &--header{
+                text-align: center;
+            }
+            &--calendar{
+                @include applyFlex(flex-start, center);
+                height: 75vh;
+                width: 100%;
+            }
+        }
+
+        &__timeslots{
+            height: 100%;
+            overflow-y: scroll;
+            position: relative;
+            padding-right: 75px;
+            &--title{
+                position: absolute;
+            }
+            &--list{
+                @include applyFlex(flex-start, flex-start, column);
+                overflow-y: scroll;
+                padding-top: 60px;
+                padding-bottom: 20px;
+                height: 68%;
+            }
+        }
+
+        &__select{
+            @include solid1pxBorder;
+            border-radius: 100px;
+            width: 100%;
+        }
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .calendarPage{
+        &__container{
+            width: 90%;
+        }
+        &__event{
+            width: 30%;
+        }
+        &__datepicker{
+            width: 70%;
         }
     }
 }
