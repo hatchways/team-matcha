@@ -381,10 +381,8 @@ class EventDetailGet(TestBase):
         user = result['user']
         event = result['event']
         db.session.commit()
-        auth_token = user.encode_auth_token(user.id)
 
-        response = self.api.get(f'/users/{user.public_id}/events/{event.url}',
-                                headers={'x-access-token': auth_token})
+        response = self.api.get(f'/users/{user.public_id}/events/{event.url}')
 
         data = json.loads(response.data.decode())
 
