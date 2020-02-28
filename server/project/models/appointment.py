@@ -24,15 +24,18 @@ class Appointment(db.Model):
 
 
 def add_appointment(event_id: int, participants: List[Participant],
-                    start=dt.datetime.utcnow() + dt.timedelta(days=1),
-                    end=dt.datetime.utcnow() + dt.timedelta(days=1, hours=1),
-                    created=dt.datetime.utcnow(), status=True, comments='') ->\
-        Appointment:
+                    start=dt.datetime.now(tz=dt.timezone.utc) +
+                    dt.timedelta(days=1),
+                    end=dt.datetime.now(dt.timezone.utc) +
+                    dt.timedelta(days=1, hours=1),
+                    created=dt.datetime.now(dt.timezone.utc),
+                    status=True,
+                    comments='') -> Appointment:
     """
     Creates an appointment, adds both the appointment and the participants and
     returns the created appointment.
     :param event_id: The id for the the associated event
-    :param participants: A list of participants or a single participant
+    :param participants: A list of participants
     :param start: When the appointment starts in datetime
     :param end: When the appointment ends in datetime
     :param created: When the appointment was created in datetime
@@ -40,12 +43,15 @@ def add_appointment(event_id: int, participants: List[Participant],
     :param comments: The message to send to the event creator
     :return: An Appointment object
     """
+    appointment = Appointment(start=start,
+                              end=end,
+                              created=created,
+                              status=status,
+                              comments=comments,
+                              event_id=event_id)
     for participant in participants:
         db.session.add(participant)
-    appointment = Appointment(start=start, end=end, created=created,
-                              status=status, comments=comments,
-                              event_id=event_id,
-                              participants=participants)
+        appointment.participants.append(participant)
 
     db.session.add(appointment)
     return appointment

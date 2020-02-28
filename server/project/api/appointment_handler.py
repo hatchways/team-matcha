@@ -8,12 +8,27 @@ from project.models.user import User
 from project.decorators import token_required
 from project.error_handlers import *
 import datetime as dt
+from dateutil import parser
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
 
 
 NEXT_X_DAYS = 90  # TODO remove placeholder after calendar PR is implemented
 
 appointment_blueprint = Blueprint('appointments', __name__)
+
+
+def check_participant_exists(name: str, email: str) -> Participant:
+    """
+    Checks whether the Participant already exists and returns it otherwise
+    creates a new participant returns that participant.
+    :param name: Name of the participant
+    :param email: Email of the participant
+    :return: a Participant
+    """
+    participant = Participant.query.filter_by(email=email).first()
+    if not participant:
+        participant = create_participant(name=name, email=email)
+    return participant
 
 
 def start_within_next_x_days(start: str, next_x_days=NEXT_X_DAYS) -> bool:
@@ -25,47 +40,59 @@ def start_within_next_x_days(start: str, next_x_days=NEXT_X_DAYS) -> bool:
     generated for
     :return: Whether the appointment is within the NEXT_X_DAYS
     """
-    return dt.datetime.fromisoformat(start) <=\
-        dt.datetime.utcnow() + dt.timedelta(days=next_x_days)
+    return parser.isoparse(start) <= \
+        dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=next_x_days)
 
 
 participant_input = api.model(
     'Participants', {
         'name': fields.String(description='The name of the participant',
-                              required=True, example='John Doe', min_length=1,
+                              required=True,
+                              example='John Doe',
+                              min_length=1,
                               max_length=128),
         'email': fields.String(description='The email of the participant',
-                               required=True, example='johndoe@email.com',
-                               min_length=5, max_length=128)})
+                               required=True,
+                               example='johndoe@email.com',
+                               min_length=5,
+                               max_length=128)})
 appointment_input = api.model(
     'Appointment', {
         'start': fields.DateTime(description='The start time of the '
                                              'appointment.',
-                                 required=True, example='2020-01-20T08:30:00'),
+                                 required=True,
+                                 example='2020-01-20T08:30:00Z'),
         'comments': fields.String(description='Any comments to send to the '
                                               'event creator',
                                   example='Look forward to seeing you!',
                                   max_length=1024),
-        'participant': fields.Nested(participant_input, required=True)})
+        'participant': fields.Nested(participant_input,
+                                     required=True)})
 participant_output = api.model(
     'Participants', {
         'name': fields.String(description='The name of the participant',
-                              required=True, example='John Doe', min_length=1,
+                              required=True,
+                              example='John Doe',
+                              min_length=1,
                               max_length=128),
         'email': fields.String(description='The email of the participant',
-                               required=True, example='johndoe@email.com',
-                               min_length=5, max_length=128)})
+                               required=True,
+                               example='johndoe@email.com',
+                               min_length=5,
+                               max_length=128)})
 appointment_output = api.model(
     'Appointment', {
         'start': fields.DateTime(description='The start time of the '
                                              'appointment',
-                                 required=True, example='2020-01-20T08:30:00'),
+                                 required=True,
+                                 example='2020-01-20T08:30:00Z'),
         'end': fields.DateTime(description='The end time of the appointment',
-                               required=True, example='2020-01-20T09:30:00'),
+                               required=True,
+                               example='2020-01-20T09:30:00Z'),
         'created': fields.DateTime(description='When the appointment was '
                                                'created',
                                    required=True,
-                                   example='2020-01-25T09:30:00'),
+                                   example='2020-01-25T09:30:00Z'),
         'status': fields.Boolean(description='Whether the appointment is still '
                                              'active'),
         'comments': fields.String(description='Any comments to send to the '
@@ -101,13 +128,13 @@ class Appointments(Resource):
         event = db.session.query(Event). \
             filter(Event.url == event_url, User.public_id == public_id). \
             first()
-        participant = create_participant(payload['participant']['name'],
-                                         payload['participant']['email'])
+        participant = check_participant_exists(payload['participant']['name'],
+                                               payload['participant']['email'])
         add_appointment(
             event_id=event.id,
             participants=[participant],
-            start=payload['start'],
-            end=dt.datetime.fromisoformat(payload['start']) +
+            start=parser.isoparse(payload['start']),
+            end=parser.isoparse(payload['start']) +
             dt.timedelta(minutes=event.duration),
             comments=payload['comments'])
         db.session.commit()

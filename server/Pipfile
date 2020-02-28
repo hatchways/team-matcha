@@ -15,11 +15,10 @@ python-dotenv = "*"
 google-auth = "*"
 requests = "*"
 pyjwt = "*"
-
 google-api-python-client = "*"
 google-auth-httplib2 = "*"
 google-auth-oauthlib = "*"
-
+python-dateutil = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,5 +1,6 @@
 import json
 import datetime as dt
+import pytz
 from project import db
 from project.test.test_base import TestBase
 from project.models.availability import Availability, create_availability
@@ -14,7 +15,7 @@ NEXT_X_DAYS = 90  # TODO this should be the exact same value as in
 # TODO appointment_handler.py
 
 
-def create_appointment_json(start='2020-02-20T08:30:00',
+def create_appointment_json(start='2020-02-20T08:30:00Z',
                             comments='Look forward to seeing you!',
                             name='Little Timmy',
                             email='timmy@mail.com') -> str:
@@ -121,7 +122,7 @@ class AppointmentPostTest(TestBase):
         db.session.commit()
         event = Event.query.first()
         event_url = event.url
-        start = '2020-03-20T08:30:00'
+        start = '2020-03-20T08:30:00Z'
         comments = "I don't know about this appointment man..."
         name = 'Little Timmy'
         email = 'little@timmy.com'
@@ -162,7 +163,7 @@ class AppointmentPostTest(TestBase):
         event = Event.query.first()
         event_url = event.url
 
-        start = (dt.datetime.utcnow() + dt.timedelta(days=91))
+        start = dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=91)
         route = f'/users/{user_public_id}/events/{event_url}/appointments'
         response = self.api.post(
             route,
@@ -175,3 +176,89 @@ class AppointmentPostTest(TestBase):
         self.assertEqual(data['message'], f"You may only schedule an "
                                           f"appointment within the next "
                                           f"{NEXT_X_DAYS} days in the future.")
+
+    def test_multiple_appointments(self):
+        """Tests whether a single participant can have multiple appointments."""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+
+        name = 'Fabulous Johnny'
+        email = 'johnny@fabulous.com'
+        start1 = dt.datetime(year=2020,
+                             month=3,
+                             day=2,
+                             hour=9,
+                             tzinfo=dt.timezone.utc)
+        start2 = start1 + dt.timedelta(hours=2)
+        route = f'/users/{user_public_id}/events/{event_url}/appointments'
+        response1 = self.api.post(
+            route,
+            data=create_appointment_json(start=start1.isoformat(),
+                                         name=name,
+                                         email=email),
+            content_type='application/json')
+        response2 = self.api.post(
+            route,
+            data=create_appointment_json(start=start2.isoformat(),
+                                         name=name,
+                                         email=email),
+            content_type='application/json')
+
+        data1 = json.loads(response1.data.decode())
+        data2 = json.loads(response1.data.decode())
+        self.assertEqual(response1.status_code, 201)
+        self.assertEqual(data1['message'], 'success')
+        self.assertEqual(response2.status_code, 201)
+        self.assertEqual(data2['message'], 'success')
+
+        appointments = db.session.query(Appointment).\
+            filter(Event.url == event_url).\
+            all()
+        self.assertEqual(len(appointments), 2)
+        for appointment in appointments:
+            self.assertTrue(pytz.utc.localize(appointment.start) in
+                            [start1, start2])
+
+        participant = Participant.query.filter_by(email=email).all()
+        self.assertEqual(len(participant), 1)
+        self.assertEqual(participant[0].name, name)
+        self.assertEqual(participant[0].email, email)
+
+    def test_timezone_conversion(self):
+        """Tests whether non utc timezones are correctly converted to UTC time.
+        """
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+        start = dt.datetime(year=2020,
+                            month=3,
+                            day=2,
+                            hour=9,
+                            tzinfo=dt.timezone(dt.timedelta(hours=-5)))
+
+        route = f'/users/{user_public_id}/events/{event_url}/appointments'
+        request = create_appointment_json(start=dt.datetime.isoformat(start))
+        response = self.api.post(route,
+                                 data=request,
+                                 content_type='application/json')
+
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(data['message'], 'success')
+
+        appointment = db.session.query(Appointment).\
+            filter(Event.url == event_url).\
+            first()
+        self.assertEqual(pytz.utc.localize(appointment.start),
+                         start.astimezone(dt.timezone.utc))
