@@ -30,13 +30,10 @@ class Login(Resource):
         # (Receive Authorization codde)
         data = api.payload
         credentials = exchange_auth_code(data['code'])
-        print(credentials)
         token = credentials['id_token']
         access_token = credentials['access_token']
-        if 'refresh_token' in credentials:
-            refresh_token = credentials['refresh_token']
-        else:
-            refresh_token=None
+        refresh_token = credentials[
+            'refresh_token'] if 'refresh_token' in credentials else None
         try:
             # Specify the CLIENT_ID of the app that accesses the backend:
             idinfo = id_token.verify_oauth2_token(
@@ -56,7 +53,8 @@ class Login(Resource):
                 user = add_user(idinfo['name'], idinfo['email'])
                 user.google_id = user_id
                 user.img_url = idinfo['picture']
-                cred = add_cred(access_token=access_token, refresh_token=refresh_token)
+                cred = add_cred(access_token=access_token,
+                                refresh_token=refresh_token)
                 user.cred = (cred)
                 db.session.commit()
 
