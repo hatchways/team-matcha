@@ -17,14 +17,15 @@ class CalendarPage extends Component {
         super(props);
         this.state = {
             date: new Date(),
+            dateSelectedFormatted: '',
+            maxdate: momentTZ().add(90, 'd'),
             availability: {},
-            timeslots: [],
-            showConfirmModal: false,
-            timeSlotSelected: '',
-            timeSlotSelected24hr: '',
             timezoneName: momentTZ.tz.guess(true),
             timezonesArr: momentTZ.tz.names(),
-            dateSelectedFormatted: ''
+            timeslots: [],
+            timeSlotSelected: '',
+            timeSlotSelected24hr: '',
+            showConfirmModal: false,
         }
     }
 
@@ -169,6 +170,7 @@ class CalendarPage extends Component {
                             onChange={this.handleDateChange}
                             orientation="landscape"
                             disablePast
+                            maxDate={this.state.maxdate}
                             shouldDisableDate={this.handleDisableDates}
                             
                         />
