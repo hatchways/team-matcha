@@ -17,7 +17,7 @@ NEXT_X_DAYS = 90  # TODO remove placeholder after calendar PR is implemented
 appointment_blueprint = Blueprint('appointments', __name__)
 
 
-def check_participant_exists(name: str, email: str) -> Participant:
+def participant_exists(name: str, email: str) -> Participant:
     """
     Checks whether the Participant already exists and returns it otherwise
     creates a new participant returns that participant.
@@ -128,8 +128,9 @@ class Appointments(Resource):
         event = db.session.query(Event). \
             filter(Event.url == event_url, User.public_id == public_id). \
             first()
-        participant = check_participant_exists(payload['participant']['name'],
-                                               payload['participant']['email'])
+
+        participant = participant_exists(payload['participant']['name'],
+                                         payload['participant']['email'])
         add_appointment(
             event_id=event.id,
             participants=[participant],
