@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import momentTZ from "moment-timezone";
-import { Box, Button, Typography, MenuItem, Select, } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { disableDays } from '../../Utils/dates-func';
-import { DatePicker } from "@material-ui/pickers";
+// importing components
 import CalendarEventMobile from './CalendarEvent/CalendarEventMobile';
 import CalendarEvent from './CalendarEvent/CalendarEvent';
-// importing components
+import Calendar from './Calendar/Calendar';
 import ConfirmModal from './ConfirmModal/ConfirmModal';
-import TimeSlotItem from './TimeSlotItem/TimeSlotItem';
-
+import TimeSlotMobileList from './TimeSlotMobileList/TimeSlotMobileList';
 
 class CalendarPage extends Component {
     constructor(props){
@@ -139,30 +138,19 @@ class CalendarPage extends Component {
                 {/*slider start*/}
                 { this.state.showTimeSlotSlider ?
                     <Box className="calendarPage__slider">
-                    <CalendarEventMobile 
-                        timezoneName={this.state.timezoneName}
-                        timezonesArr={this.state.timezonesArr}
-                        handleUserInput={this.handleUserInput}
-                        handleCloseSlider={this.handleCloseSlider}
-                    />
-                    <Box className="calendarPage__timeslots--mobile">
-                        <Typography variant="h6" className="calendarPage__timeslots--mobile--title">{momentTZ(this.state.date).format('dddd, MMMM Do')}</Typography>
-                        <Box className="calendarPage__timeslots--mobile--list">
-                            {
-                                this.state.timeslots.length > 0 
-                                ? this.state.timeslots.map((timeslot, index) => 
-                                    (<TimeSlotItem 
-                                        daySelected={momentTZ(this.state.date).format('YYYY-MM-DD')}
-                                        timezoneName={this.state.timezoneName}
-                                        handleTimeSlotSelected={this.handleTimeSlotSelected} 
-                                        handleConfirmModal={this.handleConfirmModal} 
-                                        key={index} 
-                                        {...timeslot}
-                                    />))
-                                : <p className="calendarPage__timeslots--mobile--msg">Select a day to get started</p>
-                            }
-                        </Box>
-                    </Box>
+                        <CalendarEventMobile 
+                            timezoneName={this.state.timezoneName}
+                            timezonesArr={this.state.timezonesArr}
+                            handleUserInput={this.handleUserInput}
+                            handleCloseSlider={this.handleCloseSlider}
+                        />
+                        <TimeSlotMobileList 
+                            date={this.state.date} 
+                            timeslots={this.state.timeslots} 
+                            timezoneName={this.state.timezoneName} 
+                            handleTimeSlotSelected={this.handleTimeSlotSelected} 
+                            handleConfirmModal={this.handleConfirmModal}
+                        />
                 </Box> : null
                 }
                 {/*slider end*/}
@@ -172,59 +160,17 @@ class CalendarPage extends Component {
                         timezonesArr={this.state.timezonesArr}
                         handleUserInput={this.handleUserInput}
                     />
-                    <Box className="calendarPage__datepicker">
-                        <Box className="calendarPage__datepicker--header">
-                            <Typography className="calendarPage__datepicker--header--title" variant="h6">Select a Date & Time</Typography>
-                        </Box>
-                        <Box className="calendarPage__datepicker--calendar">
-                        <div className="calendarPage__picker--desktop">
-                            <DatePicker
-                                autoOk
-                                disableToolbar
-                                variant="static"
-                                openTo="date"
-                                value={this.state.date}
-                                onChange={this.handleDateChange}
-                                orientation="landscape"
-                                disablePast
-                                maxDate={this.state.maxdate}
-                                shouldDisableDate={this.handleDisableDates}
-                            />
-                        </div>
-                        <div className="calendarPage__picker--mobile">
-                            <DatePicker
-                                autoOk
-                                disableToolbar
-                                variant="static"
-                                openTo="date"
-                                value={this.state.date}
-                                onChange={this.handleMobileDateChange}
-                                orientation="landscape"
-                                disablePast
-                                maxDate={this.state.maxdate}
-                                shouldDisableDate={this.handleDisableDates}
-                            />
-                        </div>
-                            <Box className="calendarPage__timeslots">
-                                <Typography variant="h6" className="calendarPage__timeslots--title">{momentTZ(this.state.date).format('dddd, MMMM Do')}</Typography>
-                                <Box className="calendarPage__timeslots--list">
-                                    {
-                                        this.state.timeslots.length > 0 
-                                        ? this.state.timeslots.map((timeslot, index) => 
-                                            (<TimeSlotItem 
-                                                daySelected={momentTZ(this.state.date).format('YYYY-MM-DD')}
-                                                timezoneName={this.state.timezoneName}
-                                                handleTimeSlotSelected={this.handleTimeSlotSelected} 
-                                                handleConfirmModal={this.handleConfirmModal} 
-                                                key={index} 
-                                                {...timeslot}
-                                            />))
-                                        : <p className="calendarPage__timeslots--msg">Select a day to get started</p>
-                                    }
-                                </Box>
-                            </Box>
-                        </Box>
-                    </Box>
+                    <Calendar 
+                        date={this.state.date}
+                        maxDate={this.state.maxdate}
+                        timeslots={this.state.timeslots}
+                        timezoneName={this.state.timezoneName}
+                        handleDisableDate={this.handleDisableDates}
+                        handleDateChange={this.handleDateChange}
+                        handleMobileDateChange={this.handleMobileDateChange}
+                        handleConfirmModal={this.handleConfirmModal}
+                        handleTimeSlotSelected={this.handleTimeSlotSelected}
+                    />
                 </Box>
                 { this.state.showConfirmModal 
                     ? <ConfirmModal 
