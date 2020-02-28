@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import moment from 'moment';
+import momentTZ from "moment-timezone";
 import { Box, Button, Typography } from '@material-ui/core';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import ScheduleIcon from '@material-ui/icons/Schedule';
@@ -85,7 +85,10 @@ class ConfirmationPage extends Component {
     };
 
     render(){
-        const eventScheduledFor = moment(this.props.match.params.date).format('hh:mma dddd MMMM Do YYYY');
+        const userEventScheduleFor = momentTZ(`${this.props.match.params.date}`).utcOffset(this.props.match.params.date).format('hh:mma dddd MMMM Do YYYY Z'); // formats invitee meeting (local-time)
+        const eventScheduledFor = momentTZ(this.props.match.params.date).format('hh:mma dddd MMMM Do YYYY Z'); // formats owner-original meeting (local-time)
+        // console.log(eventScheduledFor);
+        // console.log(userEventScheduleFor);
         return (
             <Box className="confirmationPage">
                 <Box boxShadow={3} className="confirmationPage__container">
@@ -96,7 +99,7 @@ class ConfirmationPage extends Component {
                         <Typography variant="h5" className="confirmationPage__event--eventname">15min Meeting</Typography>
                         <Typography variant="body2" className="confirmationPage__event--duration"><ScheduleIcon />&nbsp;15min</Typography>
                         <Typography variant="body2" className="confirmationPage__event--location"><LocationOnIcon />&nbsp;Los Angeles</Typography>
-                        <Typography variant="body2" className="confirmationPage__event--date"><EventIcon/>&nbsp;{eventScheduledFor}</Typography>
+                        <Typography variant="body2" className="confirmationPage__event--date"><EventIcon/>&nbsp;{userEventScheduleFor}</Typography>
                     </Box>
                     <form onSubmit={this.handleFormSubmit} className="confirmationPage__form">
                         <Box className="confirmationPage__form--header">Enter Details</Box>

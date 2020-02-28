@@ -23,7 +23,8 @@ class CalendarPage extends Component {
             timeSlotSelected: '',
             timeSlotSelected24hr: '',
             timezoneName: momentTZ.tz.guess(true),
-            timezonesArr: momentTZ.tz.names()
+            timezonesArr: momentTZ.tz.names(),
+            dateSelectedFormatted: ''
         }
     }
 
@@ -39,7 +40,9 @@ class CalendarPage extends Component {
                         {"hour": 15, "minute": 0},
                         {"hour": 15, "minute": 30},
                         {"hour": 16, "minute": 0},
-                        {"hour": 16, "minute": 30}],
+                        {"hour": 16, "minute": 30},
+                        {"hour": 17, "minute": 0},
+                        {"hour": 17, "minute": 30}],
             "2020-02-28": [],
             "2020-02-29": [{"hour": 0, "minute": 0},
             {"hour": 0, "minute": 30},
@@ -48,10 +51,7 @@ class CalendarPage extends Component {
             {"hour": 3, "minute": 0}],
         }
         // fetch event availability days and timeslots from server
-        this.setState({ availability });
-        // console.log('this.props.location', this.props.location);
-        // console.log('dynamic url params', this.props.match.params);
-        console.log('parsed date', momentTZ('2020-02-28T16:30').format('hh:mma dddd MMMM Do YYYY')); // parsed data for confirmation zz for time zone
+        this.setState({ availability, timeslots: availability['2020-02-27']  }); // set initial time slots if available
     }
 
     handleFetchEvent = () => {
@@ -93,23 +93,23 @@ class CalendarPage extends Component {
         return dateFound;
     };
 
-    handleConfirmModal = (time, time24hr) => {
+    handleConfirmModal = (time, time24hr, dateFormatted) => {
         this.setState((prevState) => {
             return {
                 timeSlotSelected: time,
                 timeSlotSelected24hr: time24hr,
-                showConfirmModal: !prevState.showConfirmModal
+                showConfirmModal: !prevState.showConfirmModal,
+                dateSelectedFormatted: dateFormatted
             }
         });
     };
 
     handleConfirmation = () => {
         const { public_id, eventLink } = this.props.match.params;
-        const dateSelected = `${this.state.date.format('YYYY-MM-DD')}T${this.state.timeSlotSelected24hr}`;
-        const monthQuery = this.state.date.format('YYYY-MM'); // set month query url-param
-        const dateQuery = this.state.date.format('YYYY-MM-DD'); // set date query url-param
-        const dateSelectedParam = momentTZ.tz(dateSelected, this.state.timezoneName).format();
-        this.props.history.push(`/${public_id}/${eventLink}/${dateSelectedParam}?month=${monthQuery}&date=${dateQuery}`); // redirect to confirmation page
+        const monthQuery = momentTZ(this.state.dateSelectedFormatted).format('YYYY-MM'); // set month query url-param
+        const dateQuery = momentTZ(this.state.dateSelectedFormatted).format('YYYY-MM-DD'); // set date query url-param
+        this.props.history.push(`/${public_id}/${eventLink}/${this.state.dateSelectedFormatted}?month=${monthQuery}&date=${dateQuery}`); // redirect to confirmation page
+
     };
 
     // method: gets the users text-input & dropwDown selection values
@@ -143,7 +143,7 @@ class CalendarPage extends Component {
                                         this.state.timezonesArr.length > 0 
                                             ? this.state.timezonesArr.map((timezoneVal) => { 
                                             return (
-                                                <MenuItem key={timezoneVal} value={timezoneVal}> 
+                                                <MenuItem  key={timezoneVal} value={timezoneVal}> 
                                                     <p className="calendarPage__select--text">
                                                         {timezoneVal}
                                                     </p>
@@ -179,6 +179,8 @@ class CalendarPage extends Component {
                                         this.state.timeslots.length > 0 
                                         ? this.state.timeslots.map((timeslot, index) => 
                                             (<TimeSlotItem 
+                                                daySelected={momentTZ(this.state.date).format('YYYY-MM-DD')}
+                                                timezoneName={this.state.timezoneName}
                                                 handleTimeSlotSelected={this.handleTimeSlotSelected} 
                                                 handleConfirmModal={this.handleConfirmModal} 
                                                 key={index} 
