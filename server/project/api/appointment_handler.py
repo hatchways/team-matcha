@@ -3,12 +3,14 @@ from flask_restx import Resource, fields, marshal
 from project import db, api
 from project.models.appointment import Appointment, add_appointment
 from project.models.participant import Participant, create_participant
+from project.models.availability import Availability
 from project.models.event import Event
 from project.models.user import User
 from project.decorators import token_required
 from project.error_handlers import *
 import datetime as dt
 from dateutil import parser
+import calendar
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
 
 
@@ -42,6 +44,27 @@ def start_within_next_x_days(start: str, next_x_days=NEXT_X_DAYS) -> bool:
     """
     return parser.isoparse(start) <= \
         dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=next_x_days)
+
+
+def appointment_availability_allowed(availability: Availability,
+                                     duration: int,
+                                     start: dt.datetime) -> bool:
+    """
+    Checks and returns whether the appointment is available.
+    :param availability: the availability for the event
+    :param duration: the duration of the event
+    :param start: the time to schedule the appointment
+    :return: whether the time is allowed
+    """
+    weekday = calendar.day_name[start.weekday()].lower()
+    if not availability.__getattribute__(weekday):
+        allowed = False
+    elif start.time() < availability.start or \
+            (start + dt.timedelta(minutes=duration)).time() > availability.end:
+        allowed = False
+    else:
+        allowed = True
+    return allowed
 
 
 participant_input = api.model(
@@ -128,6 +151,12 @@ class Appointments(Resource):
         event = db.session.query(Event). \
             filter(Event.url == event_url, User.public_id == public_id). \
             first()
+
+        if not appointment_availability_allowed(
+                event.availability,
+                event.duration,
+                parser.isoparse(payload['start'])):
+            raise AppointmentNotAvailableError
 
         participant = participant_exists(payload['participant']['name'],
                                          payload['participant']['email'])

@@ -129,3 +129,20 @@ def handle_appointment_after_next_x_days(error):
         'message': f"You may only schedule an appointment within the next "
                    f"{NEXT_X_DAYS} days in the future."
     }, 400
+
+
+class AppointmentNotAvailableError(BadRequest):
+    """This is a custom error."""
+    pass
+
+
+@api.errorhandler(AppointmentNotAvailableError)
+def handle_appointment_not_available(error):
+    """This is a custom error for Appointments POST and PUT requests when
+    the start time of the appointment falls outside of what is allowed."""
+    return {
+        'status': 'fail',
+        'message': 'The provided start time and date is not allowed please '
+                   'choose a valid start time and date and resubmit your '
+                   'request.'
+    }, 400

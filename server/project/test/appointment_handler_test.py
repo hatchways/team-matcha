@@ -1,6 +1,7 @@
 import json
 import datetime as dt
 import pytz
+from dateutil import parser
 from project import db
 from project.test.test_base import TestBase
 from project.models.availability import Availability, create_availability
@@ -45,9 +46,11 @@ class AppointmentGetTest(TestBase):
         event = Event.query.first()
         name = 'Jimmy Joe'
         comments = "OMG I haven't seen you in forever Jimmy how has it been?"
+        start = dt.datetime.now(dt.timezone.utc)
         add_appointment(event_id=event.id,
                         participants=[create_participant(name=name)],
-                        comments=comments)
+                        comments=comments,
+                        start=start)
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
 
@@ -63,6 +66,9 @@ class AppointmentGetTest(TestBase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(appointment['comments'], comments)
         self.assertEqual(participants['name'], name)
+        self.assertEqual(
+            pytz.utc.localize(parser.isoparse(appointment['start'])),
+            start)
 
     def test_bad_token(self):
         """Tests whether a request with an invalid token returns a 403
@@ -262,3 +268,34 @@ class AppointmentPostTest(TestBase):
             first()
         self.assertEqual(pytz.utc.localize(appointment.start),
                          start.astimezone(dt.timezone.utc))
+
+    def test_availability_days(self):
+        """Tests whether a request outside of the available days is rejected
+        with a 400 response."""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())  # Sunday: False
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+        start = dt.datetime(year=2020,
+                            month=3,
+                            day=1,  # Sunday
+                            hour=9,
+                            tzinfo=dt.timezone.utc)
+
+        route = f'/users/{user_public_id}/events/{event_url}/appointments'
+        request = create_appointment_json(start=dt.datetime.isoformat(start))
+        response = self.api.post(route,
+                                 data=request,
+                                 content_type='application/json')
+
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['status'], 'fail')
+        self.assertEqual(data['message'], 'The provided start time and date is '
+                                          'not allowed please choose a valid '
+                                          'start time and date and resubmit '
+                                          'your request.')
