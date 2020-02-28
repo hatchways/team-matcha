@@ -148,7 +148,7 @@ class CalendarPage extends Component {
                 { this.state.showTimeSlotSlider ?
                     <Box className="calendarPage__slider">
                     <Box className="calendarPage__event">
-                        <Button className="calendarPage__event--btn"><ArrowBackIcon /></Button>
+                        <Button onClick={() => this.setState({ showTimeSlotSlider: false })} className="calendarPage__slider--btn"><ArrowBackIcon /></Button>
                         <Typography variant="body1" className="calendarPage__event--username">Gerardo P.</Typography>
                         <Typography variant="h5" className="calendarPage__event--eventname">15min Meeting</Typography>
                         <Typography variant="body2" className="calendarPage__event--duration"><ScheduleIcon />&nbsp;15min</Typography>
