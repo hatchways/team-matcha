@@ -19,9 +19,7 @@ class LoginPage extends React.Component {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            access_token: res.accessToken,
-            tokenId: res.tokenId,
-            profileObj: res.profileObj,
+            code: res.code
         })
         })
         .then(data => data.json())
@@ -56,8 +54,10 @@ class LoginPage extends React.Component {
                     buttonText="LOGIN WITH GOOGLE"
                     onSuccess={this.handleGoogleAuth}
                     onFailure={this.handleGoogleAuth}
+                    prompt='consent'
                     accessType='offline'
-                    scope='https://www.googleapis.com/auth/calendar'
+                    responseType='code'
+                    scope='https://www.googleapis.com/auth/calendar openid profile email'
                     className="login__btn"
                     />
                     <Box className="login__container--footer">

@@ -32,4 +32,5 @@ instance/
 
 
 #TODO add .env to your gitignore
+google_client_secret.json
 
