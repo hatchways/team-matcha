@@ -1,6 +1,6 @@
 from project import db
 import datetime as dt
-from project.models.participants import Participants
+from project.models.participant import Participant
 from typing import List
 
 
@@ -23,7 +23,7 @@ class Appointment(db.Model):
                             uselist=False)
 
 
-def add_appointment(event_id: int, participants: List[Participants],
+def add_appointment(event_id: int, participants: List[Participant],
                     start=dt.datetime.utcnow() + dt.timedelta(days=1),
                     end=dt.datetime.utcnow() + dt.timedelta(days=1, hours=1),
                     created=dt.datetime.utcnow(), status=True, comments='') ->\
