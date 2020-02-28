@@ -15,8 +15,13 @@ class ConfirmationPage extends Component {
             emailError: '',
             name: '',
             nameError: '',
-            comments: ''
+            comment: ''
         }
+    }
+
+    componentDidMount(){
+        const { date } = this.props.match.params;
+        console.log(date);
     }
 
     validate = () => {
@@ -69,10 +74,10 @@ class ConfirmationPage extends Component {
             // })
             // .then(data => data.json())
             // .then((data) => {
-                
+                console.log(`${this.state.name} ${this.state.email} ${this.state.comment}`);
             // })
             // .catch(err => (err));
-            const { public_id, eventLink } = this.props.match.params; // get params from url
+            const { public_id, eventLink, date } = this.props.match.params; // get params from url
             const appointmentId = 'a89s7f8as7fxzwrxw'; // should get back from sucess
             this.props.history.push(`/${public_id}/${eventLink}/invitees/${appointmentId}`)
         }
@@ -125,7 +130,7 @@ class ConfirmationPage extends Component {
                             <Typography className="confirmationPage__form--input--label" variant="h6">Please share anything that will help prepare for our meeting.</Typography>
                             <textarea 
                                 onChange={this.handleUserInput}
-                                name="eventDescription"
+                                name="comment"
                                 rows="10" cols="50"
                                 placeholder="" 
                                 className="confirmationPage__form--input--textarea">
