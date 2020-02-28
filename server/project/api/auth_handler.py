@@ -1,4 +1,3 @@
-
 from flask import Blueprint, current_app, request
 from flask_restx import Resource, fields
 from google.auth.transport import requests
@@ -9,26 +8,35 @@ from project.models.blacklist_token import BlacklistToken
 from project.models.user import User, add_user
 from project.models.creds import add_cred
 from project.decorators import token_required
-from  project.services.google_calendar import fetch_free_busy
+from project.services.google_calendar import fetch_free_busy
+import google_auth_oauthlib
+import flask
+from project.services.google_auth import exchange_auth_code
 
 login_blueprint = Blueprint('login', __name__)
 
-login_input = api.model('login', {
-    'tokenId': fields.Raw(required=True),
-    'profileObj': fields.String(required=True),
-    'access_token': fields.String(required=True),
-})
+login_input = api.model(
+    'login', {
+        'tokenId': fields.Raw(required=True),
+        'profileObj': fields.String(required=True),
+        'access_token': fields.String(required=True),
+    })
 
 
 @api.route('/login')
 class Login(Resource):
     @api.expect(login_input)  #input validation
     def post(self):
-        # (Receive token by HTTPS POST)
+        # (Receive Authorization codde)
         data = api.payload
-        token = data['tokenId']
-        profileObj = data['profileObj']
-        access_token = data['access_token']
+        credentials = exchange_auth_code(data['code'])
+        print(credentials)
+        token = credentials['id_token']
+        access_token = credentials['access_token']
+        if 'refresh_token' in credentials:
+            refresh_token = credentials['refresh_token']
+        else:
+            refresh_token=None
         try:
             # Specify the CLIENT_ID of the app that accesses the backend:
             idinfo = id_token.verify_oauth2_token(
@@ -47,8 +55,8 @@ class Login(Resource):
             if not user:
                 user = add_user(idinfo['name'], idinfo['email'])
                 user.google_id = user_id
-                user.img_url = profileObj['imageUrl']
-                cred = add_cred(access_token=access_token)
+                user.img_url = idinfo['picture']
+                cred = add_cred(access_token=access_token, refresh_token=refresh_token)
                 user.cred = (cred)
                 db.session.commit()
 
@@ -83,8 +91,5 @@ class Logout(Resource):
             }
             return responseObject, 200
         except Exception as e:
-            responseObject = {
-                'status': 'fail',
-                'message': e
-            }
+            responseObject = {'status': 'fail', 'message': e}
             return responseObject, 401
