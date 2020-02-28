@@ -1,6 +1,6 @@
 //importing modules
 import React, { Component } from "react";
-import { Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
 import { MuiThemeProvider } from "@material-ui/core";
 import { theme } from "./themes/theme";
 // importing stylesheet
@@ -37,6 +37,7 @@ class App extends Component{
       isAuth: false,
       token: null,
       userId: null,
+      returningUser: false
     }
   }
 
@@ -77,121 +78,171 @@ class App extends Component{
   // }
 
   render(){
-      let routes = (
-        
+      let routes;
+      if(this.state.isAuth) {
+        routes = (
+          <Switch>
+          <Route
+            path="/"
+            exact
+            render={props => (
+              <LoginPage
+                handleLogin={this.handleLogin}
+                {...props}
+              />
+            )} 
+            />
+            <Route
+            path="/events"
+            exact
+            render={props => (
+              <Dashboard
+                token={this.state.token}
+                userId={this.state.userId}
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/events/event-types"
+            exact
+            render={props => (
+              <EventTypePage
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/events/event-type/solo"
+            exact
+            render={props => (
+              <SoloEventPage
+              token={this.state.token}
+              userId={this.state.userId}
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/events/event-type/group"
+            exact
+            render={props => (
+              <GroupEventPage
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/schedule/upcoming"
+            exact
+            render={props => (
+              <SchedulePage
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/schedule/past"
+            exact
+            render={props => (
+              <SchedulePage
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/integration"
+            exact
+            render={props => (
+              <IntegrationPage
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/upgrade"
+            exact
+            render={props => (
+              <UpgradePage
+                token={this.state.token}
+                userId={this.state.userId}
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/intro/:userid"
+            exact
+            render={props => (
+              <IntroPage
+                updateUserId={this.handleLogin}
+                token={this.state.token}
+                userId={this.state.userId}
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/events/edit/:public_id/:eventLink/"
+            exact
+            render={props => (
+              <SoloEventEditPage
+              token={this.state.token}
+              userId={this.state.userId}
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/:public_id/:eventLink"
+            exact
+            render={props => (
+              <CalendarPage
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/:public_id/:eventLink/:date"
+            exact
+            render={props => (
+              <ConfirmationPage
+                {...props}
+              />
+            )}
+            />
+            <Route
+            path="/:public_id/:eventLink/invitees/:appointmentId"
+            exact
+            render={props => (
+              <ApptConfirmedPage
+                {...props}
+              />
+            )}
+            />
+            <Route
+            render={props => (
+                <PageNotFound
+                  {...props}
+                />
+            )} 
+            />
+            </Switch>
+        )
+      } else if (this.state.isAuth === false) {
+        routes = (
         <Switch>
         <Route
-          path="/"
-          exact
-          render={props => (
-            <LoginPage
-              handleLogin={this.handleLogin}
-              {...props}
-            />
-          )} 
-          />
-          <Route
-          path="/events"
-          exact
-          render={props => (
-            <Dashboard
-              token={this.state.token}
-              userId={this.state.userId}
-              {...props}
-            />
-          )}
-          />
-          <Route
-          path="/events/event-types"
-          exact
-          render={props => (
-            <EventTypePage
-              {...props}
-            />
-          )}
-          />
-          <Route
-          path="/events/event-type/solo"
-          exact
-          render={props => (
-            <SoloEventPage
-            token={this.state.token}
-            userId={this.state.userId}
-              {...props}
-            />
-          )}
-          />
-          <Route
-          path="/events/event-type/group"
-          exact
-          render={props => (
-            <GroupEventPage
-              {...props}
-            />
-          )}
-          />
-          <Route
-          path="/schedule/upcoming"
-          exact
-          render={props => (
-            <SchedulePage
-              {...props}
-            />
-          )}
-          />
-          <Route
-          path="/schedule/past"
-          exact
-          render={props => (
-            <SchedulePage
-              {...props}
-            />
-          )}
-          />
-          <Route
-          path="/integration"
-          exact
-          render={props => (
-            <IntegrationPage
-              {...props}
-            />
-          )}
-          />
-          <Route
-          path="/upgrade"
-          exact
-          render={props => (
-            <UpgradePage
-              token={this.state.token}
-              userId={this.state.userId}
-              {...props}
-            />
-          )}
-          />
-          <Route
-          path="/intro/:userid"
-          exact
-          render={props => (
-            <IntroPage
-              updateUserId={this.handleLogin}
-              token={this.state.token}
-              userId={this.state.userId}
-              {...props}
-            />
-          )}
-          />
-          <Route
-          path="/events/edit/:public_id/:eventLink/"
-          exact
-          render={props => (
-            <SoloEventEditPage
-            token={this.state.token}
-            userId={this.state.userId}
-              {...props}
-            />
-          )}
-          />
-          <Route
+            path="/"
+            exact
+            render={props => (
+              <LoginPage
+                handleLogin={this.handleLogin}
+                {...props}
+              />
+            )} 
+        />
+        <Route
           path="/:public_id/:eventLink"
           exact
           render={props => (
@@ -218,15 +269,11 @@ class App extends Component{
             />
           )}
           />
-          <Route
-          render={props => (
-            <PageNotFound
-              {...props}
-            />
-          )}
-          />
+          <Redirect exact to="/" />
           </Switch>
-      )
+        )
+      }
+      
     return (
       <MuiThemeProvider theme={theme}>
         <Router history={history}>
@@ -249,3 +296,11 @@ class App extends Component{
 }
 
 export default App;
+
+// <Route
+//           render={props => (
+//                     <PageNotFound
+//                       {...props}
+//                     />
+//         )} 
+//         />
