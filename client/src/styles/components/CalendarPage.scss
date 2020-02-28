@@ -80,7 +80,7 @@
             color: $gray;
             font-weight: 400 !important;
             position: fixed;
-            padding: 12px 6px;
+            padding: 12px 10px;
             z-index: 2;
         }
         &--list{
@@ -139,11 +139,6 @@
     &__slider{
         display: none;
     }
-}
-
-// Extra small devices (portrait phones, less than 576px)
-@media (max-width: 575.98px) and (orientation: landscape) {
-    
 }
 
 // Extra small devices (portrait phones, less than 576px)
@@ -298,20 +293,34 @@
 
         &__timeslots{
             display: none; // remove timeslots
-            height: 100%;
-            overflow-y: scroll;
-            position: relative;
-            padding-right: 75px;
-            &--title{
-                position: absolute;
-            }
-            &--list{
-                @include applyFlex(flex-start, flex-start, column);
+        }
+        &__timeslots{
+            &--mobile{
+                height: 60%;
                 overflow-y: scroll;
-                padding-top: 60px;
-                padding-bottom: 20px;
-                height: 68%;
+                position: relative;
                 width: 100%;
+                &--title{
+                    position: absolute;
+                    text-align: center;
+                    padding-top: 10px;
+                    width: 100%;
+                }
+                &--list{
+                    @include applyFlex(center, center, column);
+                    overflow-y: scroll;
+                    padding-top: 60px;
+                    padding-bottom: 20px;
+                    width: 100%;
+                }
+                &--btn{
+                    color: $primary !important;
+                    background: none !important;
+                    margin-bottom: 10px !important;
+                    border: solid 1px $primary !important;
+                    padding: 12px 16px !important;
+                    width: 300px !important;
+                }
             }
         }
 
@@ -319,6 +328,31 @@
             @include solid1pxBorder;
             border-radius: 100px;
             width: 100%;
+        }
+        &__picker{
+            &--desktop{
+                display: none;
+            }
+            &--mobile{
+                display: block;
+            }
+        }
+        &__slider{
+            display: block;
+            background-color: #fff;
+            height: 120vh;
+            position: absolute;
+            width: 100%;
+            z-index: 3;
+            &--btn{
+                color: $primary !important;
+                background: none !important;
+                left: 10px !important;
+                border-radius: 100px !important;
+                padding: 12px 16px !important;
+                position: absolute !important;
+                top: 10px !important;
+            }
         }
     }
 }

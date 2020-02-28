@@ -32,7 +32,7 @@ class CalendarPage extends Component {
 
     componentDidMount(){
         const availability = {
-            "2020-02-26": [],
+            "2020-02-28": [{"hour": 12, "minute": 30}],
             "2020-02-29": [{"hour": 12, "minute": 0},
             {"hour": 12, "minute": 30},
             {"hour": 13, "minute": 0},

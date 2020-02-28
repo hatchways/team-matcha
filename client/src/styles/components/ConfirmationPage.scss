@@ -74,16 +74,11 @@
                 font-size: .85rem !important;
                 margin-top: 10px !important;
                 margin-bottom: 10px !important;
-                &--link{
-                    color: $gray;
-                    font-size: .85rem !important;
-                    width: 50%;
-                }
+                width: 75%;
             }
             &--name,
             &--location,
-            &--textarea,
-            &--link{
+            &--textarea{
                 background: none;
                 border: none;
                 border: solid 1px $off-black;
@@ -91,17 +86,161 @@
                 padding: 16px 16px;
                 width: 60%;
             }
-            &--link{
-                &--wrap{
-                    @include applyFlex(flex-start, flex-start, column);
-                    width: 100%;
-                }
-            }
         }
         &--submit{
             background-color: $primary !important;
             color: whitesmoke !important;
             padding: 12px 16px !important;
+        }
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .confirmationPage{
+        overflow: none;
+        padding-top: 0;
+        padding-bottom: 0;
+        &__container{
+            @include applyFlex(flex-start, flex-start, column);
+            overflow-x: hidden;
+            overflow-y: hidden;
+            padding-top: 0px;
+            padding-bottom: 40px;
+            height: 120vh;
+            width: 100%;
+        }
+        &__form{
+            height: 100%;
+            padding-top: 30px;
+            padding-bottom: 40px;
+            overflow-y: scroll;
+            width: 100%;
+            &--input{
+                &--label{
+                    width: 75%;
+                }
+            }
+            &--header{
+                display: none;
+            }
+            &--input{
+                &--label{
+                    margin-top: -10px !important;
+                }
+            }
+        }
+        &__event{
+            @include applyFlex(center, center, column);
+            border-bottom: solid 1px $off-black;
+            height: 100%;
+            padding: 0;
+            position: relative;
+            width: 100%;
+            &--username{
+                color: $light-gray !important;
+                margin-top: 2px !important;
+                font-weight: 400 !important;
+            }
+            &--btn{
+                background: none;
+                border: none;
+                border-radius: 100px !important;
+                color: $primary !important;
+                outline: none;
+                left: 10px !important;
+                position: absolute !important;
+                top: 10px !important;
+            }
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .confirmationPage{
+        overflow: none;
+        padding-top: 25px;
+        padding-bottom: 25px;
+        &__container{
+            overflow-x: hidden;
+            overflow-y: hidden;
+            padding-top: 0px;
+            padding-bottom: 40px;
+            width: 90%;
+        }
+        &__form{
+            height: 100%;
+            padding-top: 30px;
+            padding-bottom: 40px;
+            overflow-y: scroll;
+            &--header{
+                display: none;
+            }
+            &--input{
+                &--label{
+                    margin-top: -10px !important;
+                }
+            }
+        }
+        &__event{
+            height: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .confirmationPage{
+        overflow: none;
+        padding-top: 25px;
+        padding-bottom: 25px;
+        &__container{
+            overflow-x: hidden;
+            overflow-y: hidden;
+            padding-top: 0px;
+            padding-bottom: 40px;
+            width: 90%;
+        }
+        &__form{
+            height: 100%;
+            padding-top: 30px;
+            padding-bottom: 40px;
+            overflow-y: scroll;
+            &--header{
+                display: none;
+            }
+            &--input{
+                &--label{
+                    margin-top: -10px !important;
+                }
+            }
+        }
+        &__event{
+            height: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .confirmationPage{
+        &__container{
+            width: 90%;
+        }
+        &__form{
+            &--header{
+                display: none;
+            }
+            &--input{
+                &--label{
+                    margin-top: -10px !important;
+                }
+            }
         }
     }
 }
