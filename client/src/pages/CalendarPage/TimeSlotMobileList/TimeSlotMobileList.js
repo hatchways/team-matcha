@@ -3,7 +3,7 @@ import momentTZ from "moment-timezone";
 import { Box, Typography } from '@material-ui/core';
 import TimeSlotItem from '../TimeSlotItem/TimeSlotItem';
 
-const TimeSlotItemMobile = ({ date, timeslots, timezoneName, handleTimeSlotSelected, handleConfirmModal }) => {
+const TimeSlotMobileList = ({ date, timeslots, timezoneName, handleTimeSlotSelected, handleConfirmModal }) => {
     return (
         <Box className="calendarPage__timeslots--mobile">
             <Typography variant="h6" className="calendarPage__timeslots--mobile--title">{momentTZ(date).format('dddd, MMMM Do')}</Typography>
@@ -26,4 +26,4 @@ const TimeSlotItemMobile = ({ date, timeslots, timezoneName, handleTimeSlotSelec
     )
 };
 
-export default TimeSlotItemMobile;
+export default TimeSlotMobileList;
