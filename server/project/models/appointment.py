@@ -1,6 +1,6 @@
 from project import db
 import datetime as dt
-from project.models.participant import Participant
+from project.models.participants import Participants
 from typing import List
 
 
@@ -15,12 +15,15 @@ class Appointment(db.Model):
                                                       # canceled
     comments = db.Column(db.String(1024))
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
-    event = db.relationship('Event', backref='appointments', innerjoin=True,
-                            cascade='all, delete-orphan', single_parent=True,
+    event = db.relationship('Event',
+                            backref='appointments',
+                            innerjoin=True,
+                            cascade='all, delete-orphan',
+                            single_parent=True,
                             uselist=False)
 
 
-def add_appointment(event_id: int, participants: List[Participant],
+def add_appointment(event_id: int, participants: List[Participants],
                     start=dt.datetime.utcnow() + dt.timedelta(days=1),
                     end=dt.datetime.utcnow() + dt.timedelta(days=1, hours=1),
                     created=dt.datetime.utcnow(), status=True, comments='') ->\
