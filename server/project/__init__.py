@@ -46,5 +46,8 @@ def create_app(script_info=None):
     from project.api.calendar_handler import calendar_blueprint
     app.register_blueprint(calendar_blueprint)
 
+    from project.api.appointment_handler import appointment_blueprint
+    app.register_blueprint(appointment_blueprint)
+
     api.init_app(app)
     return app
