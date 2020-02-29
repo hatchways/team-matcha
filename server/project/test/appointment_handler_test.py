@@ -35,7 +35,7 @@ def create_appointment_json(start='2020-02-20T08:30:00Z',
     return json.dumps(request)
 
 
-class AppointmentGetTest(TestBase):
+class AppointmentGetAllTest(TestBase):
     def test_get_appointments(self):
         """Tests whether appointments can be successfully requested."""
         add_user()
@@ -297,3 +297,75 @@ class AppointmentPostTest(TestBase):
                                           'not allowed please choose a valid '
                                           'start time and date and resubmit '
                                           'your request.')
+
+
+class AppointmentGetTest(TestBase):
+    def test_get_appointment(self):
+        """Tests whether an appointment can be successfully requested."""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+        name = 'Big Bob'
+        email = 'bob@big.com'
+        comments = 'What is this appointment for again?'
+        start = dt.datetime(year=2020,
+                            month=3,
+                            day=2,
+                            hour=9,
+                            tzinfo=dt.timezone.utc)
+        add_appointment(event_id=event.id,
+                        participants=[create_participant(name=name,
+                                                         email=email)],
+                        start=start,
+                        comments=comments)
+        db.session.commit()
+
+        route = f'/users/{user_public_id}/events/{event_url}/appointments/' \
+                f'{start.isoformat()}'
+        response = self.api.get(route,
+                                content_type='application/json')
+
+        appointment = json.loads(response.data.decode())
+        participant = appointment['participants'][0]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(appointment['comments'], comments)
+        self.assertEqual(participant['name'], name)
+        self.assertEqual(participant['email'], email)
+
+    def test_appointment_not_found(self):
+        """Tests whether requesting an appointment that doesn't exist returns
+        a 404 error."""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+        start = dt.datetime(year=2020,
+                            month=3,
+                            day=2,
+                            hour=9,
+                            tzinfo=dt.timezone.utc)
+        add_appointment(event_id=event.id,
+                        participants=[create_participant()],
+                        start=start)
+        db.session.commit()
+
+        route = f'/users/{user_public_id}/events/{event_url}/appointments/' \
+                f'{(start + dt.timedelta(hours=1)).isoformat()}'
+        response = self.api.get(route,
+                                content_type='application/json')
+
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(data['status'], 'fail')
+        self.assertEqual(data['message'], 'No appointment was found for that '
+                                          'start time.')
+

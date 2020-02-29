@@ -1,7 +1,7 @@
 from project.api import api
 from flask import Blueprint
 import jwt
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
 
 
@@ -146,3 +146,18 @@ def handle_appointment_not_available(error):
                    'choose a valid start time and date and resubmit your '
                    'request.'
     }, 400
+
+
+class AppointmentNotFoundError(NotFound):
+    """This is a custom error."""
+    pass
+
+
+@api.errorhandler(AppointmentNotFoundError)
+def handle_appointment_not_found(error):
+    """This is a custom error for Appointment GET requests when the desired
+    Appointment is not found."""
+    return {
+        'status': 'fail',
+        'message': 'No appointment was found for that start time.'
+    }, 404

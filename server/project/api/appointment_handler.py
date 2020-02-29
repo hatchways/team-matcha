@@ -11,6 +11,7 @@ from project.error_handlers import *
 import datetime as dt
 from dateutil import parser
 import calendar
+import pytz
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
 
 
@@ -103,7 +104,7 @@ participant_output = api.model(
                                example='johndoe@email.com',
                                min_length=5,
                                max_length=128)})
-appointment_output = api.model(
+appointments_output = api.model(
     'Appointment', {
         'start': fields.DateTime(description='The start time of the '
                                              'appointment',
@@ -124,12 +125,33 @@ appointment_output = api.model(
                                   max_length=1024),
         'participants': fields.List(fields.Nested(participant_output,
                                                   required=True))})
+appointment_output = api.model(
+    'Appointment', {
+        'start': fields.DateTime(description='The start time of the '
+                                             'appointment',
+                                 required=True,
+                                 example='2020-01-20T08:30:00Z'),
+        'end': fields.DateTime(description='The end time of the appointment',
+                               required=True,
+                               example='2020-01-20T09:30:00Z'),
+        'created': fields.DateTime(description='When the appointment was '
+                                               'created',
+                                   required=True,
+                                   example='2020-01-25T09:30:00Z'),
+        'status': fields.Boolean(description='Whether the appointment is still '
+                                             'active'),
+        'comments': fields.String(description='Any comments to send to the '
+                                              'event creator',
+                                  example='Look forward to seeing you!',
+                                  max_length=1024),
+        'participants': fields.Nested(participant_output,
+                                      required=True)})
 
 
 @api.route('/users/<public_id>/events/<event_url>/appointments')
 class Appointments(Resource):
     @token_required
-    @api.marshal_with(appointment_output)
+    @api.marshal_with(appointments_output)
     def get(self, public_id, event_url, current_user=None):
         """Returns all of the appointments for the event."""
         if current_user.public_id != public_id:
@@ -169,3 +191,24 @@ class Appointments(Resource):
             comments=payload['comments'])
         db.session.commit()
         return {'message': 'success'}, 201
+
+
+@api.route('/users/<public_id>/events/<event_url>/appointments/<iso_start>')
+class AppointmentDetail(Resource):
+    @api.marshal_with(appointment_output, skip_none=True)
+    def get(self, public_id, event_url, iso_start):
+        """Returns the details for a specific appointment."""
+        appointment = db.session.query(Appointment).\
+            filter(User.public_id == public_id,
+                   Event.url == event_url,
+                   Appointment.start ==
+                   parser.isoparse(iso_start)).\
+            first()
+
+        if appointment is None:
+            raise AppointmentNotFoundError
+        else:
+            response = appointment
+            code = 200
+
+        return response, code
