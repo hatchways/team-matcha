@@ -30,7 +30,7 @@ const PhoneCallModal = ({ handleLocationUpdate, handlePhoneCallModal, handleUser
                         />
                         <Typography className="phoneCallModal__window--radio--label" variant="body2">
                             I will call my invitee<br/>
-                            <span className="phoneCallModal__window--radio--label--span">Calendly will require your invitee’s phone number before scheduling.</span>
+                            <span className="phoneCallModal__window--radio--label--span">CalendApp will require your invitee’s phone number before scheduling.</span>
                         </Typography>
                     </Box>
                     <Box className="phoneCallModal__window--radio--wrap">
@@ -43,7 +43,7 @@ const PhoneCallModal = ({ handleLocationUpdate, handlePhoneCallModal, handleUser
                         />
                         <Typography className="phoneCallModal__window--radio--label" variant="body2">
                             My invitee should call me<br/>
-                            <span className="phoneCallModal__window--radio--label--span">Calendly will provide your number after the call has been scheduled.</span>
+                            <span className="phoneCallModal__window--radio--label--span">CalendApp will provide your number after the call has been scheduled.</span>
                         </Typography>
                     </Box>
                     <Box className="phoneCallModal__number--wrap">

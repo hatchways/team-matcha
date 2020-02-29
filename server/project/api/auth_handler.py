@@ -17,9 +17,7 @@ login_blueprint = Blueprint('login', __name__)
 
 login_input = api.model(
     'login', {
-        'tokenId': fields.Raw(required=True),
-        'profileObj': fields.String(required=True),
-        'access_token': fields.String(required=True),
+        'code': fields.String(required=True),
     })
 
 

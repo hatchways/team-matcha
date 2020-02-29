@@ -5,6 +5,7 @@ import { Box } from "@material-ui/core";
 import EventPageHeader from "./EventPageHeader/EventPageHeader";
 import EventCard from "./EventPageCard/EventsPageCard";
 import EventPageMsg from "./EventPageMsg/EventPageMsg";
+import SpinnerLarge from '../../components/Spinners/SpinnerLarge';
 
 class EventsPage extends Component {
   constructor(props) {
@@ -86,7 +87,9 @@ class EventsPage extends Component {
           img={this.props.profileImageUrl}
           {...this.state.userDetails}
         />
-        <Box className="eventPage__container">
+        {
+          this.state.userDetails.public_id !== undefined ? 
+          <Box className="eventPage__container">
           {events.length > 0 ? (
             events.map((event, index) => (
               <EventCard
@@ -97,10 +100,9 @@ class EventsPage extends Component {
                 {...event}
               />
             ))
-          ) : (
-            <EventPageMsg />
-          )}
-        </Box>
+          ) : <EventPageMsg public_id={this.state.userDetails.public_id} />}
+        </Box> : <SpinnerLarge />
+        }
       </Box>
     );
   }

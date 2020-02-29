@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 import copy from "clipboard-copy";
 import {
   Button,
@@ -22,7 +23,8 @@ const EventPageCard = ({
   color,
   eventId,
   handleRemoveEvent,
-  userName
+  userName,
+  ...props
 }) => {
   const [active, setToggle] = useState(false);
   const toggle = () => {
@@ -42,7 +44,9 @@ const EventPageCard = ({
         {active ? (
           <Paper className="eventCard__col--settings--dropdown">
             <MenuList>
-              <MenuItem className="eventCard__col--settings--dropdown--item">
+              <MenuItem 
+                onClick={() => props.history.push(`/events/edit/${userName}/${url}`)} 
+                className="eventCard__col--settings--dropdown--item">
                 <EditIcon className="eventCard__col--settings--dropdown--icon" />
                 Edit
               </MenuItem>
@@ -86,4 +90,4 @@ const EventPageCard = ({
   );
 };
 
-export default EventPageCard;
+export default withRouter(EventPageCard);
