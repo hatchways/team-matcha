@@ -19,11 +19,18 @@ class AppointmentModelTest(TestBase):
         db.session.commit()
         event = Event.query.first()
         participant = create_participant()
-        start = dt.datetime(year=2020, month=3, day=1, hour=8)
+        start = dt.datetime(year=2020,
+                            month=3,
+                            day=1,
+                            hour=8,
+                            tzinfo=dt.timezone.utc)
         end = start + dt.timedelta(hours=1)
-        created = dt.datetime.utcnow() - dt.timedelta(hours=1)
-        add_appointment(event_id=event.id, participants=[participant],
-                        start=start, end=end, created=created)
+        created = dt.datetime.now(dt.timezone.utc)
+        add_appointment(event_id=event.id,
+                        participants=[participant],
+                        start=start,
+                        end=end,
+                        created=created)
         db.session.commit()
         appointment = Appointment.query.filter_by(start=start).first()
 

@@ -67,7 +67,7 @@ class AppointmentGetTest(TestBase):
         self.assertEqual(appointment['comments'], comments)
         self.assertEqual(participants['name'], name)
         self.assertEqual(
-            pytz.utc.localize(parser.isoparse(appointment['start'])),
+            parser.isoparse(appointment['start']),
             start)
 
     def test_bad_token(self):
@@ -128,7 +128,7 @@ class AppointmentPostTest(TestBase):
         db.session.commit()
         event = Event.query.first()
         event_url = event.url
-        start = '2020-03-20T08:30:00Z'
+        start = '2020-03-20T08:30:00Z'  # TODO check later
         comments = "I don't know about this appointment man..."
         name = 'Little Timmy'
         email = 'little@timmy.com'
@@ -150,7 +150,7 @@ class AppointmentPostTest(TestBase):
             filter(User.public_id == user_public_id,
                    Event.url == event_url,
                    Appointment.start == start).\
-            first()
+            first()  # TODO check later
         self.assertEqual(appointment.comments, comments)
 
         participant = appointment.participants[0]
@@ -228,8 +228,7 @@ class AppointmentPostTest(TestBase):
             all()
         self.assertEqual(len(appointments), 2)
         for appointment in appointments:
-            self.assertTrue(pytz.utc.localize(appointment.start) in
-                            [start1, start2])
+            self.assertTrue(appointment.start in [start1, start2])
 
         participant = Participant.query.filter_by(email=email).all()
         self.assertEqual(len(participant), 1)
@@ -266,8 +265,7 @@ class AppointmentPostTest(TestBase):
         appointment = db.session.query(Appointment).\
             filter(Event.url == event_url).\
             first()
-        self.assertEqual(pytz.utc.localize(appointment.start),
-                         start.astimezone(dt.timezone.utc))
+        self.assertEqual(appointment.start, start.astimezone(dt.timezone.utc))
 
     def test_availability_days(self):
         """Tests whether a request outside of the available days is rejected

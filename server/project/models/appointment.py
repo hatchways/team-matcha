@@ -8,9 +8,9 @@ class Appointment(db.Model):
     __tablename__ = 'appointments'
 
     id = db.Column(db.Integer, primary_key=True)
-    start = db.Column(db.DateTime(), nullable=False)
-    end = db.Column(db.DateTime(), nullable=False)
-    created = db.Column(db.DateTime(), nullable=False)
+    start = db.Column(db.DateTime(timezone=True), nullable=False)
+    end = db.Column(db.DateTime(timezone=True), nullable=False)
+    created = db.Column(db.DateTime(timezone=True), nullable=False)
     status = db.Column(db.Boolean(), nullable=False)  # True active False
                                                       # canceled
     comments = db.Column(db.String(1024))
