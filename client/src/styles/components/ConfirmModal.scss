@@ -1,0 +1,68 @@
+.confirmModal{
+    @include applyFlex(flex-start, center);
+    background-color: rgba(255, 255, 255, 0.783);
+    top: 0;
+    left: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    z-index: 100;
+    &__window{
+        border: solid 1px $off-black;
+        border-radius: 5px;
+        background-color: #fff;
+        margin-top: 100px;
+        position: fixed;
+        width: 375px;
+        &--header{
+            @include applyFlex(center, center);
+            border: solid 1px $off-black;
+            padding: 12px 0px;
+            text-align: center;
+            width: 100%;
+        }
+        &--footer{
+            @include applyFlex(center, center);
+            padding: 12px 0px;
+            width: 100%;
+        }
+        &--col{
+            @include applyFlex(center, flex-start, column);
+            padding-bottom: 10px;
+            padding-top: 10px;
+            &--text{
+                &--username{
+                    color: $light-gray !important;
+                    font-weight: 400 !important;
+                }
+                &--eventname{
+                    color: $gray;
+                    margin-bottom: 10px !important;
+                    font-weight: 600 !important;
+                }
+                &--duration{
+                    @include applyFlex(center, flex-start);
+                    margin-bottom: 10px !important;
+                    color: $light-gray !important;
+                }
+                &--location{
+                    @include applyFlex(center, flex-start);
+                    color: $light-gray !important;
+                }
+            }
+        }
+        &--btn{
+            padding: 8px 32px !important;
+            &--cancel{
+                color: $light-gray !important;
+                border: solid 1px $off-black !important;
+            }
+            &--update{
+                background-color: $primary !important;
+                color: #fff !important;
+                margin-right: 10px !important;
+            }
+        }
+    }
+}

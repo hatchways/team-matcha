@@ -1,0 +1,60 @@
+.soloEvent{
+    &__content{
+        &--hours{
+            @include applyFlex(center, center, column);
+            padding-top: 25px;
+            padding-bottom: 5px;
+            width: 92%;
+
+            &--values{
+                @include applyFlex(flex-start, flex-start);
+                width: 100%;
+            }
+            &--title{
+                font-size: .85rem !important;
+                margin-bottom: 10px !important;
+                width: 100%;
+            }
+            
+            &--select{
+                @include solid1pxBorder;
+                font-size: 2rem;
+                padding: 12px 32px;
+                & *{
+                    font-weight: $bold-text;
+                    color: black;
+                }
+            }
+
+            &--span{
+                color: black;
+                font-size: 2rem;
+                padding: 12px 24px;
+                font-weight: $bold-text;
+            }
+
+            &--error{
+                color: #ff3d00;
+                font-size: .85rem;
+                width: 100%;
+            }
+        }
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) {
+    .soloEvent{
+        &__content{
+            &--hours{
+                text-align: center;
+                &--values{
+                    @include applyFlex(center, center, column);
+                }
+                &--select{
+                    width: 50%;
+                }
+            }
+        }
+    }
+}

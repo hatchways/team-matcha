@@ -2,10 +2,11 @@
 import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 
-const EventTextArea = ({handleUserInput}) => (
+const EventTextArea = ({handleUserInput, eventDescription}) => (
     <Box className="soloEvent__form--input">
         <Typography className="soloEvent__form--input--label" variant="h6">Description/Instructions</Typography>
         <textarea 
+            value={eventDescription}
             onChange={handleUserInput}
             name="eventDescription"
             rows="10" cols="50"

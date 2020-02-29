@@ -3,29 +3,29 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 // importing components
-import Header from '../../../components/Header/Header';
-import FormSubmitControls from './FormSubmitControls/FormSubmitControls';
-import EventTypeHeader from '../EventTypeHeader/EventTypeHeader';
-import EventNameInput from './EventNameInput/EventNameInput';
-import EventLinkInput from './EventLinkInput/EventLinkInput';
-import EventLocationDropdown from './EventLocationDropdown/EventLocationDropdown';
-import EventTextArea from './EventTextArea/EventTextArea';
-import RadioColorList from './RadioColorList/RadioColorList';
-import RadioDurationList from './RadioDurationList/RadioDurationList';
-import EventAvlTimeDropDown from './EventAvlTimeDropdown/EventAvlTimeDropdown';
-import EventDaysAvlCheckBox from './EventDaysAvlCheckBox/EventDaysAvlCheckBox';
-import PhoneCallModal from './Modals/PhoneCallModal';
-import LocationModal from './Modals/LocationModal';
-import { allFalse } from '../../../Utils/obj-func';
+import Header from '../../../../components/Header/Header';
+import FormSubmitControls from '../FormSubmitControls/FormSubmitControls';
+import EventTypeHeader from '../../EventTypeHeader/EventTypeHeader';
+import EventNameInput from '../EventNameInput/EventNameInput';
+import EventLinkInput from '../EventLinkInput/EventLinkInput';
+import EventLocationDropdown from '../EventLocationDropdown/EventLocationDropdown';
+import EventTextArea from '../EventTextArea/EventTextArea';
+import RadioColorList from '../RadioColorList/RadioColorList';
+import RadioDurationList from '../RadioDurationList/RadioDurationList';
+import EventAvlTimeDropDown from '../EventAvlTimeDropdown/EventAvlTimeDropdown';
+import EventDaysAvlCheckBox from '../EventDaysAvlCheckBox/EventDaysAvlCheckBox';
+import PhoneCallModal from '../Modals/PhoneCallModal';
+import LocationModal from '../Modals/LocationModal';
+import { allFalse } from '../../../../Utils/obj-func';
 
 
 class SoloEventPage extends Component {
     constructor(props){
         super(props);
         this.state = {
-            eventColor: '#3d5afe',
+            eventColor: '',
             eventDescription: '',
-            eventDuration: "60",
+            eventDuration: '',
             eventLink: '',
             eventLocation: '',
             eventName: '',
@@ -56,6 +56,7 @@ class SoloEventPage extends Component {
 
     componentWillMount(){
         this.handleFetchUser();
+        this.handleFetchEvent();
     }
 
     handleFetchUser = () => {
@@ -70,6 +71,36 @@ class SoloEventPage extends Component {
             .then((data) => {
                 console.log('user details inside solo', data);
                 this.setState({userDetails: {...data}}, console.log(this.state));
+            })
+            .catch(err => (err));
+    }
+
+    handleFetchEvent = () => {
+        const { public_id, eventLink } = this.props.match.params;
+        fetch(`/users/${public_id}/events/${eventLink}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-access-token': this.props.token
+            }
+            })
+            .then(data => data.json())
+            .then((event) => {
+                console.log('event data', event);
+                this.setState({
+                    eventColor: event.color,
+                    eventDescription: event.description,
+                    eventDuration: (event.duration).toString(),
+                    eventLink: event.url,
+                    eventLocation: event.location,
+                    eventName: event.name,
+                    eventStart: event.availability.start,
+                    eventEnd: event.availability.end,
+                    locationDropDownField: event.location.length > 0 ? event.location : 'Add a location',
+                    daysAvl: {
+                        ...event.availability.days
+                    },
+                }, () => console.log('state update', this.state));
             })
             .catch(err => (err));
     }
@@ -163,14 +194,16 @@ class SoloEventPage extends Component {
     //method: handles solo-event creation/submit
     handleFormSubmit = (e) => {
         e.preventDefault();
+        const { public_id, eventLink } = this.props.match.params;
         let eventDesignatedLocation = '';
         const err = this.validate(); // validate user input
         if(!err) {
             if(this.state.eventLocation === 'phone call: (Invitee should call me)') {
                 eventDesignatedLocation = `${this.state.eventLocation} ${this.state.phone}`;
             }
-            fetch(`/users/${this.props.userId}/events`, {
-                method: 'POST',
+            // TODO: PUT request is not currently working
+            fetch(`/users/${public_id}/events/${eventLink}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-access-token': this.props.token
@@ -185,7 +218,7 @@ class SoloEventPage extends Component {
                 availability: {
                 start: this.state.eventStart,
                 end: this.state.eventEnd,
-                days: {
+                days: { // TODO: days are currently not updating 
                     ...this.state.daysAvl
                 }
             }
@@ -240,11 +273,11 @@ class SoloEventPage extends Component {
         return (
             <Box className="soloEvent">
                 <Header />
-                <EventTypeHeader text="Add One-on-One Event Type"/>
+                <EventTypeHeader text="Edit One-on-One Event Type"/>
                 <Box className="soloEvent__container">
                     <form onSubmit={this.handleFormSubmit} className="soloEvent__form">
                         {/*form header*/}
-                        <FormSubmitControls btnText="Create" isFormHeader={true}/>
+                        <FormSubmitControls btnText="Update" isFormHeader={true}/>
                         {/*form fields*/}
                         <EventNameInput
                             eventName={this.state.eventName}
@@ -288,7 +321,7 @@ class SoloEventPage extends Component {
                             handleUserInput={this.handleUserInput}
                             />
                         </Box>
-                        <FormSubmitControls btnText="Create" isFormHeader={false}/>
+                        <FormSubmitControls btnText="Update" isFormHeader={false}/>
                     </form>
                 </Box>
                 {this.state.showLocationModal 
