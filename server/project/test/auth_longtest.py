@@ -2,6 +2,7 @@ import datetime
 import json
 import time
 from unittest.mock import Mock, patch
+from unittest import mock
 
 import jwt
 from flask import current_app
@@ -12,27 +13,34 @@ from project.models.user import User
 from project.test.test_base import TestBase
 
 
+
+mock_exchange_auth_code = {
+    'id_token': "SOME_ID_TOKEN",
+    'access_token': "SOME_ACESS_TOKEN",
+    'refresh_token': "SOME_REFRESH_TOKEN",
+}
+
 def register_user(self, name, email):
-    mock_response = {
+
+    mock_oauth2_resp = {
         'iss': 'https://accounts.google.com',
         'name': name,
         'email': email,
         'sub': "123456789",
+        'picture': "SOME_IMAGE_URL",
     }
-    with patch.object(id_token,
-                      'verify_oauth2_token',
-                      return_value=mock_response):
 
-        response = self.api.post('/login',
-                                 data=json.dumps({
-                                     'tokenId': "SOME_AUTH_TOKEN",
-                                     'access_token': "SOME_ACCESS_TOKEN",
-                                     'profileObj': {
-                                         "imageUrl": "SOME_IMAGE"
-                                     },
-                                 }),
-                                 content_type='application/json')
-        return response
+    @mock.patch.object(id_token,
+                       'verify_oauth2_token',
+                       return_value=mock_oauth2_resp)
+    @mock.patch('project.api.auth_handler.exchange_auth_code',
+                return_value=mock_exchange_auth_code)
+    def post_login(_exchange, _mock_verify):
+        return self.api.post('/login',
+                             data=json.dumps({'code': 'SOME_AUTH_CODE'}),
+                             content_type='application/json')
+
+    return post_login()
 
 
 class LoginTest(TestBase):
@@ -54,26 +62,20 @@ class LoginTest(TestBase):
 
         self.assertEqual(user.email, email)
 
-    def test_invalid_google_auth_token_login(self):
-        with patch.object(id_token, 'verify_oauth2_token') as mock_method:
-            mock_method.raiseError.side_effect = Mock(
-                side_effect=Exception(ValueError))
-            name = "Joe"
-            email = "joe@email.com"
-            response = self.api.post('/login',
-                                     data=json.dumps({
-                                         'tokenId': "SOME_INVALID_ID_TOKEN",
-                                         'access_token': "SOME_ACCESS_TOKEN",
-                                         'profileObj': {
-                                             "imageUrl": "SOME_IMAGE"
-                                         },
-                                     }),
-                                     content_type='application/json')
+    @mock.patch('project.api.auth_handler.exchange_auth_code',
+                return_value=mock_exchange_auth_code)
+    def test_invalid_google_auth_token_login(self, mock_exchage):
+        name = "Joe"
+        email = "joe@email.com"
+        response = self.api.post('/login',
+                                    data=json.dumps(
+                                        {'code': 'SOME_AUTH_CODE'}),
+                                    content_type='application/json')
 
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 401)
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 401)
 
-            self.assertEqual(data['message'], 'ValueError')
+        self.assertEqual(data['message'], 'ValueError')
 
 
 class Logout(TestBase):
