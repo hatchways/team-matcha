@@ -128,7 +128,7 @@ class AppointmentPostTest(TestBase):
         db.session.commit()
         event = Event.query.first()
         event_url = event.url
-        start = '2020-03-20T08:30:00Z'  # TODO check later
+        start = '2020-03-20T08:30:00Z'
         comments = "I don't know about this appointment man..."
         name = 'Little Timmy'
         email = 'little@timmy.com'
@@ -150,7 +150,7 @@ class AppointmentPostTest(TestBase):
             filter(User.public_id == user_public_id,
                    Event.url == event_url,
                    Appointment.start == start).\
-            first()  # TODO check later
+            first()
         self.assertEqual(appointment.comments, comments)
 
         participant = appointment.participants[0]
