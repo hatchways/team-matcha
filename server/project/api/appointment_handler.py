@@ -12,6 +12,7 @@ import datetime as dt
 from dateutil import parser
 import calendar
 import pytz
+from sqlalchemy import inspect
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
 
 
@@ -68,6 +69,21 @@ def appointment_availability_allowed(availability: Availability,
     return allowed
 
 
+def edit_appointment(params, appointment: Appointment) -> Appointment:
+    """
+    Edits the appointment with the provided data and returns the edited
+    appointment.
+    :param params: the data used to edit the appointment
+    :param appointment: the appointment to be edited
+    :return: the edited appointment
+    """
+    appointment_fields = inspect(Appointment).columns.keys()
+    for key, value in params.items():
+        if key in appointment_fields:
+            setattr(appointment, key, value)
+    return appointment
+
+
 participant_input = api.model(
     'Participants', {
         'name': fields.String(description='The name of the participant',
@@ -104,6 +120,13 @@ participant_output = api.model(
                                example='johndoe@email.com',
                                min_length=5,
                                max_length=128)})
+appointment_patch = api.model(
+    'Appointment', {
+        'start': fields.DateTime(description='The start time of the '
+                                             'appointment.',
+                                 example='2020-01-20T08:30:00Z'),
+        'status': fields.Boolean(description='Whether the appointment is still '
+                                             'active.')})
 appointments_output = api.model(
     'Appointment', {
         'start': fields.DateTime(description='The start time of the '
@@ -212,3 +235,26 @@ class AppointmentDetail(Resource):
             code = 200
 
         return response, code
+
+    @api.expect(appointment_patch, validate=True)
+    def patch(self, public_id, event_url, iso_start):
+        """Modifies the specific appointment."""
+        appointment = db.session.query(Appointment).\
+            filter(User.public_id == public_id,
+                   Event.url == event_url,
+                   Appointment.start ==
+                   parser.isoparse(iso_start)).\
+            first()
+
+        if appointment is None:
+            raise AppointmentNotFoundError
+        elif appointment.end <= dt.datetime.now(dt.timezone.utc):
+            raise AppointmentEndedError
+        elif appointment.start <= dt.datetime.now(dt.timezone.utc):
+            raise EditDuringAppointmentError
+        else:
+            data = marshal(api.payload, appointment_patch, skip_none=True)
+            edit_appointment(data, appointment)
+            db.session.commit()
+
+        return {'message': 'success'}, 200

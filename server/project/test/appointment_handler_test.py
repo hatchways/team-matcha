@@ -369,3 +369,190 @@ class AppointmentGetTest(TestBase):
         self.assertEqual(data['message'], 'No appointment was found for that '
                                           'start time.')
 
+
+class AppointmentPatchTest(TestBase):
+    def test_update_appointment(self):
+        """Tests whether an appointment can be successfully updated."""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+        start = dt.datetime(year=2020,
+                            month=3,
+                            day=2,
+                            hour=9,
+                            tzinfo=dt.timezone.utc)
+        add_appointment(event_id=event.id,
+                        participants=[create_participant()],
+                        start=start,
+                        status=True)
+        db.session.commit()
+
+        route = f'/users/{user_public_id}/events/{event_url}/appointments/' \
+                f'{start.isoformat()}'
+        status = False
+        response = self.api.patch(route,
+                                  data=json.dumps({
+                                      'status': status
+                                  }),
+                                  content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.data.decode())
+        self.assertEqual(data['message'], 'success')
+
+        appointment = Appointment.query.first()
+        self.assertEqual(appointment.status, status)
+
+    def test_updating_to_same_value(self):
+        """Tests whether updating a value to its current value is accepted."""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+        start = dt.datetime(year=2020,
+                            month=3,
+                            day=2,
+                            hour=9,
+                            tzinfo=dt.timezone.utc)
+        add_appointment(event_id=event.id,
+                        participants=[create_participant()],
+                        start=start,
+                        status=True)
+        db.session.commit()
+
+        route = f'/users/{user_public_id}/events/{event_url}/appointments/' \
+                f'{start.isoformat()}'
+        status = True
+        response = self.api.patch(route,
+                                  data=json.dumps({
+                                      'status': status
+                                  }),
+                                  content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.data.decode())
+        self.assertEqual(data['message'], 'success')
+
+        appointment = Appointment.query.first()
+        self.assertEqual(appointment.status, status)
+
+    def test_bad_value(self):
+        """Tests whether attempting to supply an unsupported value is
+        rejected with a 400 response."""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+        start = dt.datetime(year=2020,
+                            month=3,
+                            day=2,
+                            hour=9,
+                            tzinfo=dt.timezone.utc)
+        add_appointment(event_id=event.id,
+                        participants=[create_participant()],
+                        start=start)
+        db.session.commit()
+
+        route = f'/users/{user_public_id}/events/{event_url}/appointments/' \
+                f'{start.isoformat()}'
+        status = 'potato'
+        response = self.api.patch(route,
+                                  data=json.dumps({
+                                      'status': status
+                                  }),
+                                  content_type='application/json')
+
+        self.assertEqual(response.status_code, 400)
+
+        data = json.loads(response.data.decode())
+        self.assertEqual(data['errors']['status'], f"'{status}' is not of type "
+                                                   f"'boolean'")
+        self.assertEqual(data['message'], 'Input payload validation failed')
+
+    def test_bad_params(self):
+        """Tests whether a request with both valid and invalid parameters is
+        accepted and the valid parameters are used."""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+        start = dt.datetime(year=2020,
+                            month=3,
+                            day=2,
+                            hour=9,
+                            tzinfo=dt.timezone.utc)
+        add_appointment(event_id=event.id,
+                        participants=[create_participant()],
+                        start=start,
+                        status=True)
+        db.session.commit()
+
+        route = f'/users/{user_public_id}/events/{event_url}/appointments/' \
+                f'{start.isoformat()}'
+        status = False
+        response = self.api.patch(route,
+                                  data=json.dumps({
+                                      'status': status,
+                                      'potato': 'I love potatoes man.'
+                                  }),
+                                  content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+        data = json.loads(response.data.decode())
+        self.assertEqual(data['message'], 'success')
+
+    def test_appointment_not_found(self):
+        """Tests whether requesting an appointment that doesn't exist returns
+        a 404 error."""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        user_public_id = user.public_id
+        add_event(user.id, create_availability())
+        db.session.commit()
+        event = Event.query.first()
+        event_url = event.url
+        start = dt.datetime(year=2020,
+                            month=3,
+                            day=2,
+                            hour=9,
+                            tzinfo=dt.timezone.utc)
+        add_appointment(event_id=event.id,
+                        participants=[create_participant()],
+                        start=start)
+        db.session.commit()
+
+        route = f'/users/{user_public_id}/events/{event_url}/appointments/' \
+                f'{(start + dt.timedelta(days=1)).isoformat()}'
+        status = False
+        response = self.api.patch(route,
+                                  data=json.dumps({
+                                      'status': status
+                                  }),
+                                  content_type='application/json')
+
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(data['status'], 'fail')
+        self.assertEqual(data['message'], 'No appointment was found for that '
+                                          'start time.')

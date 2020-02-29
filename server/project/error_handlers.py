@@ -5,10 +5,6 @@ from werkzeug.exceptions import BadRequest, NotFound
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
 
 
-NEXT_X_DAYS = 90  # TODO this should be the exact same value as in
-# TODO appointment_handler.py
-
-
 errors_blueprint = Blueprint('errors', __name__)
 
 class Error(Exception):
@@ -124,6 +120,8 @@ def handle_appointment_after_next_x_days(error):
     """This is a custom error for Appointments POST and PUT requests that
     provides a 400 response when the start date is later than the NEXT_X_DAYS
     constant."""
+    NEXT_X_DAYS = 90  # TODO this should be the exact same value as in
+    # TODO appointment_handler.py
     return {
         'status': 'fail',
         'message': f"You may only schedule an appointment within the next "
@@ -155,9 +153,41 @@ class AppointmentNotFoundError(NotFound):
 
 @api.errorhandler(AppointmentNotFoundError)
 def handle_appointment_not_found(error):
-    """This is a custom error for Appointment GET requests when the desired
+    """This is a custom error for Appointment GET requests when the requested
     Appointment is not found."""
     return {
         'status': 'fail',
         'message': 'No appointment was found for that start time.'
     }, 404
+
+
+class AppointmentEndedError(BadRequest):
+    """This us a custom error."""
+    pass
+
+
+@api.errorhandler(AppointmentEndedError)
+def handle_appointment_over(error):
+    """This is a custom error for Appointment PATCH requests when the requested
+    Appointment is already over."""
+    return {
+        'status': 'fail',
+        'message': 'The appointment has already ended editing the appointment '
+                   'is nor permitted.'
+    }, 400
+
+
+class EditDuringAppointmentError(BadRequest):
+    """This is a custom error."""
+    pass
+
+
+@api.errorhandler(EditDuringAppointmentError)
+def handle_edit_during_appointment(error):
+    """This is a custom error for Appointment Patch requests during the
+    Appointment."""
+    return {
+        'status': 'fail',
+        'message': 'The appointment cannot be modified when it has already '
+                   'started.'
+    }, 400
