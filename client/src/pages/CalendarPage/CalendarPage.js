@@ -29,26 +29,17 @@ class CalendarPage extends Component {
 
     componentDidMount(){
         const availability = {
-            "2020-02-28": [{"hour": 12, "minute": 30}],
-            "2020-02-29": [{"hour": 12, "minute": 0},
-            {"hour": 12, "minute": 30},
-            {"hour": 13, "minute": 0},
-            {"hour": 13, "minute": 30},
-            {"hour": 14, "minute": 0},
-            {"hour": 14, "minute": 30},
-            {"hour": 15, "minute": 0},
-            {"hour": 15, "minute": 30},
-            {"hour": 16, "minute": 0},
-            {"hour": 16, "minute": 30},
-            {"hour": 17, "minute": 0},
-            {"hour": 17, "minute": 30},
-            {"hour": 18, "minute": 0},
-            {"hour": 18, "minute": 30},
-            {"hour": 19, "minute": 0},
-            {"hour": 19, "minute": 30}],
+            "2020-03-01": [],
+            "2020-03-02": [],
+            "2020-03-03": [],
+            "2020-03-04": [],
+            "2020-03-05": [],
+            "2020-03-06": [],
+            "2020-03-07": [],
+            "2020-03-08": [],
         }
         // fetch event availability days and timeslots from server
-        this.setState({ availability, timeslots: availability['2020-02-29']  }); // set initial time slots if available
+        this.setState({ availability }); // set initial time slots if available
     }
 
     handleFetchEvent = () => {
@@ -98,6 +89,7 @@ class CalendarPage extends Component {
 
     // method: disables days
     handleDisableDates = (date) => {
+        console.log(date);
         const days = disableDays(this.state.availability);
         const dateFound = days.find((dayStr) => {
             return date.format('YYYY-MM-DD') === dayStr;
@@ -165,7 +157,7 @@ class CalendarPage extends Component {
                         maxDate={this.state.maxdate}
                         timeslots={this.state.timeslots}
                         timezoneName={this.state.timezoneName}
-                        handleDisableDate={this.handleDisableDates}
+                        handleDisableDates={this.handleDisableDates}
                         handleDateChange={this.handleDateChange}
                         handleMobileDateChange={this.handleMobileDateChange}
                         handleConfirmModal={this.handleConfirmModal}
