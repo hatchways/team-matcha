@@ -26,6 +26,7 @@ class SoloEventPage extends Component {
             eventColor: '',
             eventDescription: '',
             eventDuration: '',
+            eventDurationCustom: '',
             eventLink: '',
             eventLocation: '',
             eventName: '',
@@ -50,6 +51,7 @@ class SoloEventPage extends Component {
             eventLinkError: '',
             daysAvlError: '',
             eventTimeError: '',
+            eventDurationCustomError: '',
             urlError: ''
         }
     }
@@ -57,6 +59,7 @@ class SoloEventPage extends Component {
     componentWillMount(){
         this.handleFetchUser();
         this.handleFetchEvent();
+
     }
 
     handleFetchUser = () => {
@@ -86,11 +89,21 @@ class SoloEventPage extends Component {
             })
             .then(data => data.json())
             .then((event) => {
-                console.log('event data', event);
+                console.log(event)
+                let duration = '';
+                if(event.duration === 15 || event.duration === 30
+                    || event.duration === 45 || event.duration === 60){
+                    duration = event.duration.toString();
+                } else {
+                    duration = 'custom';
+                }
+                // test for custom duration
                 this.setState({
                     eventColor: event.color,
                     eventDescription: event.description,
-                    eventDuration: (event.duration).toString(),
+                    // eventDuration: duration !== 'custom' ? event.duration.toString() : 'custom',
+                    eventDuration: duration,
+                    eventDurationCustom: duration === 'custom' ? event.duration : '',
                     eventLink: event.url,
                     eventLocation: event.location,
                     eventName: event.name,
@@ -111,7 +124,8 @@ class SoloEventPage extends Component {
             eventNameError: "",
             eventLinkError: "",
             daysAvlError: "",
-            eventTimeError: ""
+            eventTimeError: "",
+            eventDurationCustomError: ""
         };
 
         if (this.state.eventName.length === 0) {
@@ -147,6 +161,16 @@ class SoloEventPage extends Component {
         if(this.state.urlExists) {
             isError = true;
             errors.eventLinkError = "Event url already exists, try another.";
+        }
+
+        if(this.state.eventDuration === 'custom' && (this.state.eventDurationCustom <= 0 ||  this.state.eventDurationCustom === '')) {
+            isError = true;
+            errors.eventDurationCustomError = "Event duration cannot be 0.";
+        }
+
+        if(this.state.eventDuration === 'custom' && this.state.eventDurationCustom > 720) {
+            isError = true;
+            errors.eventDurationCustomError = "Must be less than 12 hours (720 minutes).";
         }
 
         this.setState({ ...this.state, ...errors});
@@ -196,10 +220,16 @@ class SoloEventPage extends Component {
         e.preventDefault();
         const { public_id, eventLink } = this.props.match.params;
         let eventDesignatedLocation = '';
+        let duration = 0;
         const err = this.validate(); // validate user input
         if(!err) {
             if(this.state.eventLocation === 'phone call: (Invitee should call me)') {
                 eventDesignatedLocation = `${this.state.eventLocation} ${this.state.phone}`;
+            }
+            if(this.state.eventDuration === 'custom') {
+                duration = this.state.eventDurationCustom;
+            } else {
+                duration = this.state.eventDuration;
             }
             // TODO: PUT request is not currently working
             fetch(`/users/${public_id}/events/${eventLink}`, {
@@ -212,7 +242,7 @@ class SoloEventPage extends Component {
                 name: this.state.eventName,
                 location: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
                 description: this.state.eventDescription.trim(),
-                duration: parseInt(this.state.eventDuration),
+                duration: parseInt(duration),
                 url: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
                 color: this.state.eventColor,
                 availability: {
@@ -303,6 +333,8 @@ class SoloEventPage extends Component {
                         <RadioDurationList 
                             handleUserInput={this.handleUserInput}
                             eventDuration={this.state.eventDuration}
+                            eventDurationCustom={this.state.eventDurationCustom}
+                            eventDurationCustomError={this.state.eventDurationCustomError}
                         />
                         <EventAvlTimeDropDown 
                             eventTimeError={this.state.eventTimeError}

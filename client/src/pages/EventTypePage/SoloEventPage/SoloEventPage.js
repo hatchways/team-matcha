@@ -25,7 +25,8 @@ class SoloEventPage extends Component {
         this.state = {
             eventColor: '#3d5afe',
             eventDescription: '',
-            eventDuration: "60",
+            eventDuration: '60',
+            eventDurationCustom: '',
             eventLink: '',
             eventLocation: '',
             eventName: '',
@@ -50,6 +51,7 @@ class SoloEventPage extends Component {
             eventLinkError: '',
             daysAvlError: '',
             eventTimeError: '',
+            eventDurationCustomError: '',
             urlError: ''
         }
     }
@@ -80,7 +82,8 @@ class SoloEventPage extends Component {
             eventNameError: "",
             eventLinkError: "",
             daysAvlError: "",
-            eventTimeError: ""
+            eventTimeError: "",
+            eventDurationCustomError: ""
         };
 
         if (this.state.eventName.length === 0) {
@@ -118,6 +121,16 @@ class SoloEventPage extends Component {
             errors.eventLinkError = "Event url already exists, try another.";
         }
 
+        if(this.state.eventDuration === 'custom' && (this.state.eventDurationCustom <= 0 ||  this.state.eventDurationCustom === '')) {
+            isError = true;
+            errors.eventDurationCustomError = "Event duration cannot be 0.";
+        }
+
+        if(this.state.eventDuration === 'custom' && this.state.eventDurationCustom > 720) {
+            isError = true;
+            errors.eventDurationCustomError = "Must be less than 12 hours (720 minutes).";
+        }
+
         this.setState({ ...this.state, ...errors});
 
         return isError;
@@ -126,7 +139,7 @@ class SoloEventPage extends Component {
     // method: gets the users text-input & dropwDown selection values
     handleUserInput = (e) => {
         const { value, name } = e.target;
-        this.setState({ [name]: value });
+        this.setState({ [name]: value }, () => console.log(this.state));
     };
 
     // method: validates if userUrl is unique
@@ -164,10 +177,16 @@ class SoloEventPage extends Component {
     handleFormSubmit = (e) => {
         e.preventDefault();
         let eventDesignatedLocation = '';
+        let duration = 0;
         const err = this.validate(); // validate user input
         if(!err) {
             if(this.state.eventLocation === 'phone call: (Invitee should call me)') {
                 eventDesignatedLocation = `${this.state.eventLocation} ${this.state.phone}`;
+            }
+            if(this.state.eventDuration === 'custom') {
+                duration = this.state.eventDurationCustom;
+            } else {
+                duration = this.state.eventDuration;
             }
             fetch(`/users/${this.props.userId}/events`, {
                 method: 'POST',
@@ -179,7 +198,7 @@ class SoloEventPage extends Component {
                 name: this.state.eventName,
                 location: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
                 description: this.state.eventDescription.trim(),
-                duration: parseInt(this.state.eventDuration),
+                duration:  parseInt(duration),
                 url: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
                 color: this.state.eventColor,
                 availability: {
@@ -270,6 +289,8 @@ class SoloEventPage extends Component {
                         <RadioDurationList 
                             handleUserInput={this.handleUserInput}
                             eventDuration={this.state.eventDuration}
+                            eventDurationCustom={this.state.eventDurationCustom}
+                            eventDurationCustomError={this.state.eventDurationCustomError}
                         />
                         <EventAvlTimeDropDown 
                             eventTimeError={this.state.eventTimeError}

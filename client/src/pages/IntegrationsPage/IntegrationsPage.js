@@ -1,6 +1,6 @@
 // importing modules
 import React from 'react';
-import { Box, Button, Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import Header from '../../components/Header/Header';
 import googleCalendarImg from '../../assets/img/google-calendar.png';
 import stripeImg from '../../assets/img/stripe.png';
@@ -11,7 +11,7 @@ const IntegrationsPage = () => (
         <Header />
         <Box boxShadow={3} className="integration__container">
             <Box className="integration__col">
-                <Box className="integration__col--img"><img className="integration__col--img--i" src={googleCalendarImg} /></Box>
+                <Box className="integration__col--img"><img className="integration__col--img--i" src={googleCalendarImg} alt="google calendar icon"/></Box>
                 <Box className="integration__col--title">
                     <Typography variant="h6" className="integration__col--title--t">
                         Google Calendar
@@ -26,7 +26,7 @@ const IntegrationsPage = () => (
                 </Box>
             </Box>
             <Box className="integration__col">
-                <Box className="integration__col--img"><img className="integration__col--img--i" src={sendgridImg} /></Box>
+                <Box className="integration__col--img"><img className="integration__col--img--i" src={sendgridImg} alt="send grid icon"/></Box>
                 <Box className="integration__col--title">
                     <Typography variant="h6" className="integration__col--title--t">
                         SendGrid
@@ -40,7 +40,7 @@ const IntegrationsPage = () => (
                 </Box>
             </Box>
             <Box className="integration__col">
-                <Box className="integration__col--img"><img className="integration__col--img--i" src={stripeImg} /></Box>
+                <Box className="integration__col--img"><img className="integration__col--img--i" src={stripeImg} alt="stripe icon"/></Box>
                 <Box className="integration__col--title">
                     <Typography variant="h6" className="integration__col--title--t">
                         Stripe
