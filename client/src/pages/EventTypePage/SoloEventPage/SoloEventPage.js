@@ -205,13 +205,20 @@ class SoloEventPage extends Component {
                 start: this.state.eventStart,
                 end: this.state.eventEnd,
                 days: {
-                    ...this.state.daysAvl
+                    sunday: this.state.daysAvl.sunday,
+                    monday: this.state.daysAvl.monday,
+                    tuesday: this.state.daysAvl.tuesday,
+                    wednesday: this.state.daysAvl.wednesday,
+                    thursday: this.state.daysAvl.thursday,
+                    friday: this.state.daysAvl.friday,
+                    saturday: this.state.daysAvl.saturday
                 }
             }
             })
             })
             .then(data => data.json())
             .then((data) => {
+                this.setState({}, () => console.log('solo event created', this.state));
                 this.props.history.push('/events');
             })
             .catch(err => (err));

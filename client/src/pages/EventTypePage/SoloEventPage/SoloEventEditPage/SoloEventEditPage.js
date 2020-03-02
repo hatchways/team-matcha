@@ -111,7 +111,14 @@ class SoloEventPage extends Component {
                     eventEnd: event.availability.end,
                     locationDropDownField: event.location.length > 0 ? event.location : 'Add a location',
                     daysAvl: {
-                        ...event.availability.days
+                        // ...event.availability.days,
+                        sunday: event.availability.days.sunday,
+                        monday: event.availability.days.monday,
+                        tuesday: event.availability.days.tuesday,
+                        wednesday: event.availability.days.wednesday,
+                        thursday: event.availability.days.thursday,
+                        friday: event.availability.days.friday,
+                        saturday: event.availability.days.saturday
                     },
                 }, () => console.log('state update', this.state));
             })
