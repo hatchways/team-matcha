@@ -82,7 +82,16 @@ class App extends Component{
       if(this.state.isAuth) {
         routes = (
           <Switch>
-            <Route exact path="/" handleLogin={this.handleLogin} component={LoginPage} />
+            <Route
+            path="/"
+            exact
+            render={props => (
+              <LoginPage
+                handleLogin={this.handleLogin}
+                {...props}
+              />
+            )}
+            />
             <Route
             path="/intro/:userid"
             exact
@@ -163,7 +172,16 @@ class App extends Component{
       } else if (this.state.isAuth === false) {
         routes = (
         <Switch>
-          <Route exact path="/" handleLogin={this.handleLogin} component={LoginPage} />
+          <Route
+          path="/"
+          exact
+          render={props => (
+            <LoginPage
+              handleLogin={this.handleLogin}
+              {...props}
+            />
+          )}
+          />
           <Route exact path="/:public_id/:eventLink" component={CalendarPage} />
           <Route exact path="/:public_id/:eventLink/:date" component={ConfirmationPage} />
           <Route exact path="/:public_id/:eventLink/invitees/:appointmentId" component={ApptConfirmedPage} />
