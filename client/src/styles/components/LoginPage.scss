@@ -25,6 +25,7 @@
         &--header{
             @include applyFlex(flex-end, center);
             height: 20%;
+            padding-top: 50px;
             text-align: center;
             width: 100%;
         }
@@ -37,6 +38,7 @@
             width: 100%;
 
             &--text{
+                color: $off-black;
                 font-weight: 500 !important;
             }
         }
@@ -47,19 +49,24 @@
     }
 
     &__title{
+        color: black;
         font-weight: 500 !important;
     }
 
     &__btn{
         background-color: $primary !important;
+        border-radius: 5px !important;
         color: whitesmoke !important;
         padding: 12px 12px !important;
+        outline: none !important;
     }
 }
 
 // Extra small devices (portrait phones, less than 576px)
 @media (max-width: 575.98px) {
     .login{
+        padding-top: 50px;
+        padding-bottom: 25px;
         &__container{
             width: 90%;
         }
