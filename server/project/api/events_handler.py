@@ -34,15 +34,14 @@ weekday = fields.Boolean(
 weekend = fields.Boolean(
     default=False,
     description='Whether an event should be scheduled on this day')
-days_input_output = api.model(
-    'Days', {
-        'sunday': weekend,
-        'monday': weekday,
-        'tuesday': weekday,
-        'wednesday': weekday,
-        'thursday': weekday,
-        'friday': weekday,
-        'saturday': weekend})
+days_input_output = {
+                     'sunday': weekend,
+                     'monday': weekday,
+                     'tuesday': weekday,
+                     'wednesday': weekday,
+                     'thursday': weekday,
+                     'friday': weekday,
+                     'saturday': weekend}
 availability_input_output = api.model(
     'Availability', {
         'start': fields.Integer(
@@ -51,7 +50,7 @@ availability_input_output = api.model(
         'end': fields.Integer(
             description='Your latest availability for the event',
             default=17),
-        'days': fields.Nested(days_input_output)})
+        'days': days_input_output})
 event_input_output = api.model(
     'Event', {
         'name': fields.String(
