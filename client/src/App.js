@@ -82,15 +82,18 @@ class App extends Component{
       if(this.state.isAuth) {
         routes = (
           <Switch>
-          <Route
-            path="/"
+            <Route exact path="/" handleLogin={this.handleLogin} component={LoginPage} />
+            <Route
+            path="/intro/:userid"
             exact
             render={props => (
-              <LoginPage
-                handleLogin={this.handleLogin}
+              <IntroPage
+                updateUserId={this.handleLogin}
+                token={this.state.token}
+                userId={this.state.userId}
                 {...props}
               />
-            )} 
+            )}
             />
             <Route
             path="/events"
@@ -103,15 +106,7 @@ class App extends Component{
               />
             )}
             />
-            <Route
-            path="/events/event-types"
-            exact
-            render={props => (
-              <EventTypePage
-                {...props}
-              />
-            )}
-            />
+            <Route exact  path="/events/event-types" component={EventTypePage} />
             <Route
             path="/events/event-type/solo"
             exact
@@ -119,65 +114,6 @@ class App extends Component{
               <SoloEventPage
               token={this.state.token}
               userId={this.state.userId}
-                {...props}
-              />
-            )}
-            />
-            <Route
-            path="/events/event-type/group"
-            exact
-            render={props => (
-              <GroupEventPage
-                {...props}
-              />
-            )}
-            />
-            <Route
-            path="/schedule/upcoming"
-            exact
-            render={props => (
-              <SchedulePage
-                {...props}
-              />
-            )}
-            />
-            <Route
-            path="/schedule/past"
-            exact
-            render={props => (
-              <SchedulePage
-                {...props}
-              />
-            )}
-            />
-            <Route
-            path="/integration"
-            exact
-            render={props => (
-              <IntegrationPage
-                {...props}
-              />
-            )}
-            />
-            <Route
-            path="/upgrade"
-            exact
-            render={props => (
-              <UpgradePage
-                token={this.state.token}
-                userId={this.state.userId}
-                {...props}
-              />
-            )}
-            />
-            <Route
-            path="/intro/:userid"
-            exact
-            render={props => (
-              <IntroPage
-                updateUserId={this.handleLogin}
-                token={this.state.token}
-                userId={this.state.userId}
                 {...props}
               />
             )}
@@ -193,84 +129,46 @@ class App extends Component{
               />
             )}
             />
+            <Route exact path="/events/event-type/group" component={GroupEventPage} />
             <Route
-            path="/:public_id/:eventLink"
+            path="/schedule/upcoming"
             exact
             render={props => (
-              <CalendarPage
+              <SchedulePage
+                token={this.state.token}
+                userId={this.state.userId}
                 {...props}
               />
             )}
             />
             <Route
-            path="/:public_id/:eventLink/:date"
+            path="/schedule/past"
             exact
             render={props => (
-              <ConfirmationPage
+              <SchedulePage
+                token={this.state.token}
+                userId={this.state.userId}
                 {...props}
               />
             )}
             />
-            <Route
-            path="/:public_id/:eventLink/invitees/:appointmentId"
-            exact
-            render={props => (
-              <ApptConfirmedPage
-                {...props}
-              />
-            )}
-            />
-            <Route
-            render={props => (
-                <PageNotFound
-                  {...props}
-                />
-            )} 
-            />
+            <Route exact path="/integration" component={IntegrationPage} />
+            <Route exact path="/upgrade" component={UpgradePage} />
+            <Route exact path="/:public_id/:eventLink" component={CalendarPage} />
+            <Route exact path="/:public_id/:eventLink/:date" component={ConfirmationPage} />
+            <Route exact path="/:public_id/:eventLink/invitees/:appointmentId" component={ApptConfirmedPage} />
+            <Route component={PageNotFound} />
             </Switch>
         )
       } else if (this.state.isAuth === false) {
         routes = (
         <Switch>
-        <Route
-            path="/"
-            exact
-            render={props => (
-              <LoginPage
-                handleLogin={this.handleLogin}
-                {...props}
-              />
-            )} 
-        />
-        <Route
-          path="/:public_id/:eventLink"
-          exact
-          render={props => (
-            <CalendarPage
-              {...props}
-            />
-          )}
-          />
-          <Route
-          path="/:public_id/:eventLink/:date"
-          exact
-          render={props => (
-            <ConfirmationPage
-              {...props}
-            />
-          )}
-          />
-          <Route
-          path="/:public_id/:eventLink/invitees/:appointmentId"
-          exact
-          render={props => (
-            <ApptConfirmedPage
-              {...props}
-            />
-          )}
-          />
+          <Route exact path="/" handleLogin={this.handleLogin} component={LoginPage} />
+          <Route exact path="/:public_id/:eventLink" component={CalendarPage} />
+          <Route exact path="/:public_id/:eventLink/:date" component={ConfirmationPage} />
+          <Route exact path="/:public_id/:eventLink/invitees/:appointmentId" component={ApptConfirmedPage} />
           <Redirect exact to="/" />
-          </Switch>
+        </Switch>
         )
       }
       
@@ -296,11 +194,3 @@ class App extends Component{
 }
 
 export default App;
-
-// <Route
-//           render={props => (
-//                     <PageNotFound
-//                       {...props}
-//                     />
-//         )} 
-//         />
