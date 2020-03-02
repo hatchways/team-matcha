@@ -381,11 +381,7 @@ class AppointmentPatchTest(TestBase):
         db.session.commit()
         event = Event.query.first()
         event_url = event.url
-        start = dt.datetime(year=2020,
-                            month=3,
-                            day=2,
-                            hour=9,
-                            tzinfo=dt.timezone.utc)
+        start = dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=30)
         add_appointment(event_id=event.id,
                         participants=[create_participant()],
                         start=start,
@@ -419,11 +415,7 @@ class AppointmentPatchTest(TestBase):
         db.session.commit()
         event = Event.query.first()
         event_url = event.url
-        start = dt.datetime(year=2020,
-                            month=3,
-                            day=2,
-                            hour=9,
-                            tzinfo=dt.timezone.utc)
+        start = dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=30)
         add_appointment(event_id=event.id,
                         participants=[create_participant()],
                         start=start,
@@ -439,6 +431,7 @@ class AppointmentPatchTest(TestBase):
                                   }),
                                   content_type='application/json')
 
+        print(json.loads(response.data.decode()))
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data.decode())
@@ -458,11 +451,7 @@ class AppointmentPatchTest(TestBase):
         db.session.commit()
         event = Event.query.first()
         event_url = event.url
-        start = dt.datetime(year=2020,
-                            month=3,
-                            day=2,
-                            hour=9,
-                            tzinfo=dt.timezone.utc)
+        start = dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=30)
         add_appointment(event_id=event.id,
                         participants=[create_participant()],
                         start=start)
@@ -495,11 +484,7 @@ class AppointmentPatchTest(TestBase):
         db.session.commit()
         event = Event.query.first()
         event_url = event.url
-        start = dt.datetime(year=2020,
-                            month=3,
-                            day=2,
-                            hour=9,
-                            tzinfo=dt.timezone.utc)
+        start = dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=30)
         add_appointment(event_id=event.id,
                         participants=[create_participant()],
                         start=start,
@@ -532,11 +517,7 @@ class AppointmentPatchTest(TestBase):
         db.session.commit()
         event = Event.query.first()
         event_url = event.url
-        start = dt.datetime(year=2020,
-                            month=3,
-                            day=2,
-                            hour=9,
-                            tzinfo=dt.timezone.utc)
+        start = dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=30)
         add_appointment(event_id=event.id,
                         participants=[create_participant()],
                         start=start)
