@@ -24,6 +24,31 @@ class ConfirmationPage extends Component {
         console.log(date);
     }
 
+    handleConfirmedApt = () => {
+        // /users/{public_id}/events/{event_url}
+        const { public_id, eventLink, date } = this.props.match.params; // get params from url
+        fetch(`/users/${public_id}/events/${eventLink}/appointments`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+            ,body: JSON.stringify({
+                    start: date,
+                    comments: this.state.comment,
+                    participants: {
+                        name: this.state.name,
+                        email: this.state.email
+                    }
+            })
+            })
+            .then(data => data.json())
+            .then((calendarData) => {
+                // console.log('calendar data', calendarData);
+                this.setState({ availability: calendarData });
+            })
+            .catch(err => (err));
+    }
+
     validate = () => {
         let isError = false;
         const errors = {
@@ -58,28 +83,32 @@ class ConfirmationPage extends Component {
 
     //method: handles solo-event creation/submit
     handleFormSubmit = (e) => {
-
         e.preventDefault();
+        const { public_id, eventLink, date } = this.props.match.params; // get params from url
         const err = this.validate(); // validate user input
         if(!err) {
-            // fetch(``, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'X-access-token': this.props.token
-            //     },
-            //     body: JSON.stringify({
+        fetch(`/users/${public_id}/events/${eventLink}/appointments`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+            ,body: JSON.stringify({
+                    start: date,
+                    comments: this.state.comment,
+                    participant: {
+                        name: this.state.name,
+                        email: this.state.email
+                    }
+            })
+            })
+            .then(data => data.json())
+            .then((calendarData) => {
+                console.log('calendar data', calendarData);
+                this.setState({ availability: calendarData });
+                this.props.history.push(`/${public_id}/${eventLink}/invitees/${date}`);
+            })
+            .catch(err => (err));
             
-            // })
-            // })
-            // .then(data => data.json())
-            // .then((data) => {
-                console.log(`${this.state.name} ${this.state.email} ${this.state.comment}`);
-            // })
-            // .catch(err => (err));
-            const { public_id, eventLink, date } = this.props.match.params; // get params from url
-            const appointmentId = 'a89s7f8as7fxzwrxw'; // should get back from sucess
-            this.props.history.push(`/${public_id}/${eventLink}/invitees/${appointmentId}`)
         }
     }
 

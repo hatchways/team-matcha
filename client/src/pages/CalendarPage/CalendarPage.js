@@ -28,41 +28,8 @@ class CalendarPage extends Component {
     }
 
     componentDidMount(){
-        const availability = {
-            "2020-03-01": [],
-            "2020-03-02": [{"hour": 12, "minute": 0}],
-            "2020-03-03": [{"hour": 12, "minute": 0}],
-            "2020-03-04": [{"hour": 12, "minute": 0}],
-            "2020-03-05": [{"hour": 12, "minute": 0}],
-            "2020-03-06": [{"hour": 12, "minute": 0}],
-            "2020-03-07": [],
-            "2020-03-08": [],
-            "2020-03-09": [],
-            "2020-03-10": [],
-            "2020-03-11": [],
-            "2020-03-12": [],
-            "2020-03-13": [],
-            "2020-03-14": [],
-            "2020-03-15": [],
-            "2020-03-16": [{"hour": 12, "minute": 0}],
-            "2020-03-17": [{"hour": 12, "minute": 0}],
-            "2020-03-18": [{"hour": 12, "minute": 0}],
-            "2020-03-19": [{"hour": 12, "minute": 0}],
-            "2020-03-20": [{"hour": 12, "minute": 0}],
-            "2020-03-21": [],
-            "2020-03-22": [],
-            "2020-03-23": [{"hour": 12, "minute": 0}],
-            "2020-03-24": [],
-            "2020-03-25": [],
-            "2020-03-26": [],
-            "2020-03-27": [],
-            "2020-03-28": [],
-            "2020-03-29": [],
-            "2020-03-30": [{"hour": 12, "minute": 0}],
-            "2020-03-31": [{"hour": 12, "minute": 0}]
-        }
-        // fetch event availability days and timeslots from server
-        this.setState({ availability }); // set initial time slots if available
+        this.handleFetchEvent();
+        this.handleFetchCalendar();
     }
 
     handleFetchEvent = () => {
@@ -78,6 +45,24 @@ class CalendarPage extends Component {
             .then(data => data.json())
             .then((eventData) => {
                 console.log(eventData);
+            })
+            .catch(err => (err));
+    }
+
+    handleFetchCalendar = () => {
+        // /users/{public_id}/events/{event_url}
+        const { public_id, eventLink } = this.props.match.params; // get params from url
+        fetch(`/users/${public_id}/events/${eventLink}/calendar`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                // 'X-access-token': token
+            }
+            })
+            .then(data => data.json())
+            .then((calendarData) => {
+                // console.log('calendar data', calendarData);
+                this.setState({ availability: calendarData });
             })
             .catch(err => (err));
     }
@@ -112,7 +97,6 @@ class CalendarPage extends Component {
 
     // method: disables days
     handleDisableDates = (date) => {
-        console.log(date);
         const days = disableDays(this.state.availability);
         const dateFound = days.find((dayStr) => {
             return date.format('YYYY-MM-DD') === dayStr;
