@@ -72,7 +72,6 @@ class SoloEventPage extends Component {
             })
             .then(data => data.json())
             .then((data) => {
-                console.log('user details inside solo', data);
                 this.setState({userDetails: {...data}}, console.log(this.state));
             })
             .catch(err => (err));
@@ -89,7 +88,6 @@ class SoloEventPage extends Component {
             })
             .then(data => data.json())
             .then((event) => {
-                console.log(event)
                 let duration = '';
                 if(event.duration === 15 || event.duration === 30
                     || event.duration === 45 || event.duration === 60){
@@ -111,16 +109,10 @@ class SoloEventPage extends Component {
                     eventEnd: event.availability.end,
                     locationDropDownField: event.location.length > 0 ? event.location : 'Add a location',
                     daysAvl: {
-                        // ...event.availability.days,
-                        sunday: event.availability.days.sunday,
-                        monday: event.availability.days.monday,
-                        tuesday: event.availability.days.tuesday,
-                        wednesday: event.availability.days.wednesday,
-                        thursday: event.availability.days.thursday,
-                        friday: event.availability.days.friday,
-                        saturday: event.availability.days.saturday
+                        ...this.state.daysAvl,
+                        ...event.availability.days,
                     },
-                }, () => console.log('state update', this.state));
+                });
             })
             .catch(err => (err));
     }
