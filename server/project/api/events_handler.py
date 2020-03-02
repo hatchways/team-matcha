@@ -206,7 +206,7 @@ class EventDetail(Resource):
             return {"message": "Success"}, 200
         return {"error": "Event not found"}, 404
 
-    @api.marshal_with(event_input_output, skip_none=True)
+    @api.marshal_with(event_input_output)
     def get(self, public_id, event_url):
 
         response = {}
@@ -215,9 +215,8 @@ class EventDetail(Resource):
             event.availability.start = event.availability.start.hour
             event.availability.end = event.availability.end.hour
             event.color = '#' + event.color
-            result = marshal(event, event_input_output, skip_none=True)
 
-            return result, 200
+            return event, 200
         else:
             response['error'], code = "Event not found", 404
         return response, code

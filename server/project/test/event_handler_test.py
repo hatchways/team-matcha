@@ -391,6 +391,27 @@ class EventDetailGet(TestBase):
 
         self.assertEqual(data['url'], event.url)
 
+    def test_event_marshal(self):
+        user = add_user()
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+        start = 6
+        sunday = True
+        availability = create_availability(start=dt.time(start),
+                                           sunday=sunday)
+        url = 'funnyUrl'
+        color = '#7851a9'
+        add_event(user.id, availability, url=url, color=color.lstrip('#'))
+        db.session.commit()
+        response = self.api.get(f'/users/{user.public_id}/events/{url}',
+                                headers={'x-access-token': auth_token},
+                                content_type='application/json')
+        data = json.loads(response.data.decode())
+        self.assertEqual(data['url'], url)
+        self.assertEqual(data['availability']['start'], start)
+        self.assertEqual(data['color'], color)
+        self.assertEqual(data['availability']['days']['sunday'], sunday)
+
 
 class EventDetailDelete(TestBase):
     def test_delete_event_success(self):
