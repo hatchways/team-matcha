@@ -148,6 +148,9 @@
 // Extra small devices (portrait phones, less than 576px)
 @media (max-width: 575.98px) {
     .header{
+        &__logo{
+            font-size: 1.6rem !important;
+        }
         &__container{
             padding: 8px 16px;
             width: 100%;            
