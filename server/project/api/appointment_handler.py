@@ -3,17 +3,36 @@ from flask_restx import Resource, fields, marshal
 from project import db, api
 from project.models.appointment import Appointment, add_appointment
 from project.models.participant import Participant, create_participant
+from project.models.availability import Availability
 from project.models.event import Event
 from project.models.user import User
 from project.decorators import token_required
 from project.error_handlers import *
 import datetime as dt
+from dateutil import parser
+import calendar
+import pytz
+from sqlalchemy import inspect
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
 
 
 NEXT_X_DAYS = 90  # TODO remove placeholder after calendar PR is implemented
 
 appointment_blueprint = Blueprint('appointments', __name__)
+
+
+def participant_exists(name: str, email: str) -> Participant:
+    """
+    Checks whether the Participant already exists and returns it otherwise
+    creates a new participant returns that participant.
+    :param name: Name of the participant
+    :param email: Email of the participant
+    :return: a Participant
+    """
+    participant = Participant.query.filter_by(email=email).first()
+    if not participant:
+        participant = create_participant(name=name, email=email)
+    return participant
 
 
 def start_within_next_x_days(start: str, next_x_days=NEXT_X_DAYS) -> bool:
@@ -25,47 +44,102 @@ def start_within_next_x_days(start: str, next_x_days=NEXT_X_DAYS) -> bool:
     generated for
     :return: Whether the appointment is within the NEXT_X_DAYS
     """
-    return dt.datetime.fromisoformat(start) <=\
-        dt.datetime.utcnow() + dt.timedelta(days=next_x_days)
+    return parser.isoparse(start) <= \
+        dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=next_x_days)
+
+
+def appointment_availability_allowed(availability: Availability,
+                                     duration: int,
+                                     start: dt.datetime) -> bool:
+    """
+    Checks and returns whether the appointment is available.
+    :param availability: the availability for the event
+    :param duration: the duration of the event
+    :param start: the time to schedule the appointment
+    :return: whether the time is allowed
+    """
+    weekday = calendar.day_name[start.weekday()].lower()
+    if not availability.__getattribute__(weekday):
+        allowed = False
+    elif start.time() < availability.start or \
+            (start + dt.timedelta(minutes=duration)).time() > availability.end:
+        allowed = False
+    else:
+        allowed = True
+    return allowed
+
+
+def edit_appointment(params, appointment: Appointment) -> Appointment:
+    """
+    Edits the appointment with the provided data and returns the edited
+    appointment.
+    :param params: the data used to edit the appointment
+    :param appointment: the appointment to be edited
+    :return: the edited appointment
+    """
+    appointment_fields = inspect(Appointment).columns.keys()
+    for key, value in params.items():
+        if key in appointment_fields:
+            setattr(appointment, key, value)
+    return appointment
 
 
 participant_input = api.model(
     'Participants', {
         'name': fields.String(description='The name of the participant',
-                              required=True, example='John Doe', min_length=1,
+                              required=True,
+                              example='John Doe',
+                              min_length=1,
                               max_length=128),
         'email': fields.String(description='The email of the participant',
-                               required=True, example='johndoe@email.com',
-                               min_length=5, max_length=128)})
+                               required=True,
+                               example='johndoe@email.com',
+                               min_length=5,
+                               max_length=128)})
 appointment_input = api.model(
     'Appointment', {
         'start': fields.DateTime(description='The start time of the '
                                              'appointment.',
-                                 required=True, example='2020-01-20T08:30:00'),
+                                 required=True,
+                                 example='2020-01-20T08:30:00Z'),
         'comments': fields.String(description='Any comments to send to the '
                                               'event creator',
                                   example='Look forward to seeing you!',
                                   max_length=1024),
-        'participant': fields.Nested(participant_input, required=True)})
+        'participant': fields.Nested(participant_input,
+                                     required=True)})
 participant_output = api.model(
     'Participants', {
         'name': fields.String(description='The name of the participant',
-                              required=True, example='John Doe', min_length=1,
+                              required=True,
+                              example='John Doe',
+                              min_length=1,
                               max_length=128),
         'email': fields.String(description='The email of the participant',
-                               required=True, example='johndoe@email.com',
-                               min_length=5, max_length=128)})
-appointment_output = api.model(
+                               required=True,
+                               example='johndoe@email.com',
+                               min_length=5,
+                               max_length=128)})
+appointment_patch = api.model(
+    'Appointment', {
+        'start': fields.DateTime(description='The start time of the '
+                                             'appointment.',
+                                 example='2020-01-20T08:30:00Z'),
+        'status': fields.Boolean(description='Whether the appointment is still '
+                                             'active.')})
+appointments_output = api.model(
     'Appointment', {
         'start': fields.DateTime(description='The start time of the '
                                              'appointment',
-                                 required=True, example='2020-01-20T08:30:00'),
+                                 required=True,
+                                 example='2020-01-20T08:30:00Z'),
         'end': fields.DateTime(description='The end time of the appointment',
-                               required=True, example='2020-01-20T09:30:00'),
+                               required=True,
+                               example='2020-01-20T09:30:00Z'),
         'created': fields.DateTime(description='When the appointment was '
                                                'created',
                                    required=True,
-                                   example='2020-01-25T09:30:00'),
+                                   example='2020-01-25T09:30:00Z'),
         'status': fields.Boolean(description='Whether the appointment is still '
                                              'active'),
         'comments': fields.String(description='Any comments to send to the '
@@ -74,12 +148,33 @@ appointment_output = api.model(
                                   max_length=1024),
         'participants': fields.List(fields.Nested(participant_output,
                                                   required=True))})
+appointment_output = api.model(
+    'Appointment', {
+        'start': fields.DateTime(description='The start time of the '
+                                             'appointment',
+                                 required=True,
+                                 example='2020-01-20T08:30:00Z'),
+        'end': fields.DateTime(description='The end time of the appointment',
+                               required=True,
+                               example='2020-01-20T09:30:00Z'),
+        'created': fields.DateTime(description='When the appointment was '
+                                               'created',
+                                   required=True,
+                                   example='2020-01-25T09:30:00Z'),
+        'status': fields.Boolean(description='Whether the appointment is still '
+                                             'active'),
+        'comments': fields.String(description='Any comments to send to the '
+                                              'event creator',
+                                  example='Look forward to seeing you!',
+                                  max_length=1024),
+        'participants': fields.Nested(participant_output,
+                                      required=True)})
 
 
 @api.route('/users/<public_id>/events/<event_url>/appointments')
 class Appointments(Resource):
     @token_required
-    @api.marshal_with(appointment_output)
+    @api.marshal_with(appointments_output)
     def get(self, public_id, event_url, current_user=None):
         """Returns all of the appointments for the event."""
         if current_user.public_id != public_id:
@@ -101,14 +196,65 @@ class Appointments(Resource):
         event = db.session.query(Event). \
             filter(Event.url == event_url, User.public_id == public_id). \
             first()
-        participant = create_participant(payload['participant']['name'],
+
+        if not appointment_availability_allowed(
+                event.availability,
+                event.duration,
+                parser.isoparse(payload['start'])):
+            raise AppointmentNotAvailableError
+
+        participant = participant_exists(payload['participant']['name'],
                                          payload['participant']['email'])
         add_appointment(
             event_id=event.id,
             participants=[participant],
-            start=payload['start'],
-            end=dt.datetime.fromisoformat(payload['start']) +
+            start=parser.isoparse(payload['start']),
+            end=parser.isoparse(payload['start']) +
             dt.timedelta(minutes=event.duration),
             comments=payload['comments'])
         db.session.commit()
         return {'message': 'success'}, 201
+
+
+@api.route('/users/<public_id>/events/<event_url>/appointments/<iso_start>')
+class AppointmentDetail(Resource):
+    @api.marshal_with(appointment_output, skip_none=True)
+    def get(self, public_id, event_url, iso_start):
+        """Returns the details for a specific appointment."""
+        appointment = db.session.query(Appointment).\
+            filter(User.public_id == public_id,
+                   Event.url == event_url,
+                   Appointment.start ==
+                   parser.isoparse(iso_start)).\
+            first()
+
+        if appointment is None:
+            raise AppointmentNotFoundError
+        else:
+            response = appointment
+            code = 200
+
+        return response, code
+
+    @api.expect(appointment_patch, validate=True)
+    def patch(self, public_id, event_url, iso_start):
+        """Modifies the specific appointment."""
+        appointment = db.session.query(Appointment).\
+            filter(User.public_id == public_id,
+                   Event.url == event_url,
+                   Appointment.start ==
+                   parser.isoparse(iso_start)).\
+            first()
+
+        if appointment is None:
+            raise AppointmentNotFoundError
+        elif appointment.end <= dt.datetime.now(dt.timezone.utc):
+            raise AppointmentEndedError
+        elif appointment.start <= dt.datetime.now(dt.timezone.utc):
+            raise EditDuringAppointmentError
+        else:
+            data = marshal(api.payload, appointment_patch, skip_none=True)
+            edit_appointment(data, appointment)
+            db.session.commit()
+
+        return {'message': 'success'}, 200
