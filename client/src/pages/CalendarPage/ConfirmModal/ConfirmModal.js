@@ -4,18 +4,18 @@ import { Box, Button, Typography } from '@material-ui/core';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 
-const confirmModal = ({ handleConfirmation, handleConfirmModal, timeSlotSelected }) => (
+const confirmModal = ({ username, name, duration, location, handleConfirmation, handleConfirmModal, timeSlotSelected }) => (
     <Box className="confirmModal">
         <Box boxShadow={3} className="confirmModal__window">
             <Box className="confirmModal__window--header">
                 Confirm Meeting Time
             </Box>
             <Box className="confirmModal__window--col">
-                <Typography variant="body1" className="confirmModal__window--col--text--username">Gerardo P.</Typography>
-                <Typography variant="h5" className="confirmModal__window--col--text--eventname">15min Meeting</Typography>
-                <Typography variant="body2" className="confirmModal__window--col--text--duration"><ScheduleIcon />&nbsp;15min</Typography>
-                <Typography variant="body2" className="confirmModal__window--col--text--location"><LocationOnIcon />&nbsp;Los Angeles</Typography>
-                <Typography variant="body2" className="confirmModal__window--col--text">&nbsp;@{timeSlotSelected}</Typography>
+                <Typography variant="body1" className="confirmModal__window--col--text--username">{username}</Typography>
+                <Typography variant="h5" className="confirmModal__window--col--text--eventname">{name}</Typography>
+                <Typography variant="body2" className="confirmModal__window--col--text--duration"><ScheduleIcon />&nbsp;{duration}min</Typography>
+                <Typography variant="body2" className="confirmModal__window--col--text--location"><LocationOnIcon />&nbsp;{location}</Typography>
+                <Typography variant="body2" className="confirmModal__window--col--text--time">&nbsp;@{timeSlotSelected}</Typography>
             </Box>
             <Box className="confirmModal__window--footer">
                 <Button 

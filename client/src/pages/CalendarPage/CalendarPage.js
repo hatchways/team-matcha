@@ -23,45 +23,55 @@ class CalendarPage extends Component {
             timeSlotSelected: '',
             timeSlotSelected24hr: '',
             showConfirmModal: false,
-            showTimeSlotSlider: false
+            showTimeSlotSlider: false,
+            event: {
+                owner: '',
+                name: '',
+                duration: '',
+                location: ''
+            }
         }
     }
 
-    componentDidMount(){
-        this.handleFetchEvent();
+    componentWillMount(){
         this.handleFetchCalendar();
+        this.handleFetchEvent();
     }
 
     handleFetchEvent = () => {
-        // /users/{public_id}/events/{event_url}
         const { public_id, eventLink } = this.props.match.params; // get params from url
         fetch(`/users/${public_id}/events/${eventLink}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                // 'X-access-token': token
             }
             })
             .then(data => data.json())
             .then((eventData) => {
                 console.log(eventData);
+                this.setState({
+                    event: {
+                        ...this.state.event, 
+                            owner: public_id,
+                            name: eventData.name,
+                            duration: eventData.duration,
+                            location: eventData.location.length > 0 ? eventData.location : 'N/A'
+                    }
+                })
             })
             .catch(err => (err));
     }
 
     handleFetchCalendar = () => {
-        // /users/{public_id}/events/{event_url}
         const { public_id, eventLink } = this.props.match.params; // get params from url
         fetch(`/users/${public_id}/events/${eventLink}/calendar`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                // 'X-access-token': token
             }
             })
             .then(data => data.json())
             .then((calendarData) => {
-                // console.log('calendar data', calendarData);
                 this.setState({ availability: calendarData });
             })
             .catch(err => (err));
@@ -142,6 +152,10 @@ class CalendarPage extends Component {
                             timezonesArr={this.state.timezonesArr}
                             handleUserInput={this.handleUserInput}
                             handleCloseSlider={this.handleCloseSlider}
+                            username={this.state.event.owner}
+                            name={this.state.event.name}
+                            duration={this.state.event.duration}
+                            location={this.state.event.location}
                         />
                         <TimeSlotMobileList 
                             date={this.state.date} 
@@ -158,6 +172,10 @@ class CalendarPage extends Component {
                         timezoneName={this.state.timezoneName}
                         timezonesArr={this.state.timezonesArr}
                         handleUserInput={this.handleUserInput}
+                        username={this.state.event.owner}
+                        name={this.state.event.name}
+                        duration={this.state.event.duration}
+                        location={this.state.event.location}
                     />
                     <Calendar 
                         date={this.state.date}
@@ -176,6 +194,10 @@ class CalendarPage extends Component {
                         timeSlotSelected={this.state.timeSlotSelected} 
                         handleConfirmModal={this.handleConfirmModal}
                         handleConfirmation={this.handleConfirmation}
+                        username={this.state.event.owner}
+                        name={this.state.event.name}
+                        duration={this.state.event.duration}
+                        location={this.state.event.location}
                         /> : null }
             </Box>
         )

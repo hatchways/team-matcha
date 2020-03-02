@@ -15,17 +15,47 @@ class ConfirmationPage extends Component {
             emailError: '',
             name: '',
             nameError: '',
-            comment: ''
+            comment: '',
+            event: {
+                owner: '',
+                name: '',
+                duration: '',
+                location: ''
+            }
         }
     }
 
     componentDidMount(){
         const { date } = this.props.match.params;
         console.log(date);
+        this.handleFetchEvent();
+    }
+
+    handleFetchEvent = () => {
+        const { public_id, eventLink } = this.props.match.params; // get params from url
+        fetch(`/users/${public_id}/events/${eventLink}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+            })
+            .then(data => data.json())
+            .then((eventData) => {
+                console.log(eventData);
+                this.setState({
+                    event: {
+                        ...this.state.event, 
+                            owner: public_id,
+                            name: eventData.name,
+                            duration: eventData.duration,
+                            location: eventData.location.length > 0 ? eventData.location : 'N/A'
+                    }
+                })
+            })
+            .catch(err => (err));
     }
 
     handleConfirmedApt = () => {
-        // /users/{public_id}/events/{event_url}
         const { public_id, eventLink, date } = this.props.match.params; // get params from url
         fetch(`/users/${public_id}/events/${eventLink}/appointments`, {
             method: 'POST',
@@ -129,10 +159,10 @@ class ConfirmationPage extends Component {
                     <div className="ribbon ribbon-top-right"><span>Powered By<br/>CalendApp</span></div>
                     <Box className="confirmationPage__event">
                         <Button onClick={() => this.props.history.goBack()} className="confirmationPage__event--btn"><ArrowBackIcon /></Button>
-                        <Typography variant="body1" className="confirmationPage__event--username">Gerardo P.</Typography>
-                        <Typography variant="h5" className="confirmationPage__event--eventname">15min Meeting</Typography>
-                        <Typography variant="body2" className="confirmationPage__event--duration"><ScheduleIcon />&nbsp;15min</Typography>
-                        <Typography variant="body2" className="confirmationPage__event--location"><LocationOnIcon />&nbsp;Los Angeles</Typography>
+                        <Typography variant="body1" className="confirmationPage__event--username">{this.state.event.owner}</Typography>
+                        <Typography variant="h5" className="confirmationPage__event--eventname">{this.state.event.name}</Typography>
+                        <Typography variant="body2" className="confirmationPage__event--duration"><ScheduleIcon />&nbsp;{this.state.event.duration}min</Typography>
+                        <Typography variant="body2" className="confirmationPage__event--location"><LocationOnIcon />&nbsp;{this.state.event.location}</Typography>
                         <Typography variant="body2" className="confirmationPage__event--date"><EventIcon/>&nbsp;{userEventScheduleFor}</Typography>
                     </Box>
                     <form onSubmit={this.handleFormSubmit} className="confirmationPage__form">

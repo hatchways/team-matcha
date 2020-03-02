@@ -48,7 +48,12 @@
                 }
                 &--location{
                     @include applyFlex(center, flex-start);
+                    margin-bottom: 10px !important;
                     color: $light-gray !important;
+                }
+                &--time{
+                    color: $primary !important;
+                    font-weight: $bold-text;
                 }
             }
         }
