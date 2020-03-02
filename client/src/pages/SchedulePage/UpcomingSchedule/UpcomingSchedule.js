@@ -40,6 +40,21 @@ class UpcomingSchedule extends Component {
     componentDidMount(){
         console.log('fetch upcoming schedule from the server!');
     }
+
+    handleFetchAppts = () => {// should render all events for the user
+        // fetch(`/users/${public_id}/events/${event_url}/appointments`, {
+        //     method: 'GET',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'X-access-token': token
+        //     }
+        //     })
+        //     .then(data => data.json())
+        //     .then((apptData) => {
+        //         // console.log('appointment data', apptData);
+        //     })
+        //     .catch(err => (err));
+    }
     
     render(){
 
