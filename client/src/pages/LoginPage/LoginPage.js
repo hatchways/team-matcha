@@ -1,7 +1,6 @@
 // importing modules
 import React from 'react';
 import { Box, Container, Typography } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import { tokenCreated, tokenExpires, setIsAuth, setToken, setUserId } from '../../Auth/Auth';
 // importing compnents
 import GoogleLogin from 'react-google-login';
@@ -46,7 +45,7 @@ class LoginPage extends React.Component {
                 <Box boxShadow={3} className="login__container">
                     <Box className="login__container--header">
                         <Typography className="login__title" variant="h4">
-                            Log into your account
+                            Log into <br/>your account
                         </Typography>
                     </Box>
                     <GoogleLogin 
@@ -61,14 +60,6 @@ class LoginPage extends React.Component {
                     className="login__btn"
                     />
                     <Box className="login__container--footer">
-                        <Typography variant="body1" className="login__container--footer--text">
-                            Don't have an account?&nbsp;
-                            <Link 
-                                to="/signup" 
-                                className="login__container--col--link"
-                            >Sign Up
-                            </Link>
-                        </Typography>
                     </Box>
                 </Box>
             </Container>

@@ -1,0 +1,156 @@
+.upgrade{
+    @include applyFlex(center, center, column);
+    width: 100%;
+    &__container{
+        @include applyFlex(center, center, column);
+        width: 80%;
+    }
+    &__header{
+        @include applyFlex(center, center, column);
+        padding: 32px 16px;
+        text-align: center;
+        width: 100%;
+        &--title{
+            color: black;
+            font-weight: $bold-text;
+        }
+        &--text{
+            color: $light-gray;
+        }
+    }
+
+    &__slots{
+        @include applyFlex(center, center);
+        padding: 12px 16px;
+        width: 100%;
+        &--slot{
+            background-color: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 25px;
+            width: 40%;
+            &--col{
+                border-bottom: solid 1px $off-black;
+                padding-top: 35px;
+                padding-bottom: 35px;
+                text-align: center;
+                width: 100%;
+            }
+            &--price{
+                font-weight: $bold-text;
+            }
+            &--title{
+                font-weight: $bold-text;
+                &--prem{
+                    color: #651fff;
+                }
+                &--pro{
+                    color: #4caf50;
+                }
+            }
+            &--text{
+                @include applyFlex(center, flex-start);
+                color: $light-gray;
+            }
+            &--btn{
+                color: $primary !important;
+                border: solid 1px $primary !important;
+                border-radius: 5px !important;
+                margin-top: 20px !important;
+                padding: 12px 48px !important;
+                &:hover{
+                    background-color: $primary !important;
+                    color: #fff !important;
+                }
+            }
+            &--icon{
+                color: $primary;
+            }
+            &--footer{
+                height: 150px;
+                padding-left: 60px;
+                padding-top: 30px;
+                width: 100%;
+                
+            }
+        }
+    }
+}
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) and (orientation: landscape) {
+    .upgrade{
+        &__container{
+            width: 95%;
+        }
+        &__slots{
+            &--slot{
+                margin: 10px;
+                flex: 1;
+                &--footer{
+                    padding-left: 5px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 575.98px) {
+    .upgrade{
+        &__container{
+            width: 95%;
+        }
+        &__slots{
+            @include applyFlex(center, center, column);
+            &--slot{
+                margin: 10px;
+                width: 100%;
+                &--footer{
+                    padding-left: 25px;
+                }
+            }
+        }
+    }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .upgrade{
+        &__container{
+            width: 95%;
+        }
+        &__slots{
+            &--slot{
+                width: 50%;
+                &--footer{
+                    padding-left: 25px;
+                }
+            }
+        }
+    }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .upgrade{
+        &__container{
+            width: 90%;
+        }
+        &__slots{
+            &--slot{
+                &--footer{
+                    padding-left: 30px;
+                }
+            }
+        }
+    }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .upgrade{
+        &__container{
+            width: 90%;
+        }
+    }
+}
