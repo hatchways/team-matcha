@@ -163,9 +163,9 @@ class SoloEventPage extends Component {
             errors.eventLinkError = "Event url already exists, try another.";
         }
 
-        if(this.state.eventDuration === 'custom' && (this.state.eventDurationCustom <= 0 ||  this.state.eventDurationCustom === '')) {
+        if(this.state.eventDuration === 'custom' && (this.state.eventDurationCustom <= 15 ||  this.state.eventDurationCustom === '')) {
             isError = true;
-            errors.eventDurationCustomError = "Event duration cannot be 0.";
+            errors.eventDurationCustomError = "Event duration must be atleast 15.";
         }
 
         if(this.state.eventDuration === 'custom' && this.state.eventDurationCustom > 720) {
