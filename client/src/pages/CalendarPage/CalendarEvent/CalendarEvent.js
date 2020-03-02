@@ -5,14 +5,14 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import PublicIcon from '@material-ui/icons/Public';
 
-const CalendarEvent = ({ username, eventName, eventDuration, eventLocation, timezoneName, timezonesArr, handleUserInput, handleCloseSlider }) => {
+const CalendarEvent = ({ username, name, duration, location, timezoneName, timezonesArr, handleUserInput, handleCloseSlider }) => {
     return (
     <Box className="calendarPage__event">
         <Button className="calendarPage__event--btn"><ArrowBackIcon /></Button>
-        <Typography variant="body1" className="calendarPage__event--username">John Doe</Typography>
-        <Typography variant="h5" className="calendarPage__event--eventname">15min Meeting</Typography>
-        <Typography variant="body2" className="calendarPage__event--duration"><ScheduleIcon />&nbsp;15min</Typography>
-        <Typography variant="body2" className="calendarPage__event--location"><LocationOnIcon />&nbsp;Los Angeles</Typography>
+        <Typography variant="body1" className="calendarPage__event--username">{username}</Typography>
+        <Typography variant="h5" className="calendarPage__event--eventname">{name}</Typography>
+        <Typography variant="body2" className="calendarPage__event--duration"><ScheduleIcon />&nbsp;{duration}min</Typography>
+        <Typography variant="body2" className="calendarPage__event--location"><LocationOnIcon />&nbsp;{location}</Typography>
         <Box className="calendarPage__select--wrap">
             <PublicIcon className="calendarPage__event--location"/>&nbsp;
             <Box className="calendarPage__select">
