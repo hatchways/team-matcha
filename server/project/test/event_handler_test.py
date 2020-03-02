@@ -247,20 +247,21 @@ class EventsGetTest(TestBase):
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
         start = 6
-        availability = create_availability(start=dt.time(start))
+        sunday = True
+        availability = create_availability(start=dt.time(start),
+                                           sunday=sunday)
         url = 'funnyUrl'
         color = '#7851a9'
         add_event(user.id, availability, url=url, color=color.lstrip('#'))
         db.session.commit()
-
         response = self.api.get(f'/users/{user.public_id}/events',
                                 headers={'x-access-token': auth_token},
                                 content_type='application/json')
         data = json.loads(response.data.decode())
-
         self.assertEqual(data[0]['url'], url)
         self.assertEqual(data[0]['availability']['start'], start)
         self.assertEqual(data[0]['color'], color)
+        self.assertEqual(data[0]['availability']['days']['sunday'], sunday)
 
 
 class EventDetailPut(TestBase):
