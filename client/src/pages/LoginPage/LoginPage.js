@@ -1,7 +1,6 @@
 // importing modules
 import React from 'react';
 import { Box, Container, Typography } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import { tokenCreated, tokenExpires, setIsAuth, setToken, setUserId } from '../../Auth/Auth';
 // importing compnents
 import GoogleLogin from 'react-google-login';

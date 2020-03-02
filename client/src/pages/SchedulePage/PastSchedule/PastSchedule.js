@@ -1,23 +1,38 @@
 // importing modules
 import React, { Component } from 'react';
 import { Box, Typography } from '@material-ui/core';
-// import moment from 'moment';
+import moment from 'moment';
 // importing components
 import ScheduleNav from '../ScheduleNav/ScheduleNav';
 import NoScheduledItems from '../NoScheduledItems/NoScheduledItems';
+import PastScheduleItem from '../PastSchedule/PastScheduleItem/PastScheduleItem';
 
 class PastSchedule extends Component {
     constructor(props){
         super(props);
         this.state = {
-            pastSchedule: [
+            pastSchedule: [ // upcoming events test data
                 // {
-                //     eventDate: moment(),
+                //     eventDate: moment().format('dddd MMMM Do'),
                 //     eventName: '15 minute meeting',
                 //     eventType: 'One-on-One',
                 //     eventInvitee: 'John-doe',
                 //     eventInviteeEmail: 'john-doe@gmail.com',
-                //     eventOriginallyScheduled: 'February 14, 2020'
+                //     eventOriginallyScheduled: 'February 14, 2020',
+                //     eventInviteeTimezone: 'Pacific Time - US & Canada',
+                //     eventColor: '#651fff',
+                //     eventScheduledTime: '10:00am - 10:15am'
+                // },
+                // {
+                //     eventDate: moment().format('dddd MMMM Do'),
+                //     eventName: '30 minute meeting',
+                //     eventType: 'One-on-One',
+                //     eventInvitee: 'Jane-doe',
+                //     eventInviteeEmail: 'jane-doe@gmail.com',
+                //     eventOriginallyScheduled: 'February 16, 2020',
+                //     eventInviteeTimezone: 'Pacific Time - US & Canada',
+                //     eventColor: '#43a047',
+                //     eventScheduledTime: '11:00am - 11:30am'
                 // }
             ]
         };
@@ -42,7 +57,7 @@ class PastSchedule extends Component {
                     <Box className="pastSchedule__list">
                         {
                             pastSchedule.length > 0 
-                                ? null 
+                                ? pastSchedule.map((pastEvent, index) => <PastScheduleItem key={index} {...pastEvent} />)
                                 : <NoScheduledItems text="No Past Events"/>
                         }
                     </Box>
