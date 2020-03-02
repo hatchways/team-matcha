@@ -217,7 +217,7 @@ class AppointmentPostTest(TestBase):
             content_type='application/json')
 
         data1 = json.loads(response1.data.decode())
-        data2 = json.loads(response1.data.decode())
+        data2 = json.loads(response2.data.decode())
         self.assertEqual(response1.status_code, 201)
         self.assertEqual(data1['message'], 'success')
         self.assertEqual(response2.status_code, 201)
