@@ -21,7 +21,9 @@ class ConfirmationPage extends Component {
                 name: '',
                 duration: '',
                 location: ''
-            }
+            },
+            apptStart: '',
+            apptEnd: ''
         }
     }
 
@@ -32,7 +34,7 @@ class ConfirmationPage extends Component {
     }
 
     handleFetchEvent = () => {
-        const { public_id, eventLink } = this.props.match.params; // get params from url
+        const { public_id, eventLink, date } = this.props.match.params; // get params from url
         fetch(`/users/${public_id}/events/${eventLink}`, {
             method: 'GET',
             headers: {
@@ -49,7 +51,9 @@ class ConfirmationPage extends Component {
                             name: eventData.name,
                             duration: eventData.duration,
                             location: eventData.location.length > 0 ? eventData.location : 'N/A'
-                    }
+                    },
+                    apptStart: momentTZ(`${date}`).utcOffset(date).format('hh:mma'),
+                    apptEnd: momentTZ(`${date}`).utcOffset(date).add(eventData.duration,'m').format('hh:mma'),
                 })
             })
             .catch(err => (err));
@@ -149,7 +153,7 @@ class ConfirmationPage extends Component {
     };
 
     render(){
-        const userEventScheduleFor = momentTZ(`${this.props.match.params.date}`).utcOffset(this.props.match.params.date).format('hh:mma dddd MMMM Do YYYY Z'); // formats invitee meeting (local-time)
+        const userEventScheduleFor = momentTZ(`${this.props.match.params.date}`).utcOffset(this.props.match.params.date).format('dddd, MMMM Do, YYYY Z'); // formats invitee meeting (local-time)
         // const eventScheduledFor = momentTZ(this.props.match.params.date).format('hh:mma dddd MMMM Do YYYY Z'); // formats owner-original meeting (local-time)
         // console.log(eventScheduledFor);
         // console.log(userEventScheduleFor);
@@ -163,7 +167,7 @@ class ConfirmationPage extends Component {
                         <Typography variant="h5" className="confirmationPage__event--eventname">{this.state.event.name}</Typography>
                         <Typography variant="body2" className="confirmationPage__event--duration"><ScheduleIcon />&nbsp;{this.state.event.duration}min</Typography>
                         <Typography variant="body2" className="confirmationPage__event--location"><LocationOnIcon />&nbsp;{this.state.event.location}</Typography>
-                        <Typography variant="body2" className="confirmationPage__event--date"><EventIcon/>&nbsp;{userEventScheduleFor}</Typography>
+                        <Typography variant="body2" className="confirmationPage__event--date"><EventIcon/>&nbsp;{this.state.apptStart} - {this.state.apptEnd}, {userEventScheduleFor}</Typography>
                     </Box>
                     <form onSubmit={this.handleFormSubmit} className="confirmationPage__form">
                         <Box className="confirmationPage__form--header">Enter Details</Box>
