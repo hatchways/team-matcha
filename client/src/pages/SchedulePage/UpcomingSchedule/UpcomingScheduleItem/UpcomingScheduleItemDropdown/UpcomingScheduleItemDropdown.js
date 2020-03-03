@@ -1,4 +1,5 @@
 import React from 'react';
+import momentTZ from 'moment-timezone';
 import { Box, Button, Typography } from '@material-ui/core';
 
 const UpcomingScheduleItemDropdown = ({ eventInviteeEmail, eventOriginallyScheduled, eventInviteeTimezone }) => (
@@ -18,12 +19,12 @@ const UpcomingScheduleItemDropdown = ({ eventInviteeEmail, eventOriginallySchedu
             <Box className="upcomingSchedule__dropdown--text--wrap">
                 <Typography className="upcomingSchedule__dropdown--text">
                     INVITEE TIME ZONE<br />
-                    <span className="upcomingSchedule__dropdown--text--span">{eventInviteeTimezone}</span>
+                    <span className="upcomingSchedule__dropdown--text--span">{momentTZ(eventOriginallyScheduled).format('Z')}</span>
                 </Typography>
             </Box>
             <Box className="upcomingSchedule__dropdown--text--wrap">
                 <Typography className="upcomingSchedule__dropdown--text--italic">
-                    created {eventOriginallyScheduled}
+                    created {momentTZ(eventOriginallyScheduled).format('dddd, MMMM Do, YYYY')}
                 </Typography>
             </Box>
         </Box>

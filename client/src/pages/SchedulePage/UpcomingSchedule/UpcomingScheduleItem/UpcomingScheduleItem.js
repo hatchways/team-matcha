@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@material-ui/core';
+import momentTZ from 'moment-timezone';
 import UpcomingScheduleItemDropdown from './UpcomingScheduleItemDropdown/UpcomingScheduleItemDropdown';
 
-const UpcomingScheduleItem = ({ 
-    eventDate, eventScheduledTime, eventColor,
-    eventInvitee, eventInviteeEmail, eventName,
-    eventInviteeTimezone, eventOriginallyScheduled }) => {
+const UpcomingScheduleItem = ({ date, color, start, end, participants, event, inviteeEmail, created, timezone }) => {
     const [active, setToggle] = useState(false);
 
     const toggle = () => {
@@ -16,21 +14,21 @@ const UpcomingScheduleItem = ({
     <Box className="upcomingSchedule__item">
         <Box className="upcomingSchedule__item--date">
             <Typography variant="body1">
-                {eventDate}
+                {momentTZ(date).format('dddd, MMMM Do, YYYY')}
             </Typography>
         </Box>
         <Box className="upcomingSchedule__content">
             <Box className="upcomingSchedule__content--col1">
-                <Box className="upcomingSchedule__content--color" style={{ backgroundColor: eventColor }}></Box>
-                <Box className="upcomingSchedule__content--time">{ eventScheduledTime }</Box>
+                <Box className="upcomingSchedule__content--color" style={{ backgroundColor: event.color }}></Box>
+                <Box className="upcomingSchedule__content--time">{momentTZ(start).format('hh:mma')} - {momentTZ(end).format('hh:mma')}</Box>
             </Box>
             <Box className="upcomingSchedule__content--col2">
                 <Typography className="upcomingSchedule__content--text">
-                    {eventInvitee}<br/>
+                    {participants[0].name}<br/>
                     <span className="upcomingSchedule__content--text--span">
                     Event type:&nbsp;
                     </span>
-                    {eventName}
+                    {event.name}
                 </Typography>
             </Box>
             <button onClick={toggle} className="upcomingSchedule__content--btn">
@@ -40,9 +38,9 @@ const UpcomingScheduleItem = ({
         {
             active ? (
                 <UpcomingScheduleItemDropdown 
-                    eventInviteeEmail={eventInviteeEmail}
-                    eventOriginallyScheduled={eventOriginallyScheduled}
-                    eventInviteeTimezone={eventInviteeTimezone}
+                    eventInviteeEmail={participants[0].email}
+                    eventOriginallyScheduled={created}
+                    eventInviteeTimezone={timezone}
                 /> ) : null
         }
     </Box>
