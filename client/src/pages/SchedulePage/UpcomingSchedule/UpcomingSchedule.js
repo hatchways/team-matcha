@@ -6,34 +6,24 @@ import ScheduleNav from '../ScheduleNav/ScheduleNav';
 import NoScheduledItems from '../NoScheduledItems/NoScheduledItems';
 import UpcomingScheduleItem from '../UpcomingSchedule/UpcomingScheduleItem/UpcomingScheduleItem';
 
+/* {
+ *     eventDate: moment().format('dddd MMMM Do'),
+ *     eventName: '15 minute meeting',
+ *     eventType: 'One-on-One',
+ *     eventInvitee: 'John-doe',
+ *     eventInviteeEmail: 'john-doe@gmail.com',
+ *     eventOriginallyScheduled: 'February 14, 2020',
+ *     eventInviteeTimezone: 'Pacific Time - US & Canada',
+ *     eventColor: '#651fff',
+ *     eventScheduledTime: '10:00am - 10:15am'
+ * }
+ *  */
+
 class UpcomingSchedule extends Component {
     constructor(props){
         super(props);
         this.state = {
-            upcomingSchedule: [ // upcoming events test data
-                {
-                    eventDate: moment().format('dddd MMMM Do'),
-                    eventName: '15 minute meeting',
-                    eventType: 'One-on-One',
-                    eventInvitee: 'John-doe',
-                    eventInviteeEmail: 'john-doe@gmail.com',
-                    eventOriginallyScheduled: 'February 14, 2020',
-                    eventInviteeTimezone: 'Pacific Time - US & Canada',
-                    eventColor: '#651fff',
-                    eventScheduledTime: '10:00am - 10:15am'
-                },
-                {
-                    eventDate: moment().format('dddd MMMM Do'),
-                    eventName: '30 minute meeting',
-                    eventType: 'One-on-One',
-                    eventInvitee: 'Jane-doe',
-                    eventInviteeEmail: 'jane-doe@gmail.com',
-                    eventOriginallyScheduled: 'February 16, 2020',
-                    eventInviteeTimezone: 'Pacific Time - US & Canada',
-                    eventColor: '#43a047',
-                    eventScheduledTime: '11:00am - 11:30am'
-                }
-            ]
+            upcomingSchedule: []
         };
     }
 

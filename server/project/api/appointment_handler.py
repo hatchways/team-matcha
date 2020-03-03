@@ -145,6 +145,59 @@ appointment_patch = api.model(
         fields.Boolean(description='Whether the appointment is still '
                        'active.')
     })
+
+
+class Color(fields.String):
+    def format(self, value):
+        return '#' + value
+
+
+event = api.model(
+    'Event_Detail', {
+        'name':
+        fields.String(description='The name of the event',
+                      required=True,
+                      example='My event',
+                      min_length=1,
+                      max_length=32),
+        'color':
+        Color(),
+        'duration':
+        fields.Integer(description='The duration of the event in minutes')
+    })
+
+appointment_with_event = api.model(
+    'Appointment', {
+        'start':
+        fields.DateTime(
+            description='The start time of the '
+            'appointment',
+            required=True,
+            example='2020-01-20T08:30:00Z',
+        ),
+        'end':
+        fields.DateTime(description='The end time of the appointment',
+                        required=True,
+                        example='2020-01-20T09:30:00Z'),
+        'created':
+        fields.DateTime(description='When the appointment was '
+                        'created',
+                        required=True,
+                        example='2020-01-25T09:30:00Z'),
+        'status':
+        fields.Boolean(description='Whether the appointment is still '
+                       'active'),
+        'comments':
+        fields.String(description='Any comments to send to the '
+                      'event creator',
+                      example='Look forward to seeing you!',
+                      max_length=1024),
+        'participants':
+        fields.List(fields.Nested(participant_output, required=True)),
+        'event':
+        fields.Nested(event, required=True),
+    })
+
 appointments_output = api.model(
     'Appointment', {
         'start':
@@ -172,6 +225,7 @@ appointments_output = api.model(
         'participants':
         fields.List(fields.Nested(participant_output, required=True))
     })
+
 appointment_output = api.model(
     'Appointment', {
         'start':
@@ -219,7 +273,7 @@ appointment_args.add_argument('event_url',
 class UserAppointments(Resource):
     @token_required
     @api.expect(appointment_args)
-    @api.marshal_with(appointments_output, as_list=True)
+    @api.marshal_with(appointment_with_event, as_list=True)
     def get(self, public_id, current_user=None):
         if current_user.public_id != public_id:
             raise PermissionError
