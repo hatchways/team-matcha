@@ -3,7 +3,7 @@ import { Box, Typography } from '@material-ui/core';
 import momentTZ from 'moment-timezone';
 import UpcomingScheduleItemDropdown from './UpcomingScheduleItemDropdown/UpcomingScheduleItemDropdown';
 
-const UpcomingScheduleItem = ({ date, color, start, end, participants, event, inviteeEmail, created, timezone }) => {
+const UpcomingScheduleItem = ({ date, start, end, participants, event, created, timezone }) => {
     const [active, setToggle] = useState(false);
 
     const toggle = () => {
@@ -14,7 +14,7 @@ const UpcomingScheduleItem = ({ date, color, start, end, participants, event, in
     <Box className="upcomingSchedule__item">
         <Box className="upcomingSchedule__item--date">
             <Typography variant="body1">
-                {momentTZ(date).format('dddd, MMMM Do, YYYY')}
+                {momentTZ(start).format('dddd, MMMM Do, YYYY')}
             </Typography>
         </Box>
         <Box className="upcomingSchedule__content">
