@@ -123,7 +123,6 @@ class AppointmentGetAllTest(TestBase):
         data_no_query_param = json.loads(resp_no_query_param.data.decode())
 
 
-        print(data_with_query)
         self.assertEqual(len(data_with_query), 1)
 
         self.assertEqual(len(data_no_query_param), 2)
