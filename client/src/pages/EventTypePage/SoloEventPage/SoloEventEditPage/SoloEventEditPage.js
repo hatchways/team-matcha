@@ -230,7 +230,7 @@ class SoloEventPage extends Component {
             } else {
                 duration = this.state.eventDuration;
             }
-            // TODO: PUT request is not currently working
+            
             fetch(`/users/${public_id}/events/${eventLink}`, {
                 method: 'PUT',
                 headers: {
@@ -238,18 +238,18 @@ class SoloEventPage extends Component {
                     'X-access-token': this.props.token
                 },
                 body: JSON.stringify({
-                name: this.state.eventName,
-                location: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
-                description: this.state.eventDescription.trim(),
-                duration: parseInt(duration),
-                url: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
-                color: this.state.eventColor,
-                availability: {
-                start: this.state.eventStart,
-                end: this.state.eventEnd,
-                days: { // TODO: days are currently not updating 
-                    ...this.state.daysAvl
-                }
+                    name: this.state.eventName,
+                    location: (eventDesignatedLocation.length > 0 ? eventDesignatedLocation : this.state.eventLocation),
+                    description: this.state.eventDescription.trim(),
+                    duration: parseInt(duration),
+                    url: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
+                    color: this.state.eventColor,
+                    availability: {
+                    start: this.state.eventStart,
+                    end: this.state.eventEnd,
+                    days: { 
+                        ...this.state.daysAvl
+                    }
             }
             })
             })
