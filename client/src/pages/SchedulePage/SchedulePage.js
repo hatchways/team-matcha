@@ -8,13 +8,22 @@ import SubNavigation from '../../components/SubNavigation/SubNavigation';
 import UpcomingSchedule from './UpcomingSchedule/UpcomingSchedule';
 import PastSchedule from './PastSchedule/PastSchedule';
 
-const SchedulePage = () => (
+const SchedulePage = ({token, userId}) => (
     <Box className="schedulePage">
         <Header isActive={true} />
         <SubNavigation isActive={true} />
-        <Box className="schedulePage__container"> 
+        <Box className="schedulePage__container">
             {/*nested routes within dashboard-page within schedule-page */}
-            <Route path="/schedule/upcoming" exact component={UpcomingSchedule} />
+            <Route
+                path="/schedule/upcoming"
+                exact
+                render={props => (
+                    <UpcomingSchedule
+                        userId={userId}
+                        token={token}
+                    />
+                )}
+            />
             <Route path="/schedule/past" exact component={PastSchedule} />
         </Box>
     </Box>

@@ -1,5 +1,5 @@
-from flask import Blueprint
-from flask_restx import Resource, fields, marshal
+from flask import Blueprint, request
+from flask_restx import Resource, fields, marshal, reqparse
 from project import db, api
 from project.models.appointment import Appointment, add_appointment
 from project.models.participant import Participant, create_participant
@@ -15,10 +15,13 @@ import pytz
 from sqlalchemy import inspect
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
 
-
 NEXT_X_DAYS = 90  # TODO remove placeholder after calendar PR is implemented
 
 appointment_blueprint = Blueprint('appointments', __name__)
+
+#-------------------------------------------------------------------------------
+# Helper Functions
+#-------------------------------------------------------------------------------
 
 
 def participant_exists(name: str, email: str) -> Participant:
@@ -48,8 +51,7 @@ def start_within_next_x_days(start: str, next_x_days=NEXT_X_DAYS) -> bool:
         dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=next_x_days)
 
 
-def appointment_availability_allowed(availability: Availability,
-                                     duration: int,
+def appointment_availability_allowed(availability: Availability, duration: int,
                                      start: dt.datetime) -> bool:
     """
     Checks and returns whether the appointment is available.
@@ -84,97 +86,163 @@ def edit_appointment(params, appointment: Appointment) -> Appointment:
     return appointment
 
 
+#-------------------------------------------------------------------------------
+# Serializers
+#-------------------------------------------------------------------------------
+
 participant_input = api.model(
     'Participants', {
-        'name': fields.String(description='The name of the participant',
-                              required=True,
-                              example='John Doe',
-                              min_length=1,
-                              max_length=128),
-        'email': fields.String(description='The email of the participant',
-                               required=True,
-                               example='johndoe@email.com',
-                               min_length=5,
-                               max_length=128)})
+        'name':
+        fields.String(description='The name of the participant',
+                      required=True,
+                      example='John Doe',
+                      min_length=1,
+                      max_length=128),
+        'email':
+        fields.String(description='The email of the participant',
+                      required=True,
+                      example='johndoe@email.com',
+                      min_length=5,
+                      max_length=128)
+    })
 appointment_input = api.model(
     'Appointment', {
-        'start': fields.DateTime(description='The start time of the '
-                                             'appointment.',
-                                 required=True,
-                                 example='2020-01-20T08:30:00Z'),
-        'comments': fields.String(description='Any comments to send to the '
-                                              'event creator',
-                                  example='Look forward to seeing you!',
-                                  max_length=1024),
-        'participant': fields.Nested(participant_input,
-                                     required=True)})
+        'start':
+        fields.DateTime(description='The start time of the '
+                        'appointment.',
+                        required=True,
+                        example='2020-01-20T08:30:00Z'),
+        'comments':
+        fields.String(description='Any comments to send to the '
+                      'event creator',
+                      example='Look forward to seeing you!',
+                      max_length=1024),
+        'participant':
+        fields.Nested(participant_input, required=True)
+    })
 participant_output = api.model(
     'Participants', {
-        'name': fields.String(description='The name of the participant',
-                              required=True,
-                              example='John Doe',
-                              min_length=1,
-                              max_length=128),
-        'email': fields.String(description='The email of the participant',
-                               required=True,
-                               example='johndoe@email.com',
-                               min_length=5,
-                               max_length=128)})
+        'name':
+        fields.String(description='The name of the participant',
+                      required=True,
+                      example='John Doe',
+                      min_length=1,
+                      max_length=128),
+        'email':
+        fields.String(description='The email of the participant',
+                      required=True,
+                      example='johndoe@email.com',
+                      min_length=5,
+                      max_length=128)
+    })
 appointment_patch = api.model(
     'Appointment', {
-        'start': fields.DateTime(description='The start time of the '
-                                             'appointment.',
-                                 example='2020-01-20T08:30:00Z'),
-        'status': fields.Boolean(description='Whether the appointment is still '
-                                             'active.')})
+        'start':
+        fields.DateTime(description='The start time of the '
+                        'appointment.',
+                        example='2020-01-20T08:30:00Z'),
+        'status':
+        fields.Boolean(description='Whether the appointment is still '
+                       'active.')
+    })
 appointments_output = api.model(
     'Appointment', {
-        'start': fields.DateTime(description='The start time of the '
-                                             'appointment',
-                                 required=True,
-                                 example='2020-01-20T08:30:00Z'),
-        'end': fields.DateTime(description='The end time of the appointment',
-                               required=True,
-                               example='2020-01-20T09:30:00Z'),
-        'created': fields.DateTime(description='When the appointment was '
-                                               'created',
-                                   required=True,
-                                   example='2020-01-25T09:30:00Z'),
-        'status': fields.Boolean(description='Whether the appointment is still '
-                                             'active'),
-        'comments': fields.String(description='Any comments to send to the '
-                                              'event creator',
-                                  example='Look forward to seeing you!',
-                                  max_length=1024),
-        'participants': fields.List(fields.Nested(participant_output,
-                                                  required=True))})
+        'start':
+        fields.DateTime(description='The start time of the '
+                        'appointment',
+                        required=True,
+                        example='2020-01-20T08:30:00Z'),
+        'end':
+        fields.DateTime(description='The end time of the appointment',
+                        required=True,
+                        example='2020-01-20T09:30:00Z'),
+        'created':
+        fields.DateTime(description='When the appointment was '
+                        'created',
+                        required=True,
+                        example='2020-01-25T09:30:00Z'),
+        'status':
+        fields.Boolean(description='Whether the appointment is still '
+                       'active'),
+        'comments':
+        fields.String(description='Any comments to send to the '
+                      'event creator',
+                      example='Look forward to seeing you!',
+                      max_length=1024),
+        'participants':
+        fields.List(fields.Nested(participant_output, required=True))
+    })
 appointment_output = api.model(
     'Appointment', {
-        'start': fields.DateTime(description='The start time of the '
-                                             'appointment',
-                                 required=True,
-                                 example='2020-01-20T08:30:00Z'),
-        'end': fields.DateTime(description='The end time of the appointment',
-                               required=True,
-                               example='2020-01-20T09:30:00Z'),
-        'created': fields.DateTime(description='When the appointment was '
-                                               'created',
-                                   required=True,
-                                   example='2020-01-25T09:30:00Z'),
-        'status': fields.Boolean(description='Whether the appointment is still '
-                                             'active'),
-        'comments': fields.String(description='Any comments to send to the '
-                                              'event creator',
-                                  example='Look forward to seeing you!',
-                                  max_length=1024),
-        'participants': fields.Nested(participant_output,
-                                      required=True)})
+        'start':
+        fields.DateTime(description='The start time of the '
+                        'appointment',
+                        required=True,
+                        example='2020-01-20T08:30:00Z'),
+        'end':
+        fields.DateTime(description='The end time of the appointment',
+                        required=True,
+                        example='2020-01-20T09:30:00Z'),
+        'created':
+        fields.DateTime(description='When the appointment was '
+                        'created',
+                        required=True,
+                        example='2020-01-25T09:30:00Z'),
+        'status':
+        fields.Boolean(description='Whether the appointment is still '
+                       'active'),
+        'comments':
+        fields.String(description='Any comments to send to the '
+                      'event creator',
+                      example='Look forward to seeing you!',
+                      max_length=1024),
+        'participants':
+        fields.Nested(participant_output, required=True)
+    })
+
+#-------------------------------------------------------------------------------
+# Parser
+#-------------------------------------------------------------------------------
+
+appointment_args = reqparse.RequestParser()
+appointment_args.add_argument('event_url',
+                              type=str,
+                              help='Specific event url of the event.',
+                              location='args')
+
+#-------------------------------------------------------------------------------
+# Routes
+#-------------------------------------------------------------------------------
+
+
+@api.route('/users/<public_id>/appointments')
+class UserAppointments(Resource):
+    @token_required
+    @api.expect(appointment_args)
+    @api.marshal_with(appointments_output, as_list=True)
+    def get(self, public_id, current_user=None):
+        if current_user.public_id != public_id:
+            raise PermissionError
+
+        args = appointment_args.parse_args()
+
+        url = args.get('event_url')
+        if url:
+            appointments = db.session.query(Appointment).filter(
+                Appointment.event_id == Event.id,
+                Event.url == url,
+            ).all()
+        else:
+            appointments = db.session.query(Appointment).filter(
+                Appointment.event_id == Event.id,
+                Event.user_id == current_user.id).all()
+        return appointments, 200
 
 
 @api.route('/users/<public_id>/events/<event_url>/appointments')
 class Appointments(Resource):
     @token_required
-    @api.marshal_with(appointments_output)
+    @api.marshal_with(appointments_output, as_list=True)
     def get(self, public_id, event_url, current_user=None):
         """Returns all of the appointments for the event."""
         if current_user.public_id != public_id:
@@ -198,20 +266,18 @@ class Appointments(Resource):
             first()
 
         if not appointment_availability_allowed(
-                event.availability,
-                event.duration,
+                event.availability, event.duration,
                 parser.isoparse(payload['start'])):
             raise AppointmentNotAvailableError
 
         participant = participant_exists(payload['participant']['name'],
                                          payload['participant']['email'])
-        add_appointment(
-            event_id=event.id,
-            participants=[participant],
-            start=parser.isoparse(payload['start']),
-            end=parser.isoparse(payload['start']) +
-            dt.timedelta(minutes=event.duration),
-            comments=payload['comments'])
+        add_appointment(event_id=event.id,
+                        participants=[participant],
+                        start=parser.isoparse(payload['start']),
+                        end=parser.isoparse(payload['start']) +
+                        dt.timedelta(minutes=event.duration),
+                        comments=payload['comments'])
         db.session.commit()
         return {'message': 'success'}, 201
 

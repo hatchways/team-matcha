@@ -11,6 +11,8 @@ const Dashboard = ({token, userId}) => {
 
     const [imageUrl, setImageUrl] = useState("https://www.jetphotos.com/assets/img/user.png")
 
+    console.log(token)
+    console.log(userId)
     return (
         <div
         className="dashboard"
@@ -31,7 +33,16 @@ const Dashboard = ({token, userId}) => {
             />
         )}
         />
-        <Route path="/schedule/upcoming" exact component={SchedulePage} />
+        <Route
+            path="/schedule/upcoming"
+            exact
+            render={props => (
+                <SchedulePage
+                    token={token}
+                    userId={userId}
+              />
+            )}
+        />
     </div>
     )
 };
