@@ -63,6 +63,9 @@ def update_event(event, params):
     event_fields = inspect(Event).columns.keys()
     for key, value in params.items():
         if key in event_fields and value is not None and\
+                key is not 'availability' and key == 'color': 
+            setattr(event, key, value.lstrip('#'))
+        elif key in event_fields and value is not None and\
                 key is not 'availability':
             setattr(event, key, value)
     if 'availability' in params:
@@ -75,5 +78,6 @@ def update_event(event, params):
             for key, value in params['availability']['days'].items():
                 if key in availability_fields and value is not None:
                     setattr(event.availability, key, value)
+        
     db.session.commit()
     return event
