@@ -13,9 +13,10 @@ class CalendarPage extends Component {
     constructor(props){
         super(props);
         this.state = {
-            date: new Date(),
+            date: momentTZ().add(1, 'd'),
             dateSelectedFormatted: '',
             maxdate: momentTZ().add(90, 'd'),
+            mindate: momentTZ().add(1, 'd'),
             availability: {},
             timezoneName: momentTZ.tz.guess(true),
             timezonesArr: momentTZ.tz.names(),
@@ -48,7 +49,6 @@ class CalendarPage extends Component {
             })
             .then(data => data.json())
             .then((eventData) => {
-                console.log(eventData);
                 this.setState({
                     event: {
                         ...this.state.event, 
@@ -72,6 +72,7 @@ class CalendarPage extends Component {
             })
             .then(data => data.json())
             .then((calendarData) => {
+                console.log('Calendar data', calendarData);
                 this.setState({ availability: calendarData });
             })
             .catch(err => (err));
@@ -180,6 +181,7 @@ class CalendarPage extends Component {
                     <Calendar 
                         date={this.state.date}
                         maxDate={this.state.maxdate}
+                        minDate={this.state.mindate}
                         timeslots={this.state.timeslots}
                         timezoneName={this.state.timezoneName}
                         handleDisableDates={this.handleDisableDates}

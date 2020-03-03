@@ -6,7 +6,7 @@ import TimeSlotItem from '../TimeSlotItem/TimeSlotItem';
 
 const Calendar = (
     { 
-        date, maxDate, 
+        date, maxDate, minDate,
         timeslots, timezoneName,
         handleDisableDates, handleDateChange, 
         handleMobileDateChange, handleConfirmModal,
@@ -29,6 +29,7 @@ const Calendar = (
                 orientation="landscape"
                 disablePast
                 maxDate={maxDate}
+                minDate={minDate}
                 shouldDisableDate={handleDisableDates}
             />
         </div>
@@ -43,6 +44,7 @@ const Calendar = (
                 orientation="landscape"
                 disablePast
                 maxDate={maxDate}
+                minDate={minDate}
                 shouldDisableDate={handleDisableDates}
             />
         </div>
