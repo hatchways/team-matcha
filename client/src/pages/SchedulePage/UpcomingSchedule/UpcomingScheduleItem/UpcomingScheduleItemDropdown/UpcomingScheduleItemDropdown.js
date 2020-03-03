@@ -17,10 +17,12 @@ const UpcomingScheduleItemDropdown = ({ eventInviteeEmail, eventOriginallySchedu
                 </Typography>
             </Box>
             <Box className="upcomingSchedule__dropdown--text--wrap">
+                {/*
                 <Typography className="upcomingSchedule__dropdown--text">
                     INVITEE TIME ZONE<br />
-                    <span className="upcomingSchedule__dropdown--text--span">{momentTZ(eventOriginallyScheduled).format('Z')}</span>
+                    <span className="upcomingSchedule__dropdown--text--span">{momentTZ(`${eventOriginallyScheduled}`).utcOffset(eventOriginallyScheduled).format('Z') }</span>
                 </Typography>
+                */}
             </Box>
             <Box className="upcomingSchedule__dropdown--text--wrap">
                 <Typography className="upcomingSchedule__dropdown--text--italic">
