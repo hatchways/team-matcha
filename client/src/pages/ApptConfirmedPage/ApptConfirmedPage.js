@@ -4,7 +4,7 @@ import momentTZ from "moment-timezone";
 import { Box, Typography } from '@material-ui/core';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import PublicIcon from '@material-ui/icons/Public';
+// import PublicIcon from '@material-ui/icons/Public';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 class ApptConfirmedPage extends React.Component{
@@ -27,7 +27,7 @@ class ApptConfirmedPage extends React.Component{
     }
 
     handleFetchEvent = () => {
-        const { public_id, eventLink } = this.props.match.params; // get params from url
+        const { public_id, eventLink, appointmentId } = this.props.match.params; // get params from url
         fetch(`/users/${public_id}/events/${eventLink}`, {
             method: 'GET',
             headers: {
@@ -45,7 +45,9 @@ class ApptConfirmedPage extends React.Component{
                             name: eventData.name,
                             duration: eventData.duration,
                             location: eventData.location.length > 0 ? eventData.location : 'N/A'
-                    }
+                    },
+                    apptStart: momentTZ(`${appointmentId}`).utcOffset(appointmentId).format('hh:mma'),
+                    apptEnd: momentTZ(`${appointmentId}`).utcOffset(appointmentId).add(eventData.duration,'m').format('hh:mma'),
                 })
             })
             .catch(err => (err));
@@ -68,7 +70,7 @@ class ApptConfirmedPage extends React.Component{
 
     render() {
         const { public_id, appointmentId } = this.props.match.params;
-        const userEventScheduleFor = momentTZ(`${appointmentId}`).utcOffset(appointmentId).format('hh:mma dddd MMMM Do YYYY Z'); // formats invitee meeting (local-time)
+        const userEventScheduleFor = momentTZ(`${appointmentId}`).utcOffset(appointmentId).format('dddd, MMMM Do, YYYY Z'); // formats invitee meeting (local-time)
 
         return (
             <Box className="apptConfirmed">
@@ -87,13 +89,15 @@ class ApptConfirmedPage extends React.Component{
                         <Box className="apptConfirmed__content">
                             <ScheduleIcon className="apptConfirmed__content--icon" style={{ color: "#ef6c00" }}/>
                             &nbsp;
-                            <Typography className="apptConfirmed__content--date" variant="body1">{userEventScheduleFor}</Typography>
+                            <Typography className="apptConfirmed__content--date" variant="body1">{this.state.apptStart} - {this.state.apptEnd}, {userEventScheduleFor}</Typography>
                         </Box>
+                        {/*
                         <Box className="apptConfirmed__content">
                             <PublicIcon className="apptConfirmed__content--icon apptConfirmed__content--icon--light" />
                             &nbsp;
                             <Typography className="apptConfirmed__content--timezone" variant="body1">Pacific Time - US & Canada</Typography>
                         </Box>
+                        */}
                         <Box className="apptConfirmed__content">
                             <LocationOnIcon className="apptConfirmed__content--icon apptConfirmed__content--icon--light" />
                             &nbsp;
