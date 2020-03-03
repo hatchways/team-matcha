@@ -39,23 +39,26 @@ class UpcomingSchedule extends Component {
 
     componentDidMount(){
         console.log('fetch upcoming schedule from the server!');
+        console.log(this.props)
+        this.handleFetchAppts()
     }
 
     handleFetchAppts = () => {// should render all events for the user
-        // fetch(`/users/${public_id}/events/${event_url}/appointments`, {
-        //     method: 'GET',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'X-access-token': token
-        //     }
-        //     })
-        //     .then(data => data.json())
-        //     .then((apptData) => {
-        //         // console.log('appointment data', apptData);
-        //     })
-        //     .catch(err => (err));
+        fetch(`/users/${this.props.userId}/appointments`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-access-token': this.props.token
+            }
+        })
+        .then(data => data.json())
+        .then((apptData) => {
+            this.setState({upcomingSchedule: apptData})
+            console.log('appointment data', apptData);
+        })
+        .catch(err => (err));
     }
-    
+
     render(){
 
         const { upcomingSchedule } = this.state;

@@ -11,7 +11,6 @@ from project.models.appointment import Appointment, add_appointment
 from project.models.participant import Participant, create_participant
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
 
-
 NEXT_X_DAYS = 90  # TODO this should be the exact same value as in
 # TODO appointment_handler.py
 
@@ -28,10 +27,14 @@ def create_appointment_json(start='2020-02-20T08:30:00Z',
     :param email: the participant's email
     :return: JSON dump
     """
-    request = {'start': start,
-               'comments': comments,
-               'participant': {'name': name,
-                               'email': email}}
+    request = {
+        'start': start,
+        'comments': comments,
+        'participant': {
+            'name': name,
+            'email': email
+        }
+    }
     return json.dumps(request)
 
 
@@ -54,10 +57,11 @@ class AppointmentGetAllTest(TestBase):
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
 
-        response = self.api.get(f'/users/{user.public_id}/events/{event.url}/'
-                                f'appointments',
-                                headers={'x-access-token': auth_token},
-                                content_type='application/json')
+        response = self.api.get(
+            f'/users/{user.public_id}/events/{event.url}/'
+            f'appointments',
+            headers={'x-access-token': auth_token},
+            content_type='application/json')
 
         data = json.loads(response.data.decode())
         appointment = data[0]
@@ -66,9 +70,63 @@ class AppointmentGetAllTest(TestBase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(appointment['comments'], comments)
         self.assertEqual(participants['name'], name)
-        self.assertEqual(
-            parser.isoparse(appointment['start']),
-            start)
+        self.assertEqual(parser.isoparse(appointment['start']), start)
+
+    def test_get_all_appointments(self):
+        """Test Getting all appointments from a User"""
+        add_user()
+        db.session.commit()
+        user = User.query.first()
+        # Create 2 events
+        event1 = add_event(user_id=user.id,
+                           availability=create_availability(),
+                           name="Frist Event",
+                           url="my first url")
+
+        event2 = add_event(user_id=user.id,
+                           availability=create_availability(),
+                           name="Frist Second",
+                           url="my second url")
+        db.session.commit()
+        start = dt.datetime.now(dt.timezone.utc)
+        # add appointment to event 1
+        add_appointment(event_id=event1.id,
+                        participants=[
+                            create_participant(name="John",
+                                               email="john@test.com")
+                        ],
+                        comments="comments",
+                        start=start)
+        # add appointment to event 2
+        add_appointment(event_id=event2.id,
+                        participants=[
+                            create_participant(name="Bonnie",
+                                               email="Bonnie@test.com")
+                        ],
+                        comments="comments",
+                        start=start + dt.timedelta(days=1))
+        db.session.commit()
+        auth_token = user.encode_auth_token(user.id)
+
+        resp_with_query_param = self.api.get(
+            f'/users/{user.public_id}/appointments?event_url={event1.url}',
+            headers={'x-access-token': auth_token},
+            content_type='application/json')
+        data_with_query = json.loads(resp_with_query_param.data.decode())
+
+
+        resp_no_query_param = self.api.get(
+            f'/users/{user.public_id}/appointments',
+            headers={'x-access-token': auth_token},
+            content_type='application/json')
+
+        data_no_query_param = json.loads(resp_no_query_param.data.decode())
+
+
+        print(data_with_query)
+        self.assertEqual(len(data_with_query), 1)
+
+        self.assertEqual(len(data_no_query_param), 2)
 
     def test_bad_token(self):
         """Tests whether a request with an invalid token returns a 403
@@ -81,7 +139,8 @@ class AppointmentGetAllTest(TestBase):
         add_event(user1.id, create_availability())
         db.session.commit()
         event1 = Event.query.filter_by(user_id=user1.id).first()
-        add_appointment(event_id=event1.id, participants=[create_participant()])
+        add_appointment(event_id=event1.id,
+                        participants=[create_participant()])
         db.session.commit()
 
         auth_token2 = user2.encode_auth_token(user2.id)
@@ -108,8 +167,7 @@ class AppointmentGetAllTest(TestBase):
         db.session.commit()
 
         route = f'/users/{user.public_id}/events/{event.url}/appointments'
-        response = self.api.get(route,
-                                content_type='application/json')
+        response = self.api.get(route, content_type='application/json')
         data = json.loads(response.data.decode())
 
         self.assertEqual(response.status_code, 401)
@@ -179,9 +237,10 @@ class AppointmentPostTest(TestBase):
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data['status'], 'fail')
-        self.assertEqual(data['message'], f"You may only schedule an "
-                                          f"appointment within the next "
-                                          f"{NEXT_X_DAYS} days in the future.")
+        self.assertEqual(
+            data['message'], f"You may only schedule an "
+            f"appointment within the next "
+            f"{NEXT_X_DAYS} days in the future.")
 
     def test_multiple_appointments(self):
         """Tests whether a single participant can have multiple appointments."""
@@ -203,18 +262,18 @@ class AppointmentPostTest(TestBase):
                              tzinfo=dt.timezone.utc)
         start2 = start1 + dt.timedelta(hours=2)
         route = f'/users/{user_public_id}/events/{event_url}/appointments'
-        response1 = self.api.post(
-            route,
-            data=create_appointment_json(start=start1.isoformat(),
-                                         name=name,
-                                         email=email),
-            content_type='application/json')
-        response2 = self.api.post(
-            route,
-            data=create_appointment_json(start=start2.isoformat(),
-                                         name=name,
-                                         email=email),
-            content_type='application/json')
+        response1 = self.api.post(route,
+                                  data=create_appointment_json(
+                                      start=start1.isoformat(),
+                                      name=name,
+                                      email=email),
+                                  content_type='application/json')
+        response2 = self.api.post(route,
+                                  data=create_appointment_json(
+                                      start=start2.isoformat(),
+                                      name=name,
+                                      email=email),
+                                  content_type='application/json')
 
         data1 = json.loads(response1.data.decode())
         data2 = json.loads(response2.data.decode())
@@ -278,11 +337,12 @@ class AppointmentPostTest(TestBase):
         db.session.commit()
         event = Event.query.first()
         event_url = event.url
-        start = dt.datetime(year=2020,
-                            month=3,
-                            day=1,  # Sunday
-                            hour=9,
-                            tzinfo=dt.timezone.utc)
+        start = dt.datetime(
+            year=2020,
+            month=3,
+            day=1,  # Sunday
+            hour=9,
+            tzinfo=dt.timezone.utc)
 
         route = f'/users/{user_public_id}/events/{event_url}/appointments'
         request = create_appointment_json(start=dt.datetime.isoformat(start))
@@ -293,10 +353,11 @@ class AppointmentPostTest(TestBase):
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data['status'], 'fail')
-        self.assertEqual(data['message'], 'The provided start time and date is '
-                                          'not allowed please choose a valid '
-                                          'start time and date and resubmit '
-                                          'your request.')
+        self.assertEqual(
+            data['message'], 'The provided start time and date is '
+            'not allowed please choose a valid '
+            'start time and date and resubmit '
+            'your request.')
 
 
 class AppointmentGetTest(TestBase):
@@ -318,17 +379,16 @@ class AppointmentGetTest(TestBase):
                             day=2,
                             hour=9,
                             tzinfo=dt.timezone.utc)
-        add_appointment(event_id=event.id,
-                        participants=[create_participant(name=name,
-                                                         email=email)],
-                        start=start,
-                        comments=comments)
+        add_appointment(
+            event_id=event.id,
+            participants=[create_participant(name=name, email=email)],
+            start=start,
+            comments=comments)
         db.session.commit()
 
         route = f'/users/{user_public_id}/events/{event_url}/appointments/' \
                 f'{start.isoformat()}'
-        response = self.api.get(route,
-                                content_type='application/json')
+        response = self.api.get(route, content_type='application/json')
 
         appointment = json.loads(response.data.decode())
         participant = appointment['participants'][0]
@@ -360,14 +420,13 @@ class AppointmentGetTest(TestBase):
 
         route = f'/users/{user_public_id}/events/{event_url}/appointments/' \
                 f'{(start + dt.timedelta(hours=1)).isoformat()}'
-        response = self.api.get(route,
-                                content_type='application/json')
+        response = self.api.get(route, content_type='application/json')
 
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data['status'], 'fail')
         self.assertEqual(data['message'], 'No appointment was found for that '
-                                          'start time.')
+                         'start time.')
 
 
 class AppointmentPatchTest(TestBase):
@@ -392,9 +451,7 @@ class AppointmentPatchTest(TestBase):
                 f'{start.isoformat()}'
         status = False
         response = self.api.patch(route,
-                                  data=json.dumps({
-                                      'status': status
-                                  }),
+                                  data=json.dumps({'status': status}),
                                   content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
@@ -426,9 +483,7 @@ class AppointmentPatchTest(TestBase):
                 f'{start.isoformat()}'
         status = True
         response = self.api.patch(route,
-                                  data=json.dumps({
-                                      'status': status
-                                  }),
+                                  data=json.dumps({'status': status}),
                                   content_type='application/json')
 
         print(json.loads(response.data.decode()))
@@ -461,16 +516,15 @@ class AppointmentPatchTest(TestBase):
                 f'{start.isoformat()}'
         status = 'potato'
         response = self.api.patch(route,
-                                  data=json.dumps({
-                                      'status': status
-                                  }),
+                                  data=json.dumps({'status': status}),
                                   content_type='application/json')
 
         self.assertEqual(response.status_code, 400)
 
         data = json.loads(response.data.decode())
-        self.assertEqual(data['errors']['status'], f"'{status}' is not of type "
-                                                   f"'boolean'")
+        self.assertEqual(data['errors']['status'],
+                         f"'{status}' is not of type "
+                         f"'boolean'")
         self.assertEqual(data['message'], 'Input payload validation failed')
 
     def test_bad_params(self):
@@ -496,8 +550,10 @@ class AppointmentPatchTest(TestBase):
         status = False
         response = self.api.patch(route,
                                   data=json.dumps({
-                                      'status': status,
-                                      'potato': 'I love potatoes man.'
+                                      'status':
+                                      status,
+                                      'potato':
+                                      'I love potatoes man.'
                                   }),
                                   content_type='application/json')
 
@@ -527,13 +583,11 @@ class AppointmentPatchTest(TestBase):
                 f'{(start + dt.timedelta(days=1)).isoformat()}'
         status = False
         response = self.api.patch(route,
-                                  data=json.dumps({
-                                      'status': status
-                                  }),
+                                  data=json.dumps({'status': status}),
                                   content_type='application/json')
 
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data['status'], 'fail')
         self.assertEqual(data['message'], 'No appointment was found for that '
-                                          'start time.')
+                         'start time.')
