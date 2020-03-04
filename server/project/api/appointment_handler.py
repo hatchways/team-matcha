@@ -14,6 +14,7 @@ import calendar
 import pytz
 from sqlalchemy import inspect
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
+from project.services.google_calendar import create_google_event
 
 NEXT_X_DAYS = 90  # TODO remove placeholder after calendar PR is implemented
 
@@ -325,13 +326,26 @@ class Appointments(Resource):
 
         participant = participant_exists(payload['participant']['name'],
                                          payload['participant']['email'])
-        add_appointment(event_id=event.id,
-                        participants=[participant],
-                        start=parser.isoparse(payload['start']),
-                        end=parser.isoparse(payload['start']) +
-                        dt.timedelta(minutes=event.duration),
-                        comments=payload['comments'])
+        appointment = add_appointment(
+            event_id=event.id,
+            participants=[participant],
+            start=parser.isoparse(payload['start']),
+            end=parser.isoparse(payload['start']) +
+            dt.timedelta(minutes=event.duration),
+            comments=payload['comments'])
         db.session.commit()
+
+        user: User = event.user
+        response = create_google_event(api_key=user.cred.access_token,
+                                       user_email=user.email,
+                                       event_name=event.name,
+                                       location=event.location,
+                                       description=f"{appointment.comments}\n\n"
+                                                   f"This event was created by "
+                                                   f"www.calendapp.com",
+                                       start=appointment.start,
+                                       end=appointment.end,
+                                       participant_email=participant.email)
         return {'message': 'success'}, 201
 
 
