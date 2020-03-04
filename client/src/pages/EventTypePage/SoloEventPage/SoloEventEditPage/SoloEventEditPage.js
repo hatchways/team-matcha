@@ -19,7 +19,7 @@ import EventDaysAvlCheckBox from '../EventDaysAvlCheckBox/EventDaysAvlCheckBox';
 import PhoneCallModal from '../Modals/PhoneCallModal';
 import LocationModal from '../Modals/LocationModal';
 import { allFalse } from '../../../../Utils/obj-func';
-import { convertIntToISO } from '../../../../Utils/time-func';
+import { convertIntToISO, convertIsoToInt } from '../../../../Utils/time-func';
 
 class SoloEventPage extends Component {
     constructor(props){
@@ -63,7 +63,6 @@ class SoloEventPage extends Component {
     componentWillMount(){
         this.handleFetchUser();
         this.handleFetchEvent();
-
     }
 
     handleFetchUser = () => {
@@ -92,6 +91,8 @@ class SoloEventPage extends Component {
             })
             .then(data => data.json())
             .then((event) => {
+                console.log('event details', event);
+                console.log(event.availability.start); // create a moment object with current date + availability then format it to 24hr
                 let duration = '';
                 if(event.duration === 15 || event.duration === 30
                     || event.duration === 45 || event.duration === 60){
@@ -109,8 +110,8 @@ class SoloEventPage extends Component {
                     eventLink: event.url,
                     eventLocation: event.location,
                     eventName: event.name,
-                    eventStart: event.availability.start,
-                    eventEnd: event.availability.end,
+                    eventStart: convertIsoToInt(event.availability.start),
+                    eventEnd: convertIsoToInt(event.availability.end),
                     locationDropDownField: event.location.length > 0 ? event.location : 'Add a location',
                     daysAvl: {
                         ...this.state.daysAvl,
@@ -249,8 +250,8 @@ class SoloEventPage extends Component {
                     url: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
                     color: this.state.eventColor,
                     availability: {
-                        start: this.state.eventStart, // # convertIntToISO(this.state.eventStart, this.state.timezoneName),
-                        end: this.state.eventEnd, // # convertIntToISO(this.state.eventEnd, this.state.timezoneName),
+                        start: convertIntToISO(this.state.eventStart, this.state.timezoneName),
+                        end: convertIntToISO(this.state.eventEnd, this.state.timezoneName),
                     days: { 
                         ...this.state.daysAvl
                     }

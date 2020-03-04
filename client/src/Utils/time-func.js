@@ -6,3 +6,9 @@ export const convertIntToISO = (timeToConvert, timezoneName) => {
     const timezoneOffset = momentTZ.tz(timezoneName).format('Z'); // gets the utc timezone offset based on timezone selected
     return `${formattedTimeSlot24hr}${timezoneOffset}`;
 }
+
+export const convertIsoToInt = (timeToConvert) => {
+    const currentDate = momentTZ().format('YYYY-DD-MM');
+    const fullDate = `${currentDate}T${timeToConvert}`;
+    return momentTZ(fullDate).format('HH');
+}
