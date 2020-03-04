@@ -52,7 +52,7 @@ class Calendar(Resource):
             c = Calendars(duration=event.duration, next_x_days=NEXT_X_DAYS)
             # TODO Uncomment
             c.block_unavail_days(avail)
-            # c.block_events(busy)
+            c.block_events(busy)
             c.block_events(appointments)
             print(c.all_avail_time_slots())
             response, code = c.all_avail_time_slots(), 200
