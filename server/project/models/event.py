@@ -73,7 +73,7 @@ def update_event(event, params):
         for key, value in params['availability'].items():
             if key in availability_fields and value is not None and\
                     key != 'days':
-                setattr(event.availability, key, dt.time(value))
+                setattr(event.availability, key, value)
         if 'days' in params['availability']:
             for key, value in params['availability']['days'].items():
                 if key in availability_fields and value is not None:

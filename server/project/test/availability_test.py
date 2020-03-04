@@ -10,8 +10,8 @@ class AvailabilityModelTest(TestBase):
     def test_availability_model(self):
         """Tests whether the availability model is working correctly."""
         sunday = True
-        start = dt.time(6)
-        end = dt.time(15)
+        start = dt.time(hour=6, tzinfo=dt.timezone.utc)
+        end = dt.time(hour=9, tzinfo=dt.timezone.utc)
         add_user()
         user_id = User.query.first().id
         availability = create_availability(sunday=sunday, start=start, end=end)
@@ -26,7 +26,7 @@ class AvailabilityModelTest(TestBase):
         Availability and Event."""
         add_user()
         user_id = User.query.first().id
-        start = dt.time(6)
+        start = dt.time(hour=6, tzinfo=dt.timezone.utc)
         availability = create_availability(start=start)
         url = 'acleverurl'
         add_event(url=url, user_id=user_id, availability=availability)

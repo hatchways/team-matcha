@@ -38,15 +38,15 @@ def create_event_json(name='My event',
                       duration=60,
                       url='myevent',
                       color='#000000',
-                      start=8,
-                      end=17,
+                      start=dt.time(hour=8, tzinfo=dt.timezone.utc).isoformat(),
+                      end=dt.time(hour=17, tzinfo=dt.timezone.utc).isoformat(),
                       sunday=False,
                       monday=True,
                       tuesday=True,
                       wednesday=True,
                       thursday=True,
                       friday=True,
-                      saturday=False):
+                      saturday=False,):
     """
     Creates JSON dump to create an Event.
     :param name: name of the event
@@ -227,10 +227,13 @@ class EventCreateTest(TestBase):
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
 
-        response = self.api.post(f'/users/{user.public_id}/events',
-                                 headers={'x-access-token': auth_token},
-                                 data=create_event_json(start=17, end=8),
-                                 content_type='application/json')
+        response = self.api.post(
+            f'/users/{user.public_id}/events',
+            headers={'x-access-token': auth_token},
+            data=create_event_json(
+                start=dt.time(hour=17, tzinfo=dt.timezone.utc).isoformat(),
+                end=dt.time(hour=8, tzinfo=dt.timezone.utc).isoformat(),),
+            content_type='application/json')
         data = json.loads(response.data.decode())
 
         self.assertEqual(response.status_code, 400)
@@ -246,9 +249,9 @@ class EventsGetTest(TestBase):
         user = add_user()
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
-        start = 6
+        start = dt.time(hour=6, tzinfo=dt.timezone.utc)
         sunday = True
-        availability = create_availability(start=dt.time(start),
+        availability = create_availability(start=start,
                                            sunday=sunday)
         url = 'funnyUrl'
         color = '#7851a9'
@@ -259,7 +262,7 @@ class EventsGetTest(TestBase):
                                 content_type='application/json')
         data = json.loads(response.data.decode())
         self.assertEqual(data[0]['url'], url)
-        self.assertEqual(data[0]['availability']['start'], start)
+        self.assertEqual(data[0]['availability']['start'], start.isoformat())
         self.assertEqual(data[0]['color'], color)
         self.assertEqual(data[0]['availability']['days']['sunday'], sunday)
 
@@ -301,14 +304,15 @@ class EventDetailPut(TestBase):
         url = event.url
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
-        start = 12
+        start = dt.time(hour=12, tzinfo=dt.timezone.utc)
         sunday = True
 
         response = self.api.put(f'/users/{user.public_id}/events/{url}',
                                 headers={'x-access-token': auth_token},
                                 data=json.dumps({
                                     'availability': {
-                                        'start': start, 'days': {'sunday': sunday}}
+                                        'start': start.isoformat(),
+                                        'days': {'sunday': sunday}}
                                 }),
                                 content_type='application/json')
 
@@ -319,7 +323,7 @@ class EventDetailPut(TestBase):
 
         updated_event = Event.query.filter_by(url=url).first()
 
-        self.assertEqual(updated_event.availability.start, dt.time(start))
+        self.assertEqual(updated_event.availability.start, start)
         self.assertEqual(updated_event.availability.sunday, sunday)
 
     def test_no_days_available(self):
@@ -395,9 +399,9 @@ class EventDetailGet(TestBase):
         user = add_user()
         db.session.commit()
         auth_token = user.encode_auth_token(user.id)
-        start = 6
+        start = dt.time(hour=6, tzinfo=dt.timezone.utc)
         sunday = True
-        availability = create_availability(start=dt.time(start),
+        availability = create_availability(start=start,
                                            sunday=sunday)
         url = 'funnyUrl'
         color = '#7851a9'
@@ -408,7 +412,7 @@ class EventDetailGet(TestBase):
                                 content_type='application/json')
         data = json.loads(response.data.decode())
         self.assertEqual(data['url'], url)
-        self.assertEqual(data['availability']['start'], start)
+        self.assertEqual(data['availability']['start'], start.isoformat())
         self.assertEqual(data['color'], color)
         self.assertEqual(data['availability']['days']['sunday'], sunday)
 

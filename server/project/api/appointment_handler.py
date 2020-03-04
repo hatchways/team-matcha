@@ -63,8 +63,8 @@ def appointment_availability_allowed(availability: Availability, duration: int,
     weekday = calendar.day_name[start.weekday()].lower()
     if not availability.__getattribute__(weekday):
         allowed = False
-    elif start.time() < availability.start or \
-            (start + dt.timedelta(minutes=duration)).time() > availability.end:
+    elif start.timetz() < availability.start or \
+            (start + dt.timedelta(minutes=duration)).timetz() > availability.end:
         allowed = False
     else:
         allowed = True
@@ -311,7 +311,6 @@ class Appointments(Resource):
     def post(self, public_id, event_url):
         """Creates an appointment for the specified event."""
         payload = api.payload
-
         if not start_within_next_x_days(payload['start']):
             raise AppointmentAfterNext_X_DaysError(NEXT_X_DAYS)
 

@@ -13,13 +13,19 @@ class Availability(db.Model):
     thursday = db.Column(db.Boolean, nullable=False)
     friday = db.Column(db.Boolean, nullable=False)
     saturday = db.Column(db.Boolean, nullable=False)
-    start = db.Column(db.Time, nullable=False)
-    end = db.Column(db.Time, nullable=False)
+    start = db.Column(db.Time(timezone=True), nullable=False)
+    end = db.Column(db.Time(timezone=True), nullable=False)
 
 
-def create_availability(sunday=False, monday=True, tuesday=True, wednesday=True,
-                        thursday=True, friday=True, saturday=False,
-                        start=dt.time(8), end=dt.time(17)):
+def create_availability(sunday=False,
+                        monday=True,
+                        tuesday=True,
+                        wednesday=True,
+                        thursday=True,
+                        friday=True,
+                        saturday=False,
+                        start=dt.time(8, tzinfo=dt.timezone.utc),
+                        end=dt.time(17, tzinfo=dt.timezone.utc)):
     """
     Only creates an instance of the Availability class and returns it.
     :param sunday: (Bool) whether the event can be scheduled on Sunday
