@@ -27,7 +27,7 @@ def fetch_free_busy(api_key, user_email):
             "id": user_email
         }]
     }
-    eventsResult = service.freebusy().query(body=body).execute()
-    busy = eventsResult[u'calendars'][user_email][u'busy']
+    response = service.freebusy().query(body=body).execute()
+    busy = response[u'calendars'][user_email][u'busy']
 
     return busy

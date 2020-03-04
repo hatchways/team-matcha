@@ -1,6 +1,6 @@
 import json
 from project import db
-from project.models.user import User, add_user
+from project.models.user import User, add_user, Role, promote_to_member
 from project.test.test_base import TestBase
 
 
@@ -74,6 +74,9 @@ class UserGetTest(TestBase):
         self.assertEqual(name, data['name'])
 
         self.assertEqual(email, data['email'])
+
+        role = data['role'].split('.')[1]
+        self.assertEqual(Role.ON_BOARDING, Role[role])
 
     def test_get_list_of_users(self):
         add_user(name="Joe", email="Joe@email.com")
@@ -161,3 +164,30 @@ class UserPutTest(TestBase):
 
         self.assertEqual(data['message'],
                          "You do not have permission to access this content")
+
+
+class UserRoleTest(TestBase):
+
+    def test_onboarding_role(self):
+        user = add_user("Doe", "Doe@email.com")
+        db.session.commit()
+        user = User.query.filter_by(name="Doe").first()
+
+        self.assertEqual(user.role, Role.ON_BOARDING)
+
+    def test_promote_role_member(self):
+        user = add_user("Doe", "Doe@email.com")
+        db.session.commit()
+
+        # User is first on boarding
+        user = User.query.filter_by(name="Doe").first()
+        self.assertEqual(user.role, Role.ON_BOARDING)
+
+        # User is now on Member
+        promote_to_member(user)
+        user = User.query.filter_by(name="Doe").first()
+        self.assertEqual(user.role, Role.MEMBER)
+
+
+
+
