@@ -1,7 +1,9 @@
 // importing modules
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Box } from '@material-ui/core';
+import momentTZ from 'moment-timezone';
+import { Box, MenuItem, Select } from '@material-ui/core';
+import PublicIcon from '@material-ui/icons/Public';
 // importing components
 import Header from '../../../components/Header/Header';
 import FormSubmitControls from './FormSubmitControls/FormSubmitControls';
@@ -17,6 +19,7 @@ import EventDaysAvlCheckBox from './EventDaysAvlCheckBox/EventDaysAvlCheckBox';
 import PhoneCallModal from './Modals/PhoneCallModal';
 import LocationModal from './Modals/LocationModal';
 import { allFalse } from '../../../Utils/obj-func';
+import { convertIntToISO } from '../../../Utils/time-func';
 
 
 class SoloEventPage extends Component {
@@ -33,6 +36,8 @@ class SoloEventPage extends Component {
             eventStart: 10,
             eventEnd: 17,
             phone: '',
+            timezoneName: momentTZ.tz.guess(true),
+            timezonesArr: momentTZ.tz.names(),
             locationDropDownField: 'Add a location',
             showLocationModal: false,
             showPhoneCallModal: false,
@@ -201,8 +206,8 @@ class SoloEventPage extends Component {
                 url: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
                 color: this.state.eventColor,
                 availability: {
-                start: this.state.eventStart,
-                end: this.state.eventEnd,
+                start: this.state.eventStart, // # convertIntToISO(this.state.eventStart, this.state.timezoneName),
+                end: this.state.eventEnd, // # convertIntToISO(this.state.eventEnd, this.state.timezoneName),
                 days: {
                     ...this.state.daysAvl,
                 }
@@ -297,6 +302,31 @@ class SoloEventPage extends Component {
                             timeAvlEnd={this.state.eventEnd} 
                             handleUserInput={this.handleUserInput}
                         />
+                        <Box className="soloEvent__select--wrap">
+                            <PublicIcon className="soloEvent__select--location"/>&nbsp;
+                            <Box className="soloEvent__select">
+                                <Select
+                                disableUnderline
+                                name="timezoneName"
+                                variant="outlined"
+                                value={this.state.timezoneName}
+                                onChange={this.handleUserInput}
+                                >
+                                    {
+                                        this.state.timezonesArr.length > 0 
+                                            ? this.state.timezonesArr.map((timezoneVal) => { 
+                                            return (
+                                                <MenuItem  key={timezoneVal} value={timezoneVal}> 
+                                                    <p className="soloEvent__select--text">
+                                                        {timezoneVal}
+                                                    </p>
+                                                </MenuItem> )
+                                            }) 
+                                            : null
+                                    }
+                                </Select>
+                            </Box>
+                        </Box>
                         <EventDaysAvlCheckBox
                             handleCheckbox={this.handleCheckbox}
                             daysAvl={this.state.daysAvl}
