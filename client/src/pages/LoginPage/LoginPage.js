@@ -35,7 +35,7 @@ class LoginPage extends React.Component {
             })
             const user = await resp.json()
             console.log(user)
-            if (user.role == "Role.MEMBER"){
+            if (user.role === "Role.MEMBER"){
                 this.props.history.push('/events');
             } else {
                 this.props.history.push(`/intro/${creds.auth_token}`);
