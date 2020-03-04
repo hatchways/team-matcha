@@ -128,6 +128,7 @@ class Calendars():
         for b in busy:
             start = self.str_to_date(b['start'])
             end = self.str_to_date(b['end'])
+            print(f"blocking:{start} - {end}")
             self.set_busy(start, end)
 
 
