@@ -16,10 +16,11 @@ class GoogleCalendarTest(TestBase):
     @patch('project.services.google_calendar.build')
     def test_create_event(self, mock_service):
         """Tests whether an event can be created successfully."""
+        mock_response = {''}
         mock_service.return_value.\
             events.return_value.\
             insert.return_value.\
-            execute.return_value = {'status': 'success', 'code': 200}  # TODO mock actual response
+            execute.return_value = mock_response
         response = create_google_event('',
                                        '',
                                        '',
