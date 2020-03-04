@@ -5,7 +5,7 @@ from project.test.test_base import TestBase
 from project.models.availability import Availability, create_availability
 from project.models.event import Event, add_event
 from project.models.creds import add_cred
-from project.models.user import User, add_user
+from project.models.user import User, add_user, Role
 
 #-------------------------------------------------------------------------------
 # Helper Functions
@@ -242,6 +242,29 @@ class EventCreateTest(TestBase):
                                           'end time. Please resubmit your '
                                           'request with a valid start and end '
                                           'time.')
+
+    def test_add_event_promotes_member(self):
+        """Tests whether an onboarding user is promoted to Member after
+        successful post event
+        """
+        user = add_user()
+        db.session.commit()
+        user_id = user.id
+        auth_token = user.encode_auth_token(user.id)
+        url = 'clickme'
+
+        response = self.api.post(f'/users/{user.public_id}/events',
+                                 headers={'x-access-token': auth_token},
+                                 data=create_event_json(url=url),
+                                 content_type='application/json')
+        data = json.loads(response.data.decode())
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(data['message'], 'success')
+
+        user = User.query.get(user_id)
+        self.assertEqual(user.role, Role.MEMBER)
+
 
 
 class EventsGetTest(TestBase):

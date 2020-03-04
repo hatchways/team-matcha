@@ -14,6 +14,7 @@ from project.test.test_base import TestBase
 
 
 
+
 mock_exchange_auth_code = {
     'id_token': "SOME_ID_TOKEN",
     'access_token': "SOME_ACESS_TOKEN",

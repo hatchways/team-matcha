@@ -3,7 +3,7 @@ from flask_restx import Resource, fields, marshal
 from project import db
 from project.api import api
 from project.models.availability import Availability, create_availability
-from project.models.user import User, add_user
+from project.models.user import User, add_user, Role, promote_to_member
 from project.models.event import Event, add_event, update_event
 from typing import Tuple
 from project.decorators import token_required
@@ -178,6 +178,8 @@ class Events(Resource):
             url=payload['url'],
             color=payload['color'].lstrip('#'))
         db.session.commit()
+        if current_user.role == Role.ON_BOARDING:
+            promote_to_member(current_user)
         return {'message': 'success'}, 201
 
 

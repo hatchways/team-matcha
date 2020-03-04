@@ -11,28 +11,41 @@ class LoginPage extends React.Component {
         this.state = {};
     }
 
-    handleGoogleAuth = (res) => {
-        fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            code: res.code
-        })
-        })
-        .then(data => data.json())
-        .then((data) => {
-            this.props.handleLogin(data.auth_token, data.public_id);
+    handleGoogleAuth = async (res) => {
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    code: res.code
+                })
+            })
+            const creds = await response.json()
+            this.props.handleLogin(creds.auth_token, creds.public_id);
             tokenCreated();
             tokenExpires();
             setIsAuth();
-            setToken(data.auth_token);
-            setUserId(data.public_id);
+            setToken(creds.auth_token);
+            setUserId(creds.public_id);
+            const resp = await fetch(`/users/${creds.public_id}`, {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'},
+            })
+            const user = await resp.json()
+            console.log(user)
+            if (user.role === "Role.MEMBER"){
+                this.props.history.push('/events');
+            } else {
+                this.props.history.push(`/intro/${creds.auth_token}`);
+            }
+
             // redirect if users logs in successfully
-            this.props.history.push(`/intro/${data.auth_token}`);
-        })
-        .catch(err => (err));
+        } catch(e){
+            console.log(e)
+            return e
+        }
     }
 
 

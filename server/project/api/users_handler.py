@@ -6,7 +6,7 @@ from project import  db
 from  project.api import api
 from project.decorators import token_required
 from project.error_handlers import *
-from project.models.user import User, add_user, update_user
+from project.models.user import User, add_user, update_user, Role
 
 users_blueprint = Blueprint('users', __name__)
 
@@ -26,6 +26,8 @@ user_model = api.model(
         'img_url':
         fields.String(
             description="The image url of the user's Google account"),
+        'role':
+        fields.String(description='The object type', enum=Role._member_names_),
     })
 
 #-------------------------------------------------------------------------------
