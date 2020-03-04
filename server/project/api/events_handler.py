@@ -28,6 +28,15 @@ def starttime_after_endtime(availability) -> bool:
 
 events_blueprint = Blueprint('events', __name__)
 
+
+class Time(fields.Raw):
+    __schema_type__ = 'string'
+    __schema_format__ = 'time'
+
+    def format(self, value):
+        return value.isoformat()
+
+
 weekday = fields.Boolean(
     default=True,
     description='Whether an event should be scheduled on this day')
@@ -44,12 +53,10 @@ days_input_output = {
                      'saturday': weekend}
 availability_input_output = api.model(
     'Availability', {
-        'start': fields.Integer(
-            description='Your earliest availability for the event',
-            default=8),
-        'end': fields.Integer(
-            description='Your latest availability for the event',
-            default=17),
+        'start': Time(
+            description='Your earliest availability for the event',),
+        'end': Time(
+            description='Your latest availability for the event',),
         'days': days_input_output})
 event_input_output = api.model(
     'Event', {
@@ -87,9 +94,9 @@ days_put_input = api.model(
         'saturday': day})
 availability_put_input = api.model(
     'Availability', {
-        'start': fields.Integer(
+        'start': fields.String(
             description='Your earliest availability for the event'),
-        'end': fields.Integer(
+        'end': fields.String(
             description='Your latest availability for the event'),
         'days': fields.Nested(days_put_input)})
 event_put_input = api.model(
@@ -128,8 +135,6 @@ class Events(Resource):
             all()
 
         for event in events:
-            event.availability.start = event.availability.start.hour
-            event.availability.end = event.availability.end.hour
             event.color = '#' + event.color
 
         return events, 200
@@ -161,8 +166,8 @@ class Events(Resource):
             thursday=payload['availability']['days']['thursday'],
             friday=payload['availability']['days']['friday'],
             saturday=payload['availability']['days']['saturday'],
-            start=dt.time(payload['availability']['start']),
-            end=dt.time(payload['availability']['end']))
+            start=dt.time.fromisoformat(payload['availability']['start']),
+            end=dt.time.fromisoformat(payload['availability']['end']))
         add_event(
             user_id=user_id,
             availability=availability,
@@ -212,8 +217,6 @@ class EventDetail(Resource):
         response = {}
         event = Event.query.filter_by(url=event_url).first()
         if event is not None:
-            event.availability.start = event.availability.start.hour
-            event.availability.end = event.availability.end.hour
             event.color = '#' + event.color
 
             return event, 200

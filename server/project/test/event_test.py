@@ -38,8 +38,8 @@ class EventModelTest(TestBase):
         add_user(name=name2, email=email2)
         user1_id = User.query.filter_by(email=email1).first().id
         user2_id = User.query.filter_by(email=email2).first().id
-        start1 = dt.time(6)
-        start2 = dt.time(8)
+        start1 = dt.time(6, tzinfo=dt.timezone.utc)
+        start2 = dt.time(8, tzinfo=dt.timezone.utc)
         availability1 = create_availability(start=start1)
         availability2 = create_availability(start=start2)
         url1 = 'aCleverUrl'
