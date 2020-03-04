@@ -340,9 +340,8 @@ class Appointments(Resource):
                                        user_email=user.email,
                                        event_name=event.name,
                                        location=event.location,
-                                       description=f"{appointment.comments}\n\n"
-                                                   f"This event was created by "
-                                                   f"www.calendapp.com",
+                                       description=f"{appointment.comments}\n"
+                                                   f"\n",
                                        start=appointment.start,
                                        end=appointment.end,
                                        participant_email=participant.email)
