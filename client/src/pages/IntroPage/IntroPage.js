@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { Box, Container, Typography } from "@material-ui/core";
 import momentTZ from "moment-timezone";
+import { convertIntToISO } from "../../Utils/time-func";
 
 // importing components
 import IntroStep1 from "./IntroSteps/IntroStep1/IntroStep1";
@@ -117,11 +118,11 @@ class IntroPage extends Component {
             location: "Office",
             description: "Second cubicle past the bathroom.",
             duration: 60,
-            url: "MyFirstEvent", // this.state.userUrl.trim(),
+            url: "myfirstevent", // this.state.userUrl.trim(),
             color: "#3d5afe",
             availability: {
-              start: this.state.timeAvlStart,
-              end: this.state.timeAvlEnd,
+              start: this.state.timeAvlStart, // # convertIntToISO(this.state.timeAvlStart, this.state.timezoneName),
+              end: this.state.timeAvlEnd, // # convertIntToISO(this.state.timeAvlEnd, this.state.timezoneName),
               days: {
                 ...this.state.daysAvl
               }
