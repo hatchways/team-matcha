@@ -214,6 +214,32 @@ input[type=number] {
         }
     }
 
+    &__select--wrap{
+        @include applyFlex(flex-start, flex-start);
+        width: 92%;
+    }
+    &__select{
+        @include solid1pxBorder;
+        border-radius: 100px;
+        font-size: .85rem;
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        padding-left: 10px;
+        padding-right: 10px;
+        width: 200px;
+        &--text{
+            font-size: .85rem;
+            font-weight: $bold-text;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        &--location{
+            @include applyFlex(center, flex-start);
+            margin-bottom: 10px !important;
+            color: $light-gray !important;
+        }
+    }
+
     &__btn{
         &--cancel{
             margin-right: 10px !important;
@@ -268,6 +294,10 @@ input[type=number] {
                     margin: 2px !important;
                 }
             }
+        }
+        &__select--wrap{
+            @include applyFlex(center, center);
+            width: 92%;
         }
     }
 }
