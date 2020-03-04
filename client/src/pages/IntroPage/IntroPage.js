@@ -121,8 +121,8 @@ class IntroPage extends Component {
             url: "myfirstevent", // this.state.userUrl.trim(),
             color: "#3d5afe",
             availability: {
-              start: this.state.timeAvlStart, // # convertIntToISO(this.state.timeAvlStart, this.state.timezoneName),
-              end: this.state.timeAvlEnd, // # convertIntToISO(this.state.timeAvlEnd, this.state.timezoneName),
+              start: convertIntToISO(this.state.timeAvlStart, this.state.timezoneName),
+              end: convertIntToISO(this.state.timeAvlEnd, this.state.timezoneName),
               days: {
                 ...this.state.daysAvl
               }

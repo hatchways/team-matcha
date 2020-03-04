@@ -206,8 +206,8 @@ class SoloEventPage extends Component {
                 url: this.state.eventLink.replace(/\s+/g, '-').toLowerCase(),
                 color: this.state.eventColor,
                 availability: {
-                start: this.state.eventStart, // # convertIntToISO(this.state.eventStart, this.state.timezoneName),
-                end: this.state.eventEnd, // # convertIntToISO(this.state.eventEnd, this.state.timezoneName),
+                start: convertIntToISO(this.state.eventStart, this.state.timezoneName),
+                end: convertIntToISO(this.state.eventEnd, this.state.timezoneName),
                 days: {
                     ...this.state.daysAvl,
                 }
