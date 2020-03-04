@@ -485,7 +485,6 @@ class AppointmentPatchTest(TestBase):
                                   data=json.dumps({'status': status}),
                                   content_type='application/json')
 
-        print(json.loads(response.data.decode()))
         self.assertEqual(response.status_code, 200)
 
         data = json.loads(response.data.decode())
