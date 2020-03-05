@@ -1,6 +1,5 @@
 import json
 import datetime as dt
-import pytz
 from dateutil import parser
 from project import db
 from project.test.test_base import TestBase
@@ -10,6 +9,7 @@ from project.models.user import User, add_user
 from project.models.appointment import Appointment, add_appointment
 from project.models.participant import Participant, create_participant
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
+from unittest.mock import patch
 
 NEXT_X_DAYS = 90  # TODO this should be the exact same value as in
 # TODO appointment_handler.py
@@ -173,8 +173,9 @@ class AppointmentGetAllTest(TestBase):
         self.assertEqual(data['message'], 'Token is missing!')
 
 
+@patch('project.api.appointment_handler.create_google_event', return_value={'status': 200})
 class AppointmentPostTest(TestBase):
-    def test_post_appointments(self):
+    def test_post_appointments(self, _mock_value):
         """Tests whether an appointment can be successfully created and the
         appointment's attributes match what was supplied."""
         add_user()
@@ -214,7 +215,7 @@ class AppointmentPostTest(TestBase):
         self.assertEqual(participant.name, name)
         self.assertEqual(participant.email, email)
 
-    def test_start_after_next_x_days(self):
+    def test_start_after_next_x_days(self, _mock_value):
         """Tests whether a request made with a start time that is more than
         NEXT_X_DAYS is rejected with a 400 response."""
         add_user()
@@ -241,7 +242,7 @@ class AppointmentPostTest(TestBase):
             f"appointment within the next "
             f"{NEXT_X_DAYS} days in the future.")
 
-    def test_multiple_appointments(self):
+    def test_multiple_appointments(self, _mock_value):
         """Tests whether a single participant can have multiple appointments."""
         add_user()
         db.session.commit()
@@ -293,7 +294,7 @@ class AppointmentPostTest(TestBase):
         self.assertEqual(participant[0].name, name)
         self.assertEqual(participant[0].email, email)
 
-    def test_timezone_conversion(self):
+    def test_timezone_conversion(self, _mock_value):
         """Tests whether non utc timezones are correctly converted to UTC time.
         """
         add_user()
@@ -325,7 +326,7 @@ class AppointmentPostTest(TestBase):
             first()
         self.assertEqual(appointment.start, start.astimezone(dt.timezone.utc))
 
-    def test_availability_days(self):
+    def test_availability_days(self, _mock_value):
         """Tests whether a request outside of the available days is rejected
         with a 400 response."""
         add_user()

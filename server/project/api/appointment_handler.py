@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint
 from flask_restx import Resource, fields, marshal, reqparse
 from project import db, api
 from project.models.appointment import Appointment, add_appointment
@@ -11,9 +11,9 @@ from project.error_handlers import *
 import datetime as dt
 from dateutil import parser
 import calendar
-import pytz
 from sqlalchemy import inspect
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
+from project.services.google_calendar import create_google_event
 
 NEXT_X_DAYS = 90  # TODO remove placeholder after calendar PR is implemented
 
@@ -325,14 +325,30 @@ class Appointments(Resource):
 
         participant = participant_exists(payload['participant']['name'],
                                          payload['participant']['email'])
-        add_appointment(event_id=event.id,
-                        participants=[participant],
-                        start=parser.isoparse(payload['start']),
-                        end=parser.isoparse(payload['start']) +
-                        dt.timedelta(minutes=event.duration),
-                        comments=payload['comments'])
+        appointment = add_appointment(
+            event_id=event.id,
+            participants=[participant],
+            start=parser.isoparse(payload['start']),
+            end=parser.isoparse(payload['start']) +
+            dt.timedelta(minutes=event.duration),
+            comments=payload['comments'])
         db.session.commit()
-        return {'message': 'success'}, 201
+
+        user: User = event.user
+        request = create_google_event(creds=user.cred,
+                                      user_email=user.email,
+                                      event_name=event.name,
+                                      location=event.location,
+                                      description=f"{appointment.comments}\n"
+                                                  f"\n",
+                                      start=appointment.start,
+                                      end=appointment.end,
+                                      participant_email=participant.email)
+        response = {'message': 'success'}
+        if 'error' in request.keys():
+            response['googleCalendar'] = 'fail'
+
+        return response, 201
 
 
 @api.route('/users/<public_id>/events/<event_url>/appointments/<iso_start>')
