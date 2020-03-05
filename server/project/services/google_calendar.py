@@ -7,6 +7,8 @@ from project.models.participant import Participant
 import google.oauth2.credentials
 from googleapiclient.discovery import build
 
+from project.models.user import User
+
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
@@ -34,7 +36,7 @@ def fetch_free_busy(api_key, user_email):
     return busy
 
 
-def create_google_event(api_key: str,
+def create_google_event(creds: User.cred,
                         user_email: str,
                         event_name: str,
                         location: str,
@@ -44,7 +46,7 @@ def create_google_event(api_key: str,
                         participant_email: str):
     """
     Creates an events for the appointment and returns TODO
-    :param api_key: our api key
+    :param creds: our api key
     :param user_email: the email for the User that created the vent
     :param event_name: the name of the event
     :param location: the location of the event
@@ -54,8 +56,9 @@ def create_google_event(api_key: str,
     :param participant_email: the email of the participant for the appointment
     :return: TODO
     """
-    creds = google.oauth2.credentials.Credentials(api_key, scopes=SCOPES)
-    service = build('calendar', 'v3', credentials=creds)
+    credentialss = google.oauth2.credentials.Credentials(creds.access_token,
+                                                         scopes=SCOPES)
+    service = build('calendar', 'v3', credentials=credentialss)
 
     event = {
         'summary': event_name,
