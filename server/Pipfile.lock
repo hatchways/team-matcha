@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fecf18587c997d251331194665752cb56c56448407356a211df8cbffee93a1ef"
+            "sha256": "9c85da0944862008ae87a8840cff1ca40e5f6df0e354801a08a0128b8b180199"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -285,11 +285,11 @@
         },
         "python-dotenv": {
             "hashes": [
-                "sha256:8429f459fc041237d98c9ff32e1938e7e5535b5ff24388876315a098027c3a57",
-                "sha256:ca9f3debf2262170d6f46571ce4d6ca1add60bb93b69c3a29dcb3d1a00a65c93"
+                "sha256:81822227f771e0cab235a2939f0f265954ac4763cafd806d845801c863bf372f",
+                "sha256:92b3123fb2d58a284f76cc92bfe4ee6c502c32ded73e8b051c4f6afc8b6751ed"
             ],
             "index": "pypi",
-            "version": "==0.11.0"
+            "version": "==0.12.0"
         },
         "pytz": {
             "hashes": [
@@ -354,12 +354,20 @@
             ],
             "version": "==0.16.1"
         },
+        "yagmail": {
+            "hashes": [
+                "sha256:a055d78eca8846bee8329b1bd337599b0b09462d4d24471fba44db30dbfec03f",
+                "sha256:ca5ff7eee3c190eedd7cbdf05bff69c5c0ae357aef64f89dcc42e4872c6ebe7c"
+            ],
+            "index": "pypi",
+            "version": "==0.11.224"
+        },
         "zipp": {
             "hashes": [
-                "sha256:12248a63bbdf7548f89cb4c7cda4681e537031eda29c02ea29674bc6854460c2",
-                "sha256:7c0f8e91abc0dc07a5068f315c52cb30c66bfbc581e5b50704c8a2f6ebae794a"
+                "sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b",
+                "sha256:c599e4d75c98f6798c509911d08a22e6c021d074469042177c8c86fb92eefd96"
             ],
-            "version": "==3.0.0"
+            "version": "==3.1.0"
         }
     },
     "develop": {}
