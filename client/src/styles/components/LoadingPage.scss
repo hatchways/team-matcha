@@ -1,0 +1,4 @@
+.loading{
+    @include applyFlex(center, center);
+    height: 100vh;
+}
