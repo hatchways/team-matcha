@@ -8,7 +8,7 @@ export const convertIntToISO = (timeToConvert, timezoneName) => {
 }
 
 export const convertIsoToInt = (timeToConvert) => {
-    const currentDate = momentTZ().format('YYYY-DD-MM');
-    const fullDate = `${currentDate}T${timeToConvert}`;
-    return momentTZ(fullDate).format('HH');
+    // creates a moment object from start/end 
+    // formats it to 24hr
+    return momentTZ((parseInt(`${timeToConvert[0]}${timeToConvert[1]}`)),'HH').format('HH');
 }
