@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@material-ui/core';
 import momentTZ from 'moment-timezone';
+import { localizeUtcTime } from '../../../../Utils/time-func';
 import UpcomingScheduleItemDropdown from './UpcomingScheduleItemDropdown/UpcomingScheduleItemDropdown';
 
 const UpcomingScheduleItem = ({ date, start, end, participants, event, created, timezone }) => {
@@ -20,7 +21,7 @@ const UpcomingScheduleItem = ({ date, start, end, participants, event, created, 
         <Box className="upcomingSchedule__content">
             <Box className="upcomingSchedule__content--col1">
                 <Box className="upcomingSchedule__content--color" style={{ backgroundColor: event.color }}></Box>
-                <Box className="upcomingSchedule__content--time">{momentTZ(start).format('hh:mma')} - {momentTZ(end).format('hh:mma')}</Box>
+                <Box className="upcomingSchedule__content--time">{localizeUtcTime(start)} - {localizeUtcTime(end)}</Box>
             </Box>
             <Box className="upcomingSchedule__content--col2">
                 <Typography className="upcomingSchedule__content--text">
