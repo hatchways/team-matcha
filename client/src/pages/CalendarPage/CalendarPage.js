@@ -41,6 +41,8 @@ class CalendarPage extends Component {
         this.handleFetchEvent();
     }
 
+    
+
     handleFetchEvent = () => {
         const { public_id, eventLink } = this.props.match.params; // get params from url
         fetch(`/users/${public_id}/events/${eventLink}`, {
@@ -74,8 +76,12 @@ class CalendarPage extends Component {
             })
             .then(data => data.json())
             .then((calendarData) => {
-                console.log('Calendar data', calendarData);
-                this.setState({ availability: calendarData, isLoading: false }, () => console.log('calendar update timeslots', this.state.availability));
+                const firstDate = Object.keys(calendarData).find(a => calendarData[a].length > 0);
+                this.setState({ 
+                    availability: calendarData, 
+                    isLoading: false, timeslots: 
+                    calendarData[momentTZ(firstDate).format('YYYY-MM-DD')] 
+                });
             })
             .catch(err => (err));
     }
