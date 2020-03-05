@@ -1,59 +1,32 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@material-ui/core';
-import moment from 'moment';
 // importing components
 import ScheduleNav from '../ScheduleNav/ScheduleNav';
 import NoScheduledItems from '../NoScheduledItems/NoScheduledItems';
 import UpcomingScheduleItem from '../UpcomingSchedule/UpcomingScheduleItem/UpcomingScheduleItem';
+import SpinnerLarge from '../../../components/Spinners/SpinnerLarge';
 
-/* {
- *     eventDate: moment().format('dddd MMMM Do'),
- *     eventName: '15 minute meeting',
- *     eventType: 'One-on-One',
- *     eventInvitee: 'John-doe',
- *     eventInviteeEmail: 'john-doe@gmail.com',
- *     eventOriginallyScheduled: 'February 14, 2020',
- *     eventInviteeTimezone: 'Pacific Time - US & Canada',
- *     eventColor: '#651fff',
- *     eventScheduledTime: '10:00am - 10:15am'
- * }
- *  */
+const UpcomingSchedule = (props) => {
+    const [upcomingSchedule, setSchedule] = useState([]);
+    const [loading, setIsLoading] = useState(true);
 
-class UpcomingSchedule extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            upcomingSchedule: []
-        };
-    }
-
-    componentDidMount(){
-        console.log('fetch upcoming schedule from the server!');
-        console.log(this.props)
-        this.handleFetchAppts()
-    }
-
-    handleFetchAppts = () => {// should render all events for the user
-        fetch(`/users/${this.props.userId}/appointments`, {
+    useEffect(() => {
+        fetch(`/users/${props.userId}/appointments`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-access-token': this.props.token
+                'X-access-token': props.token
             }
         })
         .then(data => data.json())
         .then((apptData) => {
-            this.setState({upcomingSchedule: apptData})
-            console.log('appointment data', apptData);
+            setSchedule(apptData);
+            setIsLoading(false);
         })
         .catch(err => (err));
-    }
+    }, []);
 
-    render(){
-
-        const { upcomingSchedule } = this.state;
         const upcomingScheduleCount = upcomingSchedule.length > 0 ? upcomingSchedule.length : 0;
-
         return (
             <Box className="upcomingSchedule">
                 <Box className="upcomingSchedule__header">
@@ -63,17 +36,18 @@ class UpcomingSchedule extends Component {
                 </Box>
                 <Box>
                     <ScheduleNav />
-                    <Box className="upcomingSchedule__list">
-                        {
-                            upcomingSchedule.length > 0 
-                                ? upcomingSchedule.map((upcomingEvent, index) => <UpcomingScheduleItem key={index} {...upcomingEvent} />)
-                                : <NoScheduledItems text="No Upcoming Events"/>
-                        }
-                    </Box>
+                    { loading ? <SpinnerLarge /> :
+                        <Box className="upcomingSchedule__list">
+                            {
+                                upcomingSchedule.length > 0 
+                                    ? upcomingSchedule.map((upcomingEvent, index) => <UpcomingScheduleItem key={index} {...upcomingEvent} />)
+                                    : <NoScheduledItems text="No Upcoming Events"/>
+                            }
+                        </Box>
+                    }
                 </Box>
             </Box>
         );
-    }
-};
+}
 
 export default UpcomingSchedule;
