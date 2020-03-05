@@ -33,7 +33,7 @@ class CalendarTest(TestBase):
         avail = init_avail(friday=False)
         next_x_days = 10
         event_duration = 60
-        today = dt.strptime("2020-02-21T00:00:00Z", '%Y-%m-%dT%H:%M:%SZ')
+        today = dt.strptime("2020-02-20T00:00:00Z", '%Y-%m-%dT%H:%M:%SZ')
 
         c = Calendars(today=today,
                      duration=event_duration,
@@ -51,7 +51,7 @@ class CalendarTest(TestBase):
         avail = init_avail(monday=False, wednesday=False, friday=False)
         next_x_days = 10
         event_duration = 60
-        today = dt.strptime("2020-02-21T00:00:00Z", '%Y-%m-%dT%H:%M:%SZ')
+        today = dt.strptime("2020-02-20T00:00:00Z", '%Y-%m-%dT%H:%M:%SZ')
 
         c = Calendars(today=today,
                      duration=event_duration,
@@ -80,7 +80,7 @@ class CalendarTest(TestBase):
         ]
         next_x_days = 1
         event_duration = 30
-        today = dt.strptime("2020-02-21T00:00:00Z", '%Y-%m-%dT%H:%M:%SZ')
+        today = dt.strptime("2020-02-20T00:00:00Z", '%Y-%m-%dT%H:%M:%SZ')
 
         c = Calendars(today=today,
                      duration=event_duration,
@@ -107,7 +107,7 @@ class CalendarTest(TestBase):
         ]
         next_x_days = 2
         event_duration = 30
-        today = dt.strptime("2020-02-21T00:00:00Z", '%Y-%m-%dT%H:%M:%SZ')
+        today = dt.strptime("2020-02-20T00:00:00Z", '%Y-%m-%dT%H:%M:%SZ')
 
         c = Calendars(today=today,
                      duration=event_duration,
@@ -143,7 +143,7 @@ class CalendarTest(TestBase):
         ]
         next_x_days = 2
         event_duration = 30
-        today = dt.strptime("2020-02-21T00:00:00Z", '%Y-%m-%dT%H:%M:%SZ')
+        today = dt.strptime("2020-02-20T00:00:00Z", '%Y-%m-%dT%H:%M:%SZ')
 
         c = Calendars(today=today,
                      duration=event_duration,
