@@ -143,7 +143,7 @@ class CalendarPage extends Component {
                 isLoading: !prevState.isLoading,
                 [name]: value
             }
-        }, () => console.log(this.state));
+        });
         this.handleFetchCalendar(value); // fetches calendar on timeZone change
     };
 
