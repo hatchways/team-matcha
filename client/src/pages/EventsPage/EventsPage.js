@@ -1,5 +1,5 @@
 // importing modules
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@material-ui/core";
 // importing components
 import EventPageHeader from "./EventPageHeader/EventPageHeader";
@@ -7,105 +7,82 @@ import EventCard from "./EventPageCard/EventsPageCard";
 import EventPageMsg from "./EventPageMsg/EventPageMsg";
 import SpinnerLarge from '../../components/Spinners/SpinnerLarge';
 
-class EventsPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      events: [],
-      userDetails: {}
-    };
-  }
+const EventsPage = (props) => {
+    const [events, setEvents] = useState([]);
+    const [user, setUser] = useState({});
+    const [loading, setIsLoading] = useState(true);
 
-
-    componentDidMount() {
-        this.handleFetchUser();
-    }
-
-    fetchEvents = (public_id) => {
-        console.log('fetching events for:' + public_id);
-        fetch(`/users/${public_id}/events`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-access-token': this.props.token
-            }
-        })
-            .then(data => data.json())
-            .then((data) => {
-                console.log('events data', data);
-                this.setState({ events: data });
-            })
-            .catch(err => (err));
-    }
-
-
-    handleFetchUser = () => {
+    useEffect(() => {
         fetch(`/users/details`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-access-token': this.props.token
+                'X-access-token': props.token
             }
             })
             .then(data => data.json())
-            .then((data) => {
-                console.log('user details', data);
-                this.props.setImageUrl(data.img_url);
-                this.setState({ userDetails: {...data} });
-                this.fetchEvents(data.public_id);
+            .then((userData) => {
+                props.setImageUrl(userData.img_url);
+                setUser({...userData});
+                fetchEvents(userData.public_id);
             })
             .catch(err => (err));
-    }
+    }, []);
 
-    handleRemoveEvent = (url) => {
-        // this.setState((prevState) => ({
-        //     events: prevState.events.filter((event) => event.eventId !== id)
-        // }))
-        fetch(`/users/${this.state.userDetails.public_id}/events/${url}`, {
+    const fetchEvents = (public_id) => {
+      fetch(`/users/${public_id}/events`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-access-token': props.token
+          }
+      })
+          .then(data => data.json())
+          .then((eventsData) => {
+              setEvents(eventsData);
+              setIsLoading(false);
+          })
+          .catch(err => (err));
+  }
+
+    const handleRemoveEvent = (url) => {
+        fetch(`/users/${props.userId}/events/${url}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'X-access-token': this.props.token
+                'X-access-token': props.token
             }
         })
             .then(data => data.json())
             .then((data) => {
-                this.fetchEvents(this.state.userDetails.public_id);
+                fetchEvents(props.userId);
             })
             .catch(err => (err));
     };
 
-
-
-
-  render() {
-    const { events } = this.state;
-
     return (
       <Box className="eventPage">
         <EventPageHeader
-          img={this.props.profileImageUrl}
-          {...this.state.userDetails}
+          img={props.profileImageUrl}
+          {...user}
         />
         {
-          this.state.userDetails.public_id !== undefined ? 
+          loading ? <SpinnerLarge /> :
           <Box className="eventPage__container">
           {events.length > 0 ? (
             events.map((event, index) => (
               <EventCard
-                handleRemoveEvent={this.handleRemoveEvent}
-                handleLinkToClipBoard={this.handleLinkToClipBoard}
+                handleRemoveEvent={handleRemoveEvent}
                 key={index}
-                userName={this.state.userDetails.public_id}
+                userName={user.public_id}
                 {...event}
               />
             ))
-          ) : <EventPageMsg public_id={this.state.userDetails.public_id} />}
-        </Box> : <SpinnerLarge />
+          ) : <EventPageMsg public_id={user.public_id} />}
+        </Box> 
         }
       </Box>
     );
   }
-}
 
 export default EventsPage;
