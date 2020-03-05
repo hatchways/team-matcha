@@ -29,7 +29,7 @@ class Calendars():
         """
         # Now should be calcualted as the 00:00am of today
         self.timezone = pytz.timezone(timezone)
-        self.today_start = self.start_of_day(today.astimezone(self.timezone))
+        self.today_start = self.start_of_day(today.astimezone(self.timezone) + datetime.timedelta(days=1) )
         self.next_days = [
             self.today_start + datetime.timedelta(days=x)
             for x in range(next_x_days)
@@ -119,9 +119,6 @@ class Calendars():
             self.calendar_bit_field |= mask << s
 
     def block_events(self, busy):
-        # TODO When Apointment Model gets added need to block slots given a list
-        # of start end times from Appointments. Could maybe use the this same function
-        # given the same type of input
         """
         params: a list of dicts with set of keys #(start, end) and values are
         datetime RFC3339 formated strings.
@@ -131,14 +128,12 @@ class Calendars():
         for b in busy:
             start = self.str_to_date(b['start']).astimezone(self.timezone)
             end = self.str_to_date(b['end']).astimezone(self.timezone)
-            # print(f"start:{start}, end:{end}")
             self.set_busy(start, end)
 
     def block_unavail_days(self, avail):
         def mask_from_avail_times(start, end):
             start = ((start.hour * 60) + start.minute) // self.MIN_RESOLUTION
             end = ((end.hour * 60) + end.minute) // self.MIN_RESOLUTION
-            # print(f"start:{start} end:{end}")
             if start < end:
                 # 111111111110000000000111111111111
                 mask = (((1 << (end - start)) - 1) << start) ^ self.MAX_DAY_MASK
@@ -169,7 +164,7 @@ class Calendars():
         end = dt.now(avail.end.tzinfo).replace(
             hour=avail.end.hour,
             minute=avail.end.minute,
-        ).astimezone(self.timezone)
+       ).astimezone(self.timezone)
 
         for day in self.next_days:
             day = self.start_of_day(day)
