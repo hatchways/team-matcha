@@ -8,6 +8,7 @@ import CalendarEvent from './CalendarEvent/CalendarEvent';
 import Calendar from './Calendar/Calendar';
 import ConfirmModal from './ConfirmModal/ConfirmModal';
 import TimeSlotMobileList from './TimeSlotMobileList/TimeSlotMobileList';
+import LoadingPage from '../../components/LoadingPage/LoadingPage';
 
 class CalendarPage extends Component {
     constructor(props){
@@ -30,12 +31,13 @@ class CalendarPage extends Component {
                 name: '',
                 duration: '',
                 location: ''
-            }
+            },
+            isLoading: true
         }
     }
 
     componentWillMount(){
-        this.handleFetchCalendar();
+        this.handleFetchCalendar(this.state.timezoneName);
         this.handleFetchEvent();
     }
 
@@ -62,9 +64,9 @@ class CalendarPage extends Component {
             .catch(err => (err));
     }
 
-    handleFetchCalendar = () => {
+    handleFetchCalendar = (timezone) => {
         const { public_id, eventLink } = this.props.match.params; // get params from url
-        fetch(`/users/${public_id}/events/${eventLink}/calendar?timezone=${this.state.timezoneName}`, {
+        fetch(`/users/${public_id}/events/${eventLink}/calendar?timezone=${timezone}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -73,7 +75,7 @@ class CalendarPage extends Component {
             .then(data => data.json())
             .then((calendarData) => {
                 console.log('Calendar data', calendarData);
-                this.setState({ availability: calendarData });
+                this.setState({ availability: calendarData, isLoading: false }, () => console.log('calendar update timeslots', this.state.availability));
             })
             .catch(err => (err));
     }
@@ -136,13 +138,21 @@ class CalendarPage extends Component {
     // method: gets the users text-input & dropwDown selection values
     handleUserInput = e => {
         const { value, name } = e.target;
-        this.setState({ [name]: value }, () => console.log(this.state));
+        this.setState((prevState) => {
+            return {
+                isLoading: !prevState.isLoading,
+                [name]: value
+            }
+        }, () => console.log(this.state));
+        this.handleFetchCalendar(value); // fetches calendar on timeZone change
     };
 
     handleCloseSlider = () => (this.setState({ showTimeSlotSlider: false }));
     
     render(){
         return (
+            <React.Fragment>
+            { this.state.isLoading === true ? <LoadingPage /> :
             <Box className="calendarPage">
                 <Box boxShadow={3} className="calendarPage__container">
                 {/*slider start*/}
@@ -202,6 +212,8 @@ class CalendarPage extends Component {
                         location={this.state.event.location}
                         /> : null }
             </Box>
+            }
+            </React.Fragment>
         )
     }
 }
