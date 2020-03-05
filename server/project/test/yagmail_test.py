@@ -2,11 +2,7 @@ from __future__ import print_function
 from unittest import TestCase
 import os
 import yagmail as yag
-import pickle
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-import datetime as dt
+
 
 ###########
 # Warning #
