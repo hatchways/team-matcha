@@ -14,7 +14,7 @@ export const convertIsoToInt = (timeToConvert) => {
 
 export const localizeUtcTime = (timeToConvert) => {
     const local = momentTZ.utc(timeToConvert).toDate();
-    // return momentTZ(local).local().subtract(1, 'h').format('hh:mma');
-    return momentTZ(local).local().format('hh:mma');
+    return momentTZ(local).local().subtract(1, 'h').format('hh:mma');
+    // return momentTZ(local).local().format('hh:mma');
 
 }
