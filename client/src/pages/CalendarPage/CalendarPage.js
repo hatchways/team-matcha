@@ -16,7 +16,7 @@ class CalendarPage extends Component {
         this.state = {
             date: momentTZ().add(1, 'd'),
             dateSelectedFormatted: '',
-            maxdate: momentTZ().add(90, 'd'),
+            maxdate: momentTZ().add(89, 'd'),
             mindate: momentTZ().add(1, 'd'),
             availability: {},
             timezoneName: momentTZ.tz.guess(true),
