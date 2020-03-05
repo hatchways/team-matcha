@@ -64,7 +64,7 @@ class CalendarPage extends Component {
 
     handleFetchCalendar = () => {
         const { public_id, eventLink } = this.props.match.params; // get params from url
-        fetch(`/users/${public_id}/events/${eventLink}/calendar`, {
+        fetch(`/users/${public_id}/events/${eventLink}/calendar?timezone=${this.state.timezoneName}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
