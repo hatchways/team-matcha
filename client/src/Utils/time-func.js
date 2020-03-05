@@ -8,7 +8,6 @@ export const convertIntToISO = (timeToConvert, timezoneName) => {
 }
 
 export const convertIsoToInt = (timeToConvert) => {
-    // creates a moment object from start/end 
-    // formats it to 24hr
-    return momentTZ((parseInt(`${timeToConvert[0]}${timeToConvert[1]}`)),'HH').format('HH');
+    const formattedTimeSlot24hr = momentTZ(`${timeToConvert[0]}${timeToConvert[1]}:00`, 'HH:mm').format('HH:mm:ss'); // formatting time to reflect hour&minutes in 24hr format
+    return parseInt(momentTZ(formattedTimeSlot24hr, 'HH:mm').format('HH'));
 }
