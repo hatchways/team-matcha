@@ -65,12 +65,9 @@ class Calendar(Resource):
             busy = fetch_free_busy(access_token, user)
             appointments = query_appointments(user)
             avail = event.availability
-            # # America/Los_Angeles
-            # timezone = pytz.timezone("America/New_York")
             c = Calendars(duration=event.duration,
                           next_x_days=NEXT_X_DAYS,
                           timezone=timezone)
-            # TODO Uncomment
             c.block_unavail_days(avail)
             c.block_events(busy)
             c.block_events(appointments)
