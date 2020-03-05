@@ -2,6 +2,7 @@ from datetime import datetime as dt, timezone, timedelta
 import datetime
 
 import time
+import pytz
 
 
 class Calendars():
@@ -13,12 +14,13 @@ class Calendars():
       - 00:15 from TODAY and so on.
     """
 
-    DAILY_SLOTS = 96 # 15 min is our minimum resolution so there is 96 slots in a day
-    MAX_DAY_MASK = (1 << DAILY_SLOTS) - 1 #bit field, every slot for the day is flipped to 1
-    SLOT_MINUTES = 30 # minutes of slots we want to return
+    DAILY_SLOTS = 96  # 15 min is our minimum resolution so there is 96 slots in a day
+    MAX_DAY_MASK = (1 << DAILY_SLOTS
+                    ) - 1  #bit field, every slot for the day is flipped to 1
+    SLOT_MINUTES = 30  # minutes of slots we want to return
     MIN_RESOLUTION = 15
 
-    def __init__(self, today=dt.utcnow(), duration=None, next_x_days=90):
+    def __init__(self, today=dt.utcnow(), duration=None, next_x_days=90, timezone="UTC"):
         """
         params:
             today - datetime
@@ -26,7 +28,8 @@ class Calendars():
             next_x_days - number of days in the future to handle
         """
         # Now should be calcualted as the 00:00am of today
-        self.today_start = self.start_of_day(today)
+        self.timezone = pytz.timezone(timezone)
+        self.today_start = self.start_of_day(today.astimezone(self.timezone))
         self.next_days = [
             self.today_start + datetime.timedelta(days=x)
             for x in range(next_x_days)
@@ -91,7 +94,7 @@ class Calendars():
         date: 2020-02-22T00:00:00Z
         returns 96 since (24h * (60min / 15min)) = 96
         """
-        timedelta = date - self.today_start
+        timedelta = date.astimezone(self.timezone) - self.today_start
         return round(timedelta.total_seconds() // 60) // self.MIN_RESOLUTION
 
     def set_busy(self, start, end):
@@ -126,16 +129,25 @@ class Calendars():
         side effects: updates self.calendar bit_field
         """
         for b in busy:
-            start = self.str_to_date(b['start'])
-            end = self.str_to_date(b['end'])
+            start = self.str_to_date(b['start']).astimezone(self.timezone)
+            end = self.str_to_date(b['end']).astimezone(self.timezone)
+            # print(f"start:{start}, end:{end}")
             self.set_busy(start, end)
-
 
     def block_unavail_days(self, avail):
         def mask_from_avail_times(start, end):
             start = ((start.hour * 60) + start.minute) // self.MIN_RESOLUTION
             end = ((end.hour * 60) + end.minute) // self.MIN_RESOLUTION
-            mask = (((1 << (end - start)) - 1) << start) ^ self.MAX_DAY_MASK
+            # print(f"start:{start} end:{end}")
+            if start < end:
+                # 111111111110000000000111111111111
+                mask = (((1 << (end - start)) - 1) << start) ^ self.MAX_DAY_MASK
+            else:
+                # 000111111111111111111111111110000
+                #set left zeroes
+                mask = self.MAX_DAY_MASK >> (self.DAILY_SLOTS - start)
+                #set right zeroes
+                mask = ((1 << end)-1) ^ mask
             return mask
 
         a = [
@@ -147,19 +159,26 @@ class Calendars():
             avail.saturday,
             avail.sunday,
         ]
-        mask = mask_from_avail_times(avail.start, avail.end)
+
+        # Convert avail start and end time to requested tiemzone
+        start = dt.now(avail.start.tzinfo).replace(
+            hour=avail.start.hour,
+            minute=avail.start.minute,
+        ).astimezone(self.timezone)
+
+        end = dt.now(avail.end.tzinfo).replace(
+            hour=avail.end.hour,
+            minute=avail.end.minute,
+        ).astimezone(self.timezone)
+
         for day in self.next_days:
             day = self.start_of_day(day)
             days_from_today = (day - self.today_start).days
             if not a[day.weekday()]:
-                # Day is Unavailable, flip alll bits in that day to 1
                 mask = (1 << self.DAILY_SLOTS) - 1
                 self.calendar_bit_field |= (
                     mask << (self.DAILY_SLOTS * days_from_today))
             else:
-                # Day is Available, flip all bits outside the availability
-                # start - end range
-                mask = (1 << self.DAILY_SLOTS) - 1
-                mask = mask_from_avail_times(avail.start, avail.end)
+                mask = mask_from_avail_times(start, end)
                 self.calendar_bit_field |= mask << (self.DAILY_SLOTS *
                                                     days_from_today)

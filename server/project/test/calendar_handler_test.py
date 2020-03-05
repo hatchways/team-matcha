@@ -45,8 +45,7 @@ class CalendarTestCase(TestBase):
                 }
             }
         }
-        with patch('project.services.google_calendar.build'
-                   ) as mock_method:
+        with patch('project.services.google_calendar.build') as mock_method:
             mock_method.return_value.freebusy.return_value.query.\
             return_value.execute.return_value = mock_response
             result = seed_event()
@@ -55,9 +54,9 @@ class CalendarTestCase(TestBase):
             db.session.commit()
 
             response = self.api.get(
-                f'/users/{user.public_id}/events/{event.url}/calendar')
+                f'/users/{user.public_id}/events/{event.url}/calendar?timezone=America/Los_Angeles'
+            )
 
             data = json.loads(response.data.decode())
 
             self.assertEqual(response.status_code, 200)
-
