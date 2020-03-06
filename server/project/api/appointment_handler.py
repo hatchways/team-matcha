@@ -14,6 +14,11 @@ import calendar
 from sqlalchemy import inspect
 # from calendar import NEXT_X_DAYS  # TODO fix import and remove placeholder
 from project.services.google_calendar import create_google_event
+import os
+from string import Template
+import codecs
+import yagmail as yag
+import pytz
 
 NEXT_X_DAYS = 90  # TODO remove placeholder after calendar PR is implemented
 
@@ -85,6 +90,49 @@ def edit_appointment(params, appointment: Appointment) -> Appointment:
             setattr(appointment, key, value)
     return appointment
 
+
+def send_email(
+        recipient: str,
+        appointment: Appointment,
+        template_path: str,
+        google_email=os.environ.get('GOOGLE_EMAIL'),
+        google_pass=os.environ.get('GOOGLE_PASS'),):
+    """
+    Sends an email to the recipient and returns the response.
+    :param recipient: email of the recipient
+    :param appointment: appointment scheduled
+    :param template_path: location of the html template
+    :param google_email: gmail the email is sent from
+    :param google_pass: password for the gmail account
+    :return: returns the response from sending the email
+    """
+    template = Template(codecs.open(
+        template_path,
+        'r',
+        'utf-8'
+    ).read())
+    timezone: dt.timezone = appointment.event.availability.start.tzinfo
+    start: dt.datetime = appointment.start.astimezone(timezone)
+    end: dt.datetime = appointment.end.astimezone(timezone)
+    content = template.substitute(event_name=appointment.event.name,
+                                  event_description=appointment.event.
+                                  description,
+                                  event_location=appointment.event.location,
+                                  appointment_start=start.strftime(
+                                      '%A, %B %-d, %Y, %I:%M %p'),
+                                  appointment_end=end.strftime(
+                                      '%A, %B %-d, %Y, %I:%M %p'),
+                                  participant_name=appointment.participants[0].
+                                  name,
+                                  appointment_comments=appointment.comments,)
+    calendapp = yag.SMTP(google_email, google_pass)
+    email = calendapp.send(to=recipient,
+                           subject=f"New appointment: "
+                                   f"{appointment.participants[0].name} - "
+                                   f"{start.strftime('%A, %B %-d, %Y, %I:%M %p')} "
+                                   f"- {appointment.event.duration}mins",
+                           contents=content,)
+    return email
 
 #-------------------------------------------------------------------------------
 # Serializers
@@ -347,6 +395,11 @@ class Appointments(Resource):
         response = {'message': 'success'}
         if 'error' in request.keys():
             response['googleCalendar'] = 'fail'
+
+        response = send_email(user.email,
+                              appointment,
+                              'project/resources/templates/email_template.html',
+                              )
 
         return response, 201
 
