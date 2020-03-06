@@ -7,7 +7,7 @@ import EventCard from "./EventPageCard/EventsPageCard";
 import EventPageMsg from "./EventPageMsg/EventPageMsg";
 import SpinnerLarge from '../../components/Spinners/SpinnerLarge';
 
-const EventsPage = (props) => {
+const EventsPage = ({setImageUrl, token, userId, profileImageUrl}) => {
     const [events, setEvents] = useState([]);
     const [user, setUser] = useState({});
     const [loading, setIsLoading] = useState(true);
@@ -17,12 +17,12 @@ const EventsPage = (props) => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-access-token': props.token
+                'X-access-token': token
             }
             })
             .then(data => data.json())
             .then((userData) => {
-                props.setImageUrl(userData.img_url);
+                setImageUrl(userData.img_url);
                 setUser({...userData});
                 fetchEvents(userData.public_id);
             })
@@ -34,7 +34,7 @@ const EventsPage = (props) => {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json',
-              'X-access-token': props.token
+              'X-access-token': token
           }
       })
           .then(data => data.json())
@@ -46,16 +46,16 @@ const EventsPage = (props) => {
   }
 
     const handleRemoveEvent = (url) => {
-        fetch(`/users/${props.userId}/events/${url}`, {
+        fetch(`/users/${userId}/events/${url}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'X-access-token': props.token
+                'X-access-token': token
             }
         })
             .then(data => data.json())
             .then((data) => {
-                fetchEvents(props.userId);
+                fetchEvents(userId);
             })
             .catch(err => (err));
     };
@@ -63,7 +63,7 @@ const EventsPage = (props) => {
     return (
       <Box className="eventPage">
         <EventPageHeader
-          img={props.profileImageUrl}
+          img={profileImageUrl}
           {...user}
         />
         {

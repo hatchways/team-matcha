@@ -13,10 +13,9 @@ const ApptConfirmedPage = (props) => {
     const [apptStart, setApptStart] = useState('');
     const [apptEnd, setApptEnd] = useState('');
     const [loading, setIsLoading] = useState(true);
-
+    const { public_id, eventLink, appointmentId } = props.match.params; // get params from url
 
     useEffect(() => {
-        const { public_id, eventLink, appointmentId } = props.match.params; // get params from url
         fetch(`/users/${public_id}/events/${eventLink}`, {
         method: 'GET',
         headers: {
@@ -33,8 +32,6 @@ const ApptConfirmedPage = (props) => {
         .catch(err => (err));
     }, []);
 
-
-        const { public_id, appointmentId } = props.match.params;
         const userEventScheduleFor = momentTZ(`${appointmentId}`).utcOffset(appointmentId).format('dddd, MMMM Do, YYYY Z'); // formats invitee meeting (local-time)
 
         return (
