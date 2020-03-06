@@ -91,7 +91,7 @@ class CalendarPage extends Component {
         this.setState({   
             date: date, 
             timeslots: this.state.availability[date.format('YYYY-MM-DD')]
-            }, () => console.log(this.state)
+            }
         );
         const { public_id, eventLink } = this.props.match.params; // get params from url
         const monthQuery = date.format('YYYY-MM'); // set month query url-param
@@ -100,14 +100,14 @@ class CalendarPage extends Component {
     };
 
     // method: handles date change and time-slots to render
-    handleMobileDateChange = (date) => {
+    handleMobileDateChange = (date, mobile=false) => {
         this.setState((prevState) => {
             return {
                 date: date, 
                 timeslots: this.state.availability[date.format('YYYY-MM-DD')],
-                showTimeSlotSlider: !prevState.showTimeSlotSlider
+                showTimeSlotSlider: mobile === false ? !prevState.showTimeSlotSlider : false
             }
-        }, () => console.log(this.state));
+        });
         const { public_id, eventLink } = this.props.match.params; // get params from url
         const monthQuery = date.format('YYYY-MM'); // set month query url-param
         const dateQuery = date.format('YYYY-MM-DD'); // set date query url-param
