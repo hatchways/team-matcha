@@ -1,14 +1,16 @@
 // importing modules
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+import React from 'react';
 import { Box, Typography } from '@material-ui/core';
-import moment from 'moment';
+// import moment from 'moment';
 // importing components
 import ScheduleNav from '../ScheduleNav/ScheduleNav';
 import NoScheduledItems from '../NoScheduledItems/NoScheduledItems';
 import PastScheduleItem from '../PastSchedule/PastScheduleItem/PastScheduleItem';
 
 const PastSchedule = () => {
-    const [pastSchedule, setSchedule] = useState([]);
+    // const [pastSchedule, setSchedule] = useState([]);
+    const pastSchedule = [];
     const pastScheduleCount = pastSchedule.length > 0 ? pastSchedule.length : 0;
 
     // should fetch appointments
