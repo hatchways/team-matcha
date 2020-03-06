@@ -118,7 +118,7 @@ class IntroPage extends Component {
             location: "Office",
             description: "Second cubicle past the bathroom.",
             duration: 60,
-            url: "myfirstevent", // this.state.userUrl.trim(),
+            url: this.props.userId.trim() + "-welcome",
             color: "#3d5afe",
             availability: {
               start: convertIntToISO(this.state.timeAvlStart, this.state.timezoneName),
