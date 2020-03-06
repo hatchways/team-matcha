@@ -22,7 +22,6 @@ import datetime as dt
 class YagmailTest(TestCase):
     GOOGLE_EMAIL = os.environ.get('GOOGLE_EMAIL')
     GOOGLE_PASS = os.environ.get('GOOGLE_PASS')
-    SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
     def test_login(self):
         """Tests whether gmail login is working correctly."""
