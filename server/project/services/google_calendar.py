@@ -64,15 +64,23 @@ def create_google_event(creds: User.cred,
     :param participant_email: the email of the participant for the appointment
     :return: TODO
     """
-    credentialss = google.oauth2.credentials.Credentials(creds.access_token,
-                                                         scopes=SCOPES)
-    service = build('calendar', 'v3', credentials=credentialss)
+
+    refresh_token = creds.refresh_token
+    api_key = creds.access_token
+    credentials = google.oauth2.credentials.Credentials(
+        api_key,
+        client_id=current_app.config['OAUTH_CLIENT_ID'],
+        client_secret=current_app.config['OAUTH_CLIENT_SECRET'],
+        token_uri="https://accounts.google.com/o/oauth2/token",
+        refresh_token=refresh_token,
+        scopes=SCOPES)
+    service = build('calendar', 'v3', credentials=credentials)
 
     event = {
         'summary': event_name,
         'location': location,
         'description': description + '\n\n' + 'This event was created by '
-                                              'www.calendapp.com',
+        'www.calendapp.com',
         'start': {
             'dateTime': start.isoformat(),
         },
@@ -80,8 +88,12 @@ def create_google_event(creds: User.cred,
             'dateTime': end.isoformat(),
         },
         'attendees': [
-            {'email': user_email},
-            {'email': participant_email},
+            {
+                'email': user_email
+            },
+            {
+                'email': participant_email
+            },
         ],
         'reminders': {
             'useDefault': True,
