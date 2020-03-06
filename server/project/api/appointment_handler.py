@@ -18,7 +18,6 @@ import os
 from string import Template
 import codecs
 import yagmail as yag
-import pytz
 
 NEXT_X_DAYS = 90  # TODO remove placeholder after calendar PR is implemented
 
@@ -382,24 +381,28 @@ class Appointments(Resource):
             comments=payload['comments'])
         db.session.commit()
 
-        user: User = event.user
-        request = create_google_event(creds=user.cred,
-                                      user_email=user.email,
-                                      event_name=event.name,
-                                      location=event.location,
-                                      description=f"{appointment.comments}\n"
-                                                  f"\n",
-                                      start=appointment.start,
-                                      end=appointment.end,
-                                      participant_email=participant.email)
         response = {'message': 'success'}
-        if 'error' in request.keys():
+
+        user: User = event.user
+        calendar_response = create_google_event(
+            creds=user.cred,
+            user_email=user.email,
+            event_name=event.name,
+            location=event.location,
+            description=f"{appointment.comments}\n"
+                        f"\n",
+            start=appointment.start,
+            end=appointment.end,
+            participant_email=participant.email)
+        if 'error' in calendar_response.keys():
             response['googleCalendar'] = 'fail'
 
-        response = send_email(user.email,
-                              appointment,
-                              'project/resources/templates/email_template.html',
-                              )
+        gmail_response = send_email(user.email,
+                                    appointment,
+                                    'project/resources/templates/'
+                                    'email_template.html',)
+        if len(gmail_response) > 0:
+            response['googleEmail'] = 'fail'
 
         return response, 201
 
