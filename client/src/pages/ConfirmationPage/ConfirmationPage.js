@@ -28,8 +28,6 @@ class ConfirmationPage extends Component {
     }
 
     componentDidMount(){
-        const { date } = this.props.match.params;
-        console.log(date);
         this.handleFetchEvent();
     }
 
@@ -43,7 +41,6 @@ class ConfirmationPage extends Component {
             })
             .then(data => data.json())
             .then((eventData) => {
-                console.log(eventData);
                 this.setState({
                     event: {
                         ...this.state.event, 
@@ -77,7 +74,6 @@ class ConfirmationPage extends Component {
             })
             .then(data => data.json())
             .then((calendarData) => {
-                // console.log('calendar data', calendarData);
                 this.setState({ availability: calendarData });
             })
             .catch(err => (err));
@@ -137,7 +133,6 @@ class ConfirmationPage extends Component {
             })
             .then(data => data.json())
             .then((calendarData) => {
-                console.log('calendar data', calendarData);
                 this.setState({ availability: calendarData });
                 this.props.history.push(`/${public_id}/${eventLink}/invitees/${date}`);
             })
