@@ -27,8 +27,6 @@ def query_appointments(user):
     appointments = db.session.query(Appointment).filter(
         Appointment.event_id == Event.id, Event.user_id == user.id,
         Appointment.start > dt.datetime.now(dt.timezone.utc))
-    # for a in appointments:
-    # print(f"start:{a.start}, end:{a.end}")
     result = map(
         lambda x: {
             "start": x.start.strftime("%Y-%m-%dT%H:%M:%SZ"),

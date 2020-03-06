@@ -19,7 +19,6 @@ def fetch_free_busy(api_key, user):
     """
 
     refresh_token = user.cred.refresh_token
-    print(refresh_token)
     creds = google.oauth2.credentials.Credentials(
         api_key,
         client_id=current_app.config['OAUTH_CLIENT_ID'],
