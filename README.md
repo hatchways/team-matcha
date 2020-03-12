@@ -37,7 +37,7 @@
 *event creation flow*
 
 
-### Calendar
+### Calendar and Appointments
 #### Features
 
 * Calendar provides available timeslots for booking a meeting time
@@ -47,12 +47,11 @@
   * Event's availability settings
 * Timezone picker with corresponding timeslot times
 * Optional Comment on the booking by invitee
-![event-create](documentation/calendar.gif)
+![calendar](documentation/calendar.gif)
 *calendar flow*
 
-### Appointments
-
-
+![appointments](documentation/appointments.gif)
+*appointments view*
 
 ### Email Confirmation
 #### Features
