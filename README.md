@@ -59,7 +59,7 @@
 * User receives email confirmation on successful appointment booking
 * Email displays
   * Event Details (name, description, location, etc)
-  * Appoint Details (date and time)
+  * Appointment Details (date and time)
   * Event has link that redirects to application
 
 ![email-confirmation](documentation/email-confirmation.jpg)
