@@ -1,9 +1,9 @@
 # CalendApp
 
 ## Table of Contents
-* [Technologies Used] (https://github.com/hatchways/team-matcha#technologies)
-* [Overview] (https://github.com/hatchways/team-matcha#overview)
-* [Running Locally] (https://github.com/hatchways/team-matcha#to-run)
+* [Technologies Used](https://github.com/hatchways/team-matcha#technologies)
+* [Overview](https://github.com/hatchways/team-matcha#overview)
+* [Running Locally](https://github.com/hatchways/team-matcha#to-run)
 
 ## Technologies
 
