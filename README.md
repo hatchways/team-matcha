@@ -11,7 +11,13 @@
 
 ## Overview
 
-### Summary
+CalendApp is an appointment scheduling application inspired by [Calendly.com](https://calendly.com/).
+The application provides a dashboard to manage events, appointments, and availability settings. When 
+a you are ready to send out invitation simply share the event's unique url to provide access to the 
+calendar view with available time slots. The calendar system features integration with the users 
+Google Calendar to block off unavailable timeslots. The system is also timezone aware so everyone 
+is on the same page. Upon successful booking of an appointment the application will send a 
+confirmation email to you. Both parties will have google calendar event invitiations created.
 
 ### Onboarding
 
@@ -62,6 +68,7 @@
   * Event has link that redirects to application
 
 ![email-confirmation](documentation/email-confirmation.jpg)
+*email confirmation*
 
 ## To-Run
 
