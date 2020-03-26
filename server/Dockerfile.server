@@ -11,7 +11,6 @@ RUN cd /tmp && \
     pipenv lock --requirements > requirements.txt
 WORKDIR /server
 RUN pip install -r /tmp/requirements.txt
-EXPOSE 5000
 COPY . .
 
 #Prevents Python from writing pyc files to disc (equivalent to python -B option)
