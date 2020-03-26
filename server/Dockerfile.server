@@ -14,11 +14,6 @@ RUN pip install -r /tmp/requirements.txt
 EXPOSE 5000
 COPY . .
 
-# RUN apk update && \
-#   apk add --virtual build-deps gcc python-dev musl-dev && \
-#   apk add postgresql-dev && \
-#   apk add netcat-openbsd
-
 #Prevents Python from writing pyc files to disc (equivalent to python -B option)
 ENV PYTHONDONTWRITEBYTECODE 1
 
