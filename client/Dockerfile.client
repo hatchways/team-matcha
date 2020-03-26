@@ -10,7 +10,9 @@ RUN apk add --no-cache --virtual .gyp \
     && npm ci \
     && npm install react-scripts@2.1.8 -g --silent \
     && apk del .gyp
-EXPOSE 3000
 COPY . .
+RUN npm run build
+RUN npm install -g serve
+EXPOSE 3000
 
-CMD [ "npm", "run", "build" ]
+CMD [ "serve", "-s", "build" ]
