@@ -1,0 +1,16 @@
+FROM node:12.4.0-alpine
+
+WORKDIR /client
+COPY package-lock.json .
+COPY package.json .
+RUN apk add --no-cache --virtual .gyp \
+        python \
+        make \
+        g++ \
+    && npm ci \
+    && npm install react-scripts@2.1.8 -g --silent \
+    && apk del .gyp
+EXPOSE 3000
+COPY . .
+
+CMD [ "npm", "run", "build" ]
