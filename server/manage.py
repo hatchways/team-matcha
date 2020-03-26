@@ -6,7 +6,6 @@ from project.models.user import add_user
 import unittest
 import sys
 from typing import List
-import datetime as dt
 
 cli = FlaskGroup(create_app=create_app)
 
@@ -16,7 +15,6 @@ def create_db():
     print("Recreating db")
     db.drop_all()
     db.create_all()
-    seed_timezones('project/db/timezones.csv')
     db.session.commit()
 
 
