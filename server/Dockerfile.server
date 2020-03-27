@@ -9,14 +9,15 @@ RUN pip install pipenv
 COPY Pipfile* /tmp/
 RUN cd /tmp && \
     pipenv lock --requirements > requirements.txt
-WORKDIR /server
 RUN pip install -r /tmp/requirements.txt
-COPY . .
 
 #Prevents Python from writing pyc files to disc (equivalent to python -B option)
 ENV PYTHONDONTWRITEBYTECODE 1
 
 #Prevents Python from buffering stdout and stderr (equivalent to python -u option)
 ENV PYTHONUNBUFFERED 1
+
+WORKDIR /usr/src/app/server
+COPY . .
 
 CMD [ "python" "manage.py" "run" "-h" "0.0.0.0" ]
