@@ -20,4 +20,4 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /usr/src/app/server
 COPY . .
 
-CMD [ "python" "manage.py" "run" "-h" "0.0.0.0" ]
+CMD [ "python", "manage.py", "run", "-h", "0.0.0.0:$PORT" ]
