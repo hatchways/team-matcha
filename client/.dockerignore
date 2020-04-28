@@ -1,3 +1,9 @@
 # Custom files
 .git
 node_modules
+build
+.dockerignore
+Dockerfile
+Dockerfile.web
+Readme.md
+documentation
