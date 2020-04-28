@@ -14,7 +14,11 @@ def create_app(script_info=None):
     app = Flask(__name__)
 
     # set up config
-    app_settings = os.getenv('APP_SETTINGS')
+    if os.getenv('APP_SETTINGS'):
+        app_settings = os.getenv('APP_SETTINGS')
+    elif os.getenv('FLASK_ENV') == "production":
+        from project.config import ProductionConfig
+        app_settings = ProductionConfig
     app.config.from_object(app_settings)
 
     # set up extensions
