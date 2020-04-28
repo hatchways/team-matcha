@@ -17,4 +17,5 @@ FROM node:12.4.0-alpine
 
 RUN npm install -g serve
 COPY --from=builder /usr/src/app/client/build .
+COPY --from=builder /usr/src/app/client/public .
 CMD [ "serve", "-s", "build" ]
