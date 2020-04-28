@@ -3,9 +3,11 @@ import os
 from flask import Flask
 from flask_restx import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 # instantiate the db
 db = SQLAlchemy()
+cors = CORS()
 
 
 def create_app(script_info=None):
@@ -22,6 +24,7 @@ def create_app(script_info=None):
     app.config.from_object(app_settings)
 
     # set up extensions
+    cors.init_app(app)
     db.init_app(app)
 
     # register blueprints here

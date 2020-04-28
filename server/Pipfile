@@ -20,6 +20,7 @@ google-auth-httplib2 = "*"
 google-auth-oauthlib = "*"
 python-dateutil = "*"
 yagmail = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.7"
