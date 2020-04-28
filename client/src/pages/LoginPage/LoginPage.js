@@ -13,7 +13,8 @@ class LoginPage extends React.Component {
 
     handleGoogleAuth = async (res) => {
         try {
-            const response = await fetch('/login', {
+            const api_route = process.env.NODE_ENV == "production" ? process.env.API_URL : "/" 
+            const response = await fetch(`${api_route}login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
