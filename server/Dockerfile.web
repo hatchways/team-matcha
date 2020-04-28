@@ -17,7 +17,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 #Prevents Python from buffering stdout and stderr (equivalent to python -u option)
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /usr/src/app/server
+RUN pip install gunicorn
+
 COPY . .
 
-CMD [ "python", "manage.py", "run", "-h", "0.0.0.0:$PORT" ]
+CMD [ "gunicorn", "manage:create_app()" ]
