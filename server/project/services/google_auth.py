@@ -8,7 +8,7 @@ def exchange_auth_code(code):
         "code": code,
         "client_id": current_app.config['OAUTH_CLIENT_ID'],
         "client_secret": current_app.config['OAUTH_CLIENT_SECRET'],
-        "redirect_uri": "http://localhost:3000",
+        "redirect_uri": "https://calendapp.herokuapp.com",
         "grant_type": "authorization_code"
     }
     headers = {'content-type': 'application/x-www-form-urlencoded'}
