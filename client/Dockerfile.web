@@ -1,4 +1,4 @@
-FROM node:12.4.0-alpine
+FROM node:12.4.0-alpine AS builder
 
 WORKDIR /usr/src/app/client
 COPY package-lock.json .
@@ -12,6 +12,9 @@ RUN apk add --no-cache --virtual .gyp \
     && apk del .gyp
 COPY . .
 RUN npm run build
-RUN npm install -g serve
 
+FROM node:12.4.0-alpine
+
+RUN npm install -g serve
+COPY --from=builder /usr/src/app/client/build .
 CMD [ "serve", "-s", "build" ]
