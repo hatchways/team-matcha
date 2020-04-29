@@ -12,7 +12,8 @@ function Ping(props) {
   const submitAnswer = () => {
     console.log("run");
     let status;
-    fetch("/ping", {
+    const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/"
+    fetch(`${api_route}ping`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

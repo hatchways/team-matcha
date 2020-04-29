@@ -66,7 +66,8 @@ class SoloEventPage extends Component {
     }
 
     handleFetchUser = () => {
-        fetch(`/users/details`, {
+        const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
+        fetch(`${api_route}users/details`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -82,7 +83,8 @@ class SoloEventPage extends Component {
 
     handleFetchEvent = () => {
         const { public_id, eventLink } = this.props.match.params;
-        fetch(`/users/${public_id}/events/${eventLink}`, {
+        const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
+        fetch(`${api_route}users/${public_id}/events/${eventLink}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -193,7 +195,8 @@ class SoloEventPage extends Component {
     const { value, name } = e.target;
     this.setState({ [name]: value.replace(/\s+/g, '-').toLowerCase() }, () => console.log(this.state));
 
-    fetch(`/users/${this.props.userId}/events`, {
+    const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/"
+    fetch(`${api_route}users/${this.props.userId}/events`, {
             method: "GET",
             headers: {
             "Content-Type": "application/json",
@@ -236,7 +239,8 @@ class SoloEventPage extends Component {
                 duration = this.state.eventDuration;
             }
             
-            fetch(`/users/${public_id}/events/${eventLink}`, {
+            const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/"
+            fetch(`${api_route}users/${public_id}/events/${eventLink}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

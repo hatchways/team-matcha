@@ -16,7 +16,8 @@ const ApptConfirmedPage = (props) => {
     const { public_id, eventLink, appointmentId } = props.match.params; // get params from url
 
     useEffect(() => {
-        fetch(`/users/${public_id}/events/${eventLink}`, {
+        const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
+        fetch(`${api_route}users/${public_id}/events/${eventLink}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

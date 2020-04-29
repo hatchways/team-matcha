@@ -11,7 +11,8 @@ const UpcomingSchedule = (props) => {
     const [loading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch(`/users/${props.userId}/appointments`, {
+        const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/"
+        fetch(`${api_route}users/${props.userId}/appointments`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

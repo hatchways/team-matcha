@@ -17,7 +17,8 @@ const Header = ({ isActive }) => {
     };
 
     useEffect(() => {
-        fetch(`/users/details`, {
+        const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
+        fetch(`${api_route}users/details`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

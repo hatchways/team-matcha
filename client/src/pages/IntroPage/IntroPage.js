@@ -70,7 +70,8 @@ class IntroPage extends Component {
     const { value, name } = e.target;
     this.setState({ [name]: value.trim() });
 
-    fetch("/users")
+    const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/"
+    fetch(`${api_route}users`)
       .then(response => {
         return response.json();
       })
@@ -93,7 +94,8 @@ class IntroPage extends Component {
 
   // method: handles data submission to the server
   handleDataSubmit = () => {
-    fetch(`/users/${this.props.userId.trim()}`, {
+    const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/"
+    fetch(`${api_route}users/${this.props.userId.trim()}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +108,7 @@ class IntroPage extends Component {
       .then(data => data.json())
       .then(data => {
         this.props.updateUserId(this.props.token, this.state.userUrl);
-        fetch(`/users/${this.state.userUrl.trim()}/events`, {
+        fetch(`${api_route}users/${this.state.userUrl.trim()}/events`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

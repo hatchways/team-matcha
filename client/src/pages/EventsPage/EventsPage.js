@@ -13,7 +13,8 @@ const EventsPage = ({setImageUrl, token, userId, profileImageUrl}) => {
     const [loading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch(`/users/details`, {
+      const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
+        fetch(`${api_route}users/details`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,7 +31,8 @@ const EventsPage = ({setImageUrl, token, userId, profileImageUrl}) => {
     }, []);
 
     const fetchEvents = (public_id) => {
-      fetch(`/users/${public_id}/events`, {
+      const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
+      fetch(`${api_route}users/${public_id}/events`, {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json',
@@ -46,7 +48,8 @@ const EventsPage = ({setImageUrl, token, userId, profileImageUrl}) => {
   }
 
     const handleRemoveEvent = (url) => {
-        fetch(`/users/${userId}/events/${url}`, {
+      const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
+        fetch(`${api_route}users/${userId}/events/${url}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

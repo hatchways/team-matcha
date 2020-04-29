@@ -45,7 +45,8 @@ class CalendarPage extends Component {
 
     handleFetchEvent = () => {
         const { public_id, eventLink } = this.props.match.params; // get params from url
-        fetch(`/users/${public_id}/events/${eventLink}`, {
+        const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
+        fetch(`${api_route}users/${public_id}/events/${eventLink}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -68,7 +69,8 @@ class CalendarPage extends Component {
 
     handleFetchCalendar = (timezone) => {
         const { public_id, eventLink } = this.props.match.params; // get params from url
-        fetch(`/users/${public_id}/events/${eventLink}/calendar?timezone=${timezone}`, {
+        const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
+        fetch(`${api_route}users/${public_id}/events/${eventLink}/calendar?timezone=${timezone}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

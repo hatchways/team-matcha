@@ -30,7 +30,7 @@ class LoginPage extends React.Component {
             setIsAuth();
             setToken(creds.auth_token);
             setUserId(creds.public_id);
-            const resp = await fetch(`/users/${creds.public_id}`, {
+            const resp = await fetch(`${api_route}users/${creds.public_id}`, {
                 method: 'GET',
                 headers: {'Content-Type': 'application/json'},
             })

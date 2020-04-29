@@ -33,7 +33,8 @@ class ConfirmationPage extends Component {
 
     handleFetchEvent = () => {
         const { public_id, eventLink, date } = this.props.match.params; // get params from url
-        fetch(`/users/${public_id}/events/${eventLink}`, {
+        const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
+        fetch(`${api_route}users/${public_id}/events/${eventLink}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -58,7 +59,8 @@ class ConfirmationPage extends Component {
 
     handleConfirmedApt = () => {
         const { public_id, eventLink, date } = this.props.match.params; // get params from url
-        fetch(`/users/${public_id}/events/${eventLink}/appointments`, {
+        const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
+        fetch(`${api_route}users/${public_id}/events/${eventLink}/appointments`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -116,8 +118,9 @@ class ConfirmationPage extends Component {
         e.preventDefault();
         const { public_id, eventLink, date } = this.props.match.params; // get params from url
         const err = this.validate(); // validate user input
+        const api_route = process.env.NODE_ENV == "production" ? process.env.REACT_APP_API_URL : "/" 
         if(!err) {
-        fetch(`/users/${public_id}/events/${eventLink}/appointments`, {
+        fetch(`${api_route}users/${public_id}/events/${eventLink}/appointments`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
